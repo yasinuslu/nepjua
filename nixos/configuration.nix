@@ -210,8 +210,10 @@
   # Feel free to remove if you don't need it.
   services.openssh = {
     enable = true;
-    permitRootLogin = "yes";
-    passwordAuthentication = true;
+    settings = {
+      PermitRootLogin = "yes";
+      PasswordAuthentication = true;
+    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

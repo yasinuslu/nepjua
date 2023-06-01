@@ -64,7 +64,7 @@
     parsec-bin
 
     # Fonts
-    # (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
 
     # From previous dotfiles
     fish
