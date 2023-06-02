@@ -10,8 +10,9 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./vscode.nix
-    ./gnome
+    ./desktop
     ./fish
+    ./git
   ];
 
   nixpkgs = {
@@ -41,66 +42,11 @@
     homeDirectory = "/home/nepjua";
   };
 
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
-  home.packages = with pkgs; [
-    # Applications
-    google-chrome
-    microsoft-edge
-    copyq
-    qbittorrent
-    vlc
-
-    # Command Line
-    wget
-    tldr
-    parsec-bin
-
-    # From previous dotfiles
-    jq
-    lsd
-    bat
-    fd
-    starship
-    tmux
-    vim
-    nodejs
-    yarn
-    nodePackages.pnpm
-    python3Minimal
-
-    discord
-    betterdiscordctl
-
-    direnv
-    slack
-  ];
-
-  programs.git = {
+  programs.vscode = {
     enable = true;
-    diff-so-fancy.enable = true;
   };
 
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-  };
-
-  home.sessionVariables = {
-    XDG_DATA_DIRS = "/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
-  };
-
-  # Enable home-manager and git
+  # Enable home-manager
   programs.home-manager.enable = true;
 
   # Nicely reload system units when changing configs
