@@ -232,11 +232,11 @@
 
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.sudo.enableGnomeKeyring = true;
-  security.pam.services.gdm.enableGnomeKeyring = true;
-  security.pam.services.sshd.enableGnomeKeyring = true;
-  security.pam.services.login.enableGnomeKeyring = true;
-  security.pam.services.polkit.enableGnomeKeyring = true;
+  # security.pam.services.sudo.enableGnomeKeyring = true;
+  # security.pam.services.gdm.enableGnomeKeyring = true;
+  # security.pam.services.sshd.enableGnomeKeyring = true;
+  # security.pam.services.login.enableGnomeKeyring = true;
+  # security.pam.services.polkit.enableGnomeKeyring = true;
 
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
