@@ -11,6 +11,7 @@
     # ./nvim.nix
     ./vscode.nix
     ./gnome
+    ./fish
   ];
 
   nixpkgs = {
@@ -56,11 +57,9 @@
     parsec-bin
 
     # From previous dotfiles
-    fish
     jq
     lsd
     bat
-    fzf
     fd
     starship
     tmux
@@ -80,20 +79,6 @@
   programs.git = {
     enable = true;
     diff-so-fancy.enable = true;
-  };
-
-  programs.fish = {
-    enable = true;
-  };
-
-  programs.fzf = {
-    enable = true;
-    enableFishIntegration = true;
-    enableBashIntegration = true;
-
-    fileWidgetCommand = ''
-      fd --type f --strip-cwd-prefix --hidden --follow --exclude .git
-    '';
   };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

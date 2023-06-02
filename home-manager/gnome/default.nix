@@ -7,5 +7,5 @@
     gnomeExtensions.advanced-alttab-window-switcher
     gnomeExtensions.quick-settings-tweaker
     gnomeExtensions.appindicator
-  ]
+  ];
 }
