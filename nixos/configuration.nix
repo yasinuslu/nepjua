@@ -52,17 +52,17 @@
     };
   };
 
-  fileSystems."/home/nepjua/backup" =
-    { device = "/dev/nvme0n1p2";
-      fsType = "ntfs3";
-      options = [ "force" "rw" "uid=1000"];
-    };
+  # fileSystems."/home/nepjua/backup" =
+  #   { device = "/dev/nvme0n1p2";
+  #     fsType = "ntfs3";
+  #     options = [ "force" "rw" "uid=1000"];
+  #   };
 
-  fileSystems."/home/nepjua/cold-storage" =
-    { device = "/dev/disk/by-partuuid/1ef89276-4bdd-4403-860c-3d5126f5df53";
-      fsType = "ntfs3";
-      options = [ "force" "rw" "uid=1000"];
-    };
+  # fileSystems."/home/nepjua/cold-storage" =
+  #   { device = "/dev/disk/by-partuuid/1ef89276-4bdd-4403-860c-3d5126f5df53";
+  #     fsType = "ntfs3";
+  #     options = [ "force" "rw" "uid=1000"];
+  #   };
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 

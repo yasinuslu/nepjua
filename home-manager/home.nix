@@ -45,7 +45,6 @@
     # Applications
     google-chrome
     microsoft-edge
-    # vscode
     copyq
     qbittorrent
     vlc
@@ -68,6 +67,7 @@
     lsd
     bat
     fzf
+    fd
     starship
     tmux
     vim
@@ -80,6 +80,7 @@
     betterdiscordctl
 
     direnv
+    slack
   ];
 
   programs.git = {
@@ -98,6 +99,11 @@
   programs.fzf = {
     enable = true;
     enableFishIntegration = true;
+    enableBashIntegration = true;
+
+    fileWidgetCommand = ''
+      fd --type f --strip-cwd-prefix --hidden --follow --exclude .git
+    '';
   };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
