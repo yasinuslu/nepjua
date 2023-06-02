@@ -1,5 +1,9 @@
 
 { inputs, lib, config, pkgs, colors, ... }: {
+  imports = [
+    ./fonts.nix
+  ];
+
   home.packages = with pkgs; [
     # Gnome
     gnome.gnome-tweaks
