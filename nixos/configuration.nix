@@ -147,6 +147,8 @@
     gparted
     htop
     git
+    _1password
+    _1password-gui
     (lutris.override {
       extraLibraries =  pkgs: [
         # List library dependencies here
@@ -206,6 +208,11 @@
     };
   };
 
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = [ config.users.users.nepjua.name ];
+  };
+
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
@@ -215,6 +222,10 @@
       PasswordAuthentication = true;
     };
   };
+
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" ]; })
+  ];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "22.11";

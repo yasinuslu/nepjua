@@ -1,7 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 
-{ inputs, lib, config, pkgs, ... }: {
+{ inputs, lib, config, pkgs, colors, ... }: {
   # You can import other home-manager modules here
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
@@ -9,6 +9,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    # ./kitty.nix
   ];
 
   nixpkgs = {
@@ -46,8 +47,6 @@
     microsoft-edge
     # vscode
     copyq
-    _1password
-    _1password-gui
     qbittorrent
     vlc
 
@@ -63,9 +62,6 @@
     tldr
     parsec-bin
 
-    # Fonts
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-
     # From previous dotfiles
     fish
     jq
@@ -80,7 +76,10 @@
     nodePackages.pnpm
     python3Minimal
 
+    discord
     betterdiscordctl
+
+    direnv
   ];
 
   programs.git = {
@@ -116,16 +115,7 @@
     # '';
   };
 
-  # You can also manage environment variables but you will have to manually
-  # source
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/nepjua/etc/profile.d/hm-session-vars.sh
-  #
-  # if you don't want to manage your shell through Home Manager.
+  services.gnome-keyring.enable = true;
   home.sessionVariables = {
     XDG_DATA_DIRS = "/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
   };
