@@ -148,6 +148,7 @@
     git
     _1password
     _1password-gui
+    gnome.dconf-editor
     (lutris.override {
       extraLibraries =  pkgs: [
         # List library dependencies here
