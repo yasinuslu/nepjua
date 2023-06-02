@@ -72,14 +72,6 @@ idle-delay=uint32 300
 event-sounds=true
 theme-name='__custom'
 
-[org/gnome/desktop/wm/keybindings]
-switch-applications=['<Super>Tab']
-switch-applications-backward=['<Shift><Super>Tab']
-switch-group=['<Alt>grave']
-switch-group-backward=['<Shift><Alt>grave']
-switch-windows=['<Alt>Tab']
-switch-windows-backward=['<Shift><Alt>Tab']
-
 [org/gnome/desktop/wm/preferences]
 focus-mode='click'
 titlebar-font='Cantarell Bold 11'
@@ -114,35 +106,3 @@ default-folder-viewer='icon-view'
 migrated-gtk-settings=true
 search-filter-time-type='last_modified'
 search-view='list-view'
-
-[org/gnome/nautilus/window-state]
-initial-size=(890, 550)
-maximized=true
-
-[org/gnome/settings-daemon/plugins/color]
-night-light-enabled=false
-
-[org/gnome/shell/world-clocks]
-locations=@av []
-
-[org/gnome/software]
-check-timestamp=int64 1685695201
-first-run=false
-flatpak-purge-timestamp=int64 1685564962
-
-[org/gtk/settings/file-chooser]
-date-format='regular'
-location-mode='path-bar'
-show-hidden=false
-show-size-column=true
-show-type-column=true
-sidebar-width=177
-sort-column='name'
-sort-directories-first=false
-sort-order='ascending'
-type-format='category'
-window-position=(1338, 766)
-window-size=(1203, 902)
-
-[system/proxy]
-mode='none'

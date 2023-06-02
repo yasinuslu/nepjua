@@ -3,6 +3,7 @@
   imports = [
     ./fonts.dconf.nix
     ./extensions.dconf.nix
+    ./keybindings.dconf.nix
   ];
 
   home.packages = with pkgs; [
