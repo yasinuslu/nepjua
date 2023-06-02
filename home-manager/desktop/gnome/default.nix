@@ -4,6 +4,8 @@
     ./fonts.dconf.nix
     ./extensions.dconf.nix
     ./keybindings.dconf.nix
+    ./mutter.dconf.nix
+    ./nautilus.dconf.nix
   ];
 
   home.packages = with pkgs; [
