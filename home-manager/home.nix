@@ -9,7 +9,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
-    # ./kitty.nix
+    ./vscode.nix
   ];
 
   nixpkgs = {
@@ -86,10 +86,6 @@
   programs.git = {
     enable = true;
     diff-so-fancy.enable = true;
-  };
-
-  programs.vscode = {
-    enable = true;
   };
 
   programs.fish = {
