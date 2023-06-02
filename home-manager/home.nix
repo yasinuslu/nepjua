@@ -10,6 +10,7 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./vscode.nix
+    ./gnome
   ];
 
   nixpkgs = {
@@ -48,13 +49,6 @@
     copyq
     qbittorrent
     vlc
-
-    # Gnome
-    gnome.gnome-tweaks
-    guake
-    gnomeExtensions.advanced-alttab-window-switcher
-    gnomeExtensions.quick-settings-tweaker
-    gnomeExtensions.appindicator
 
     # Command Line
     wget
