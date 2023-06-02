@@ -121,7 +121,6 @@
     # '';
   };
 
-  services.gnome-keyring.enable = true;
   home.sessionVariables = {
     XDG_DATA_DIRS = "/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
   };

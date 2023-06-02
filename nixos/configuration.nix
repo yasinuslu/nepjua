@@ -121,7 +121,6 @@
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  security.polkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -213,6 +212,10 @@
     polkitPolicyOwners = [ config.users.users.nepjua.name ];
   };
 
+  programs._1password = {
+    enable = true;
+  };
+
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
@@ -226,6 +229,15 @@
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" ]; })
   ];
+
+  security.polkit.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.sudo.enableGnomeKeyring = true;
+  security.pam.services.gdm.enableGnomeKeyring = true;
+  security.pam.services.sshd.enableGnomeKeyring = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.polkit.enableGnomeKeyring = true;
+
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "22.11";
