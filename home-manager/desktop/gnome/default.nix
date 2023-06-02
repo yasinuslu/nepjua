@@ -1,7 +1,8 @@
 
 { inputs, lib, config, pkgs, colors, ... }: {
   imports = [
-    ./fonts.nix
+    ./fonts.dconf.nix
+    ./extensions.dconf.nix
   ];
 
   home.packages = with pkgs; [
