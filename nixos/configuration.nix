@@ -15,6 +15,53 @@
     ./hardware-configuration.nix
   ];
 
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  networking.hostName = "infinite-nix"; # Define your hostname.
+  
+  # Enable networking
+  networking.networkmanager.enable = true;
+
+  # Set your time zone.
+  time.timeZone = "Europe/Istanbul";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "tr_TR.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "tr_TR.UTF-8";
+    LC_TIME = "tr_TR.UTF-8";
+  };
+
+  # Configure keymap in X11
+  services.xserver = {
+    layout = "us";
+    xkbVariant = "";
+  };
+
+  users.users = {
+    nepjua = {
+      initialPassword = "line-flanker-wingman-sidle";
+      isNormalUser = true;
+      description = "Yasin Uslu";
+      openssh.authorizedKeys.keys = [];
+      extraGroups = [ "networkmanager" "wheel" ];
+      shell = pkgs.fish;
+    };
+  };
+
+  # Enable automatic login for the user.
+  services.getty.autologinUser = "nepjua";
+
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -52,6 +99,23 @@
     };
   };
 
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.systemPackages = with pkgs; [
+    vim
+    gparted
+    htop
+    git
+    _1password
+    _1password-gui
+    gnome.dconf-editor
+    (lutris.override {
+      extraLibraries =  pkgs: [
+        # List library dependencies here
+      ];
+    })
+  ];
+
   fileSystems."/home/nepjua/backup" =
     { device = "/dev/nvme0n1p2";
       fsType = "ext4";
@@ -62,33 +126,6 @@
   #     fsType = "ntfs3";
   #     options = [ "force" "rw" "uid=1000"];
   #   };
-
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "Europe/Istanbul";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "tr_TR.UTF-8";
-    LC_IDENTIFICATION = "tr_TR.UTF-8";
-    LC_MEASUREMENT = "tr_TR.UTF-8";
-    LC_MONETARY = "tr_TR.UTF-8";
-    LC_NAME = "tr_TR.UTF-8";
-    LC_NUMERIC = "tr_TR.UTF-8";
-    LC_PAPER = "tr_TR.UTF-8";
-    LC_TELEPHONE = "tr_TR.UTF-8";
-    LC_TIME = "tr_TR.UTF-8";
-  };
 
   services.flatpak.enable = true;
   programs.steam = {
@@ -107,12 +144,6 @@
   services.xserver.displayManager.gdm.wayland = false;
   services.xserver.desktopManager.gnome.enable = true;
 
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-  };
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -125,35 +156,12 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
 
   programs.fish.enable = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    vim
-    gparted
-    htop
-    git
-    _1password
-    _1password-gui
-    gnome.dconf-editor
-    (lutris.override {
-      extraLibraries =  pkgs: [
-        # List library dependencies here
-      ];
-    })
-  ];
 
   environment.gnome.excludePackages = (with pkgs; [
     gnome-photos
@@ -173,39 +181,6 @@
     hitori # sudoku game
     atomix # puzzle game
   ]);
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  networking.hostName = "infinite-nix"; # Define your hostname.
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  boot.supportedFilesystems = [ "ntfs" ];
-
-  users.users = {
-    nepjua = {
-      initialPassword = "correcthorsebatterystaple";
-      isNormalUser = true;
-      description = "Yasin Uslu";
-      openssh.authorizedKeys.keys = [];
-      extraGroups = [ "networkmanager" "wheel" ];
-      shell = pkgs.fish;
-    };
-  };
 
   programs._1password-gui = {
     enable = true;
@@ -240,5 +215,5 @@
 
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "22.11";
+  system.stateVersion = "23.05";
 }
