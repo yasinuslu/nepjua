@@ -1,6 +1,7 @@
-{}: {
+{ inputs, lib, config, pkgs, colors, ... }: {
   imports = [
     ./gnome
+    ./guake
   ];
 
   # The home.packages option allows you to install Nix packages into your
@@ -15,7 +16,6 @@
     discord
     betterdiscordctl
     slack
-    guake
   ];
 
   home.sessionVariables = {
