@@ -19,22 +19,22 @@
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs: {
+  outputs = {
+    nixpkgs,
+    home-manager,
+    alejandra,
+    self,
+    ...
+  } @ inputs: rec {
+    system = "x86_64-linux";
+    formatter.${system} = alejandra.defaultPackage.${system};
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
-
       trippy-nix = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; }; # Pass flake inputs to our config
-        system = "x86_64-linux";
+        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
         modules = [
-          {
-            environment.systemPackages = [
-              # nix-colors.defaultPackage.${system}
-              alejandra.defaultPackage.${system}
-            ];
-          }
           ./nixos/configuration.nix
         ];
       };
@@ -45,9 +45,9 @@
     homeConfigurations = {
       "nepjua@trippy-nix" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to our config
+        extraSpecialArgs = {inherit inputs;}; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
-        modules = [ ./home/nepjua/trippy.nix ];
+        modules = [./home/nepjua/trippy.nix];
       };
     };
   };
