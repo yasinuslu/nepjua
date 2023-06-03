@@ -3,6 +3,7 @@
     ./fish
     ./git
     ./fzf.nix
+    ./tmux.nix
   ];
 
   home.packages = with pkgs; [
@@ -16,7 +17,6 @@
     lsd
     bat
     starship
-    tmux
     vim
     nodejs
     yarn

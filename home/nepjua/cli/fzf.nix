@@ -13,6 +13,10 @@
     enableFishIntegration = true;
     enableBashIntegration = true;
 
+    tmux = {
+      enableShellIntegration = true;
+    };
+
     fileWidgetCommand = ''
       fd --type f --strip-cwd-prefix --hidden --follow --exclude .git
     '';
