@@ -7,10 +7,6 @@
     enable = true;
     plugins = [
       {
-        name = "nepjua";
-        src = ./fish-plugin-nepjua;
-      }
-      {
         name = "fisher";
         src = pkgs.fetchFromGitHub {
           owner = "jorgebucaran";
@@ -90,6 +86,10 @@
           rev = "master";
           sha256 = "sha256-OYiYTW+g71vD9NWOcX1i2/TaQfAg+c2dJZ5ohwWSDCc=";
         };
+      }
+      {
+        name = "nepjua";
+        src = ./fish-plugin-nepjua;
       }
     ];
   };
