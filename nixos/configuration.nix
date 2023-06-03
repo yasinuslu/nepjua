@@ -1,7 +1,12 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
-
-{ inputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
@@ -20,7 +25,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "trippy-nix"; # Define your hostname.
-  
+
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -54,7 +59,7 @@
       isNormalUser = true;
       description = "Yasin Uslu";
       openssh.authorizedKeys.keys = [];
-      extraGroups = [ "networkmanager" "wheel" ];
+      extraGroups = ["networkmanager" "wheel"];
       shell = pkgs.fish;
     };
   };
@@ -85,7 +90,7 @@
   nix = {
     # This will add each flake input as a registry
     # To make nix3 commands consistent with your flake
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+    registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
@@ -110,16 +115,16 @@
     _1password-gui
     gnome.dconf-editor
     (lutris.override {
-      extraLibraries =  pkgs: [
+      extraLibraries = pkgs: [
         # List library dependencies here
       ];
     })
   ];
 
-  fileSystems."/home/nepjua/backup" =
-    { device = "/dev/nvme0n1p2";
-      fsType = "btrfs";
-    };
+  fileSystems."/home/nepjua/backup" = {
+    device = "/dev/nvme0n1p2";
+    fsType = "btrfs";
+  };
 
   # fileSystems."/home/nepjua/cold-storage" =
   #   { device = "/dev/disk/by-partuuid/1ef89276-4bdd-4403-860c-3d5126f5df53";
@@ -141,7 +146,7 @@
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = false;
+  services.xserver.displayManager.gdm.wayland = true;
   services.xserver.desktopManager.gnome.enable = true;
 
   # Enable CUPS to print documents.
@@ -163,28 +168,30 @@
 
   programs.fish.enable = true;
 
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-photos
-    gnome-tour
-  ]) ++ (with pkgs.gnome; [
-    cheese # webcam tool
-    gnome-music
-    gnome-terminal
-    gedit # text editor
-    epiphany # web browser
-    geary # email reader
-    evince # document viewer
-    gnome-characters
-    totem # video player
-    tali # poker game
-    iagno # go game
-    hitori # sudoku game
-    atomix # puzzle game
-  ]);
+  environment.gnome.excludePackages =
+    (with pkgs; [
+      gnome-photos
+      gnome-tour
+    ])
+    ++ (with pkgs.gnome; [
+      cheese # webcam tool
+      gnome-music
+      gnome-terminal
+      gedit # text editor
+      epiphany # web browser
+      geary # email reader
+      evince # document viewer
+      gnome-characters
+      totem # video player
+      tali # poker game
+      iagno # go game
+      hitori # sudoku game
+      atomix # puzzle game
+    ]);
 
   programs._1password-gui = {
     enable = true;
-    polkitPolicyOwners = [ config.users.users.nepjua.name ];
+    polkitPolicyOwners = [config.users.users.nepjua.name];
   };
 
   programs._1password = {
@@ -202,12 +209,11 @@
   };
 
   fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = [ "JetBrainsMono" "FiraCode" ]; })
+    (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
   ];
 
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
-
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.05";
