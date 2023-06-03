@@ -1,4 +1,8 @@
-{pkgs}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   home.packages = with pkgs; [
     fzf
     fd

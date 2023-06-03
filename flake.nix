@@ -35,6 +35,11 @@
         specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
         modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage.${system}
+            ];
+          }
           ./nixos/configuration.nix
         ];
       };

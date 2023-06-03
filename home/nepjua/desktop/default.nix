@@ -1,15 +1,21 @@
-{ inputs, lib, config, pkgs, colors, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  colors,
+  ...
+}: {
   imports = [
     ./gnome
     ./guake
+    ./browser.nix
   ];
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
     # Applications
-    google-chrome
-    microsoft-edge
     copyq
     qbittorrent
     vlc
