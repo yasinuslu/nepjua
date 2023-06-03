@@ -10,7 +10,6 @@
   programs.tmux = {
     enable = true;
     extraConfig = ''
-      set-option -g prefix C-s
       set -g prefix2 C-g
       bind C-g send-prefix -2
       setw -g mode-keys vi
@@ -20,5 +19,6 @@
       bind-key -r C-'[' swap-window -t -1\; previous-window
       bind-key -r C-']' swap-window -t +1\; next-window
     '';
+    shortcut = "s";
   };
 }

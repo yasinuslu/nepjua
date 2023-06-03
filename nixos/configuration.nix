@@ -18,6 +18,7 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
+    ./gaming
   ];
 
   # Bootloader.
@@ -114,11 +115,6 @@
     _1password
     _1password-gui
     gnome.dconf-editor
-    (lutris.override {
-      extraLibraries = pkgs: [
-        # List library dependencies here
-      ];
-    })
   ];
 
   fileSystems."/home/nepjua/backup" = {
@@ -133,11 +129,6 @@
   #   };
 
   services.flatpak.enable = true;
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
