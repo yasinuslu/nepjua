@@ -27,5 +27,6 @@
 
   home.sessionVariables = {
     XDG_DATA_DIRS = "/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
+    NIXPKGS_ALLOW_INSECURE = "1";
   };
 }
