@@ -7,12 +7,16 @@
     enable = true;
     plugins = [
       {
+        name = "nepjua";
+        src = ./fish-plugin-nepjua;
+      }
+      {
         name = "fisher";
         src = pkgs.fetchFromGitHub {
           owner = "jorgebucaran";
           repo = "fisher";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-28QW/WTLckR4lEfHv6dSotwkAKpNJFCShxmKFGQQ1Ew=";
         };
       }
       {
@@ -21,7 +25,7 @@
           owner = "edc";
           repo = "bass";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-3mFlFiqGfQ+GfNshwKfhQ39AuNMdt8Nv2Vgb7bBV7L4=";
         };
       }
       {
@@ -30,16 +34,7 @@
           owner = "barnybug";
           repo = "docker-fish-completion";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
-        };
-      }
-      {
-        name = "jethrokuan-fzf";
-        src = pkgs.fetchFromGitHub {
-          owner = "jethrokuan";
-          repo = "fzf";
-          rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-2vwJLIeexu/4E05YlQoCf1udIrJtZO2VHHdBi6TKB1A=";
         };
       }
       {
@@ -48,7 +43,7 @@
           owner = "jorgebucaran";
           repo = "fishopts";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-9hRFBmjrCgIUNHuOJZvOufyLsfreJfkeS6XDcCPesvw=";
         };
       }
       {
@@ -57,7 +52,7 @@
           owner = "jorgebucaran";
           repo = "fish-menu";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-qt3t1iKRRNuiLWiVoiAYOu+9E7jsyECyIqZJ/oRIT1A=";
         };
       }
       {
@@ -66,25 +61,16 @@
           owner = "oh-my-fish";
           repo = "plugin-node-binpath";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-1pzEf3KabfXRqtNr/rBWAaKAMsWNMvK2UjrR14nf5LQ=";
         };
       }
       {
-        name = "oh-my-fish-plugin-osx";
+        name = "oh-my-fish-plugin-osx"; # FIXME: Move this into a newly created osx-specific configuration
         src = pkgs.fetchFromGitHub {
           owner = "oh-my-fish";
           repo = "plugin-osx";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
-        };
-      }
-      {
-        name = "oh-my-fish-theme-bobthefish";
-        src = pkgs.fetchFromGitHub {
-          owner = "oh-my-fish";
-          repo = "theme-bobthefish";
-          rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-jSUIk3ewM6QnfoAtp16l96N1TlX6vR0d99dvEH53Xgw=";
         };
       }
       {
@@ -93,7 +79,7 @@
           owner = "jhillyerd";
           repo = "plugin-git";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-tsw+npcOga8NBM1F8hnsT69k33FS5nK1zaPB1ohasPk=";
         };
       }
       {
@@ -102,7 +88,7 @@
           owner = "evanlucas";
           repo = "fish-kubectl-completions";
           rev = "master";
-          sha256 = "sha256-uWtEDpOrfQNGpS56WdoV13ggt4ESdsdM4gtPCcDpJyM=";
+          sha256 = "sha256-OYiYTW+g71vD9NWOcX1i2/TaQfAg+c2dJZ5ohwWSDCc=";
         };
       }
     ];
