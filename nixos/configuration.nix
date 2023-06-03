@@ -24,8 +24,9 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = ["btrfs" "ext4" "fat" "ntfs"];
 
-  networking.hostName = "trippy-nix"; # Define your hostname.
+  networking.hostName = "kaori"; # Define your hostname.
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -117,16 +118,39 @@
     gnome.dconf-editor
   ];
 
-  fileSystems."/home/nepjua/backup" = {
+  fileSystems."/mnt/ayame" = {
     device = "/dev/nvme0n1p2";
     fsType = "btrfs";
   };
 
-  # fileSystems."/home/nepjua/cold-storage" =
-  #   { device = "/dev/disk/by-partuuid/1ef89276-4bdd-4403-860c-3d5126f5df53";
-  #     fsType = "ntfs3";
-  #     options = [ "force" "rw" "uid=1000"];
-  #   };
+  fileSystems."/home/nepjua/ayame" = {
+    device = "/mnt/ayame";
+    options = ["bind"];
+  };
+
+  fileSystems."/export/ayame" = {
+    device = "/mnt/ayame";
+    options = ["bind"];
+  };
+
+  services.nfs.server = {
+    enable = true;
+    # fixed rpc.statd port; for firewall
+    lockdPort = 4001;
+    mountdPort = 4002;
+    statdPort = 4000;
+    extraNfsdConfig = '''';
+    exports = ''
+      /export         192.168.50.21(rw,fsid=0,no_subtree_check)
+      /export/ayame  192.168.50.21(rw,nohide,insecure,no_subtree_check)
+    '';
+  };
+  networking.firewall = {
+    enable = true;
+    # for NFSv3; view with `rpcinfo -p`
+    allowedTCPPorts = [111 2049 4000 4001 4002 20048];
+    allowedUDPPorts = [111 2049 4000 4001 4002 20048];
+  };
 
   services.flatpak.enable = true;
 
@@ -193,6 +217,7 @@
   # Feel free to remove if you don't need it.
   services.openssh = {
     enable = true;
+    allowSFTP = true;
     settings = {
       PermitRootLogin = "yes";
       PasswordAuthentication = true;

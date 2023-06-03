@@ -3,8 +3,8 @@
 ## TLDR
 
 ```sh
-sudo nixos-rebuild switch --flake .#trippy-nix
-home-manager switch --flake .#nepjua@trippy-nix
+sudo nixos-rebuild switch --flake .#kaori
+home-manager switch --flake .#nepjua@kaori
 ```
 
 ## Installation
@@ -12,11 +12,11 @@ home-manager switch --flake .#nepjua@trippy-nix
 Install the system
 
 ```sh
-sudo nixos-rebuild switch --flake .#trippy-nix
+sudo nixos-rebuild switch --flake .#kaori
 ```
 
 Install home-manager
 
 ```sh
-home-manager switch --flake .#nepjua@trippy-nix
+home-manager switch --flake .#nepjua@kaori
 ```
