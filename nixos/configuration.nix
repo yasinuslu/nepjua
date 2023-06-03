@@ -19,7 +19,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "infinite-nix"; # Define your hostname.
+  networking.hostName = "trippy-nix"; # Define your hostname.
   
   # Enable networking
   networking.networkmanager.enable = true;
@@ -118,7 +118,7 @@
 
   fileSystems."/home/nepjua/backup" =
     { device = "/dev/nvme0n1p2";
-      fsType = "ext4";
+      fsType = "btrfs";
     };
 
   # fileSystems."/home/nepjua/cold-storage" =
@@ -207,11 +207,6 @@
 
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
-  # security.pam.services.sudo.enableGnomeKeyring = true;
-  # security.pam.services.gdm.enableGnomeKeyring = true;
-  # security.pam.services.sshd.enableGnomeKeyring = true;
-  # security.pam.services.login.enableGnomeKeyring = true;
-  # security.pam.services.polkit.enableGnomeKeyring = true;
 
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

@@ -10,8 +10,7 @@
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
     ./desktop
-    ./fish
-    ./git
+    ./cli
   ];
 
   nixpkgs = {
