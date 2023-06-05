@@ -16,7 +16,7 @@
   };
 
   fileSystems."/export/ayame" = {
-    device = "/mnt/ayame";
+    device = "/mnt/ayame/export";
     options = ["bind"];
   };
 
@@ -26,10 +26,13 @@
     lockdPort = 4001;
     mountdPort = 4002;
     statdPort = 4000;
-    extraNfsdConfig = '''';
+    # extraNfsdConfig = ''
+    #   # Allow clients to write as nobody:nogroup
+    #   nfsd args - -maproot=nobody -mapall=nogroup
+    # '';
     exports = ''
-      /export         192.168.50.21(rw,fsid=0,no_subtree_check) 192.168.50.22(rw,fsid=0,no_subtree_check)
-      /export/ayame  192.168.50.21(rw,nohide,insecure,no_subtree_check) 192.168.50.22(rw,nohide,insecure,no_subtree_check)
+      /export        192.168.50.21(rw,fsid=0,no_subtree_check,all_squash) 192.168.50.22(rw,fsid=0,no_subtree_check,all_squash)
+      /export/ayame  192.168.50.21(rw,nohide,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=100) 192.168.50.22(rw,nohide,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=100)
     '';
   };
 

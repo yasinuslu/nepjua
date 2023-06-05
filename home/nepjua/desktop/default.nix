@@ -23,6 +23,7 @@
     discord
     betterdiscordctl
     slack
+    obsidian
   ];
 
   home.sessionVariables = {
