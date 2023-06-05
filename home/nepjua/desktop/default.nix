@@ -24,6 +24,7 @@
     betterdiscordctl
     slack
     obsidian
+    zoom-us
   ];
 
   home.sessionVariables = {
