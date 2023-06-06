@@ -20,6 +20,7 @@
     ./hardware-configuration.nix
     ./gaming
     ./fs.nix
+    ./docker.nix
   ];
 
   # Bootloader.
@@ -62,7 +63,7 @@
       isNormalUser = true;
       description = "Yasin Uslu";
       openssh.authorizedKeys.keys = [];
-      extraGroups = ["networkmanager" "wheel"];
+      extraGroups = ["networkmanager" "wheel" "docker"];
       shell = pkgs.fish;
     };
   };

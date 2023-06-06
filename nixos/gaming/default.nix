@@ -20,5 +20,6 @@
         # List library dependencies here
       ];
     })
+    rare
   ];
 }
