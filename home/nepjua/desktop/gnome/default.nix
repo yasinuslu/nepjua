@@ -1,11 +1,18 @@
-
-{ inputs, lib, config, pkgs, colors, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  colors,
+  ...
+}: {
   imports = [
     ./fonts.dconf.nix
     ./extensions.dconf.nix
     ./keybindings.dconf.nix
     ./mutter.dconf.nix
     ./nautilus.dconf.nix
+    ./theme.nix
   ];
 
   home.packages = with pkgs; [
