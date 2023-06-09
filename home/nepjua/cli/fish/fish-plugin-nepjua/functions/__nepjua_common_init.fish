@@ -98,13 +98,18 @@ function __nepjua_common_init
     fish_add_path $PWD/vendor/bin
   end
 
-  # TODO: install fd with dotfiles and remove if check
-  if type -q fd
-    # use https://github.com/sharkdp/fd for fzf if available, respects .gitignore
-    set -xg FZF_DEFAULT_COMMAND 'fd --type f'
-    # To apply the command to CTRL-T as well
-    set -xg FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+  # FIXME: Learn how to utilize this in home-manager
+  if test -d /etc/nix
+    set -xg NIXPKGS_ALLOW_UNFREE 1
   end
+
+  # TODO: install fd with dotfiles and remove if check
+  # if type -q fd
+  #   # use https://github.com/sharkdp/fd for fzf if available, respects .gitignore
+  #   set -xg FZF_DEFAULT_COMMAND 'fd --type f'
+  #   # To apply the command to CTRL-T as well
+  #   set -xg FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+  # end
 
   set -gx PNPM_HOME "$HOME/.local/share/pnpm"
   set -gx PATH "$PNPM_HOME" $PATH

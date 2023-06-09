@@ -21,7 +21,20 @@
     nodejs
     yarn
     nodePackages.pnpm
-    python3Minimal
+
+    # FIXME: Python area, should be in a separate file
+    # Python
+    python311Full
+
+    # Playwright
+    playwright
+
+    # Direnv
     direnv
   ];
+
+  programs.nix-index.enable = true;
+  programs.command-not-found.enable = false;
+
+  # home.sessionVariables.PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
 }

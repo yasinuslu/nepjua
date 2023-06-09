@@ -17,6 +17,9 @@
 
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-index-database.url = "github:Mic92/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -24,6 +27,7 @@
     home-manager,
     alejandra,
     self,
+    nix-index-database,
     ...
   } @ inputs: rec {
     system = "x86_64-linux";
@@ -41,6 +45,8 @@
             ];
           }
           ./nixos/configuration.nix
+          # nix-index-database.nixosModules.nix-index
+          # {programs.nix-index-database.comma.enable = true;}
         ];
       };
     };
@@ -52,7 +58,11 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs;}; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
-        modules = [./home/nepjua/kaori.nix];
+        modules = [
+          ./home/nepjua/kaori.nix
+          nix-index-database.hmModules.nix-index
+          {programs.nix-index-database.comma.enable = true;}
+        ];
       };
     };
   };
