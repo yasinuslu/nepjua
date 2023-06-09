@@ -26,6 +26,8 @@
     obsidian
     zoom-us
     spotify
+    obs-studio
+    bottles
   ];
 
   services.spotifyd = {
