@@ -31,6 +31,7 @@
 
     # Direnv
     direnv
+    btop
   ];
 
   programs.nix-index.enable = true;
