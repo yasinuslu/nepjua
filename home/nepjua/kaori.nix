@@ -10,6 +10,7 @@
     # ./nvim.nix
     ./desktop
     ./cli
+    ./dev
   ];
 
   nixpkgs = {

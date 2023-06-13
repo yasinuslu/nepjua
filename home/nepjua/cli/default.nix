@@ -26,9 +26,6 @@
     # Python
     python311Full
 
-    # Playwright
-    playwright
-
     # Direnv
     direnv
     btop
