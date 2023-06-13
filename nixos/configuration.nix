@@ -21,12 +21,10 @@
     ./gaming
     ./fs.nix
     ./docker.nix
+    ./bootloader.nix
   ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.supportedFilesystems = ["btrfs" "ext4" "fat" "ntfs"];
+  
 
   networking.hostName = "kaori"; # Define your hostname.
 
