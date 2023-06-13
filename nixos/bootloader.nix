@@ -5,12 +5,20 @@
   pkgs,
   ...
 }: {
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    grub = {
+      enable = true;
+      device = "nodev";
+      useOSProber = true;
+      efiSupport = true;
+      default = "saved";
+    };
+
+    efi.canTouchEfiVariables = true;
+  };
+
   boot.supportedFilesystems = ["btrfs" "ext4" "fat" "ntfs"];
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "nodev";
-  boot.loader.grub.useOSProber = true;
+
+  # Need this to have sync time on Windows.
+  time.hardwareClockInLocalTime = true;
 }
