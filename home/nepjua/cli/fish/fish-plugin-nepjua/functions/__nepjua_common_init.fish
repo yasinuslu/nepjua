@@ -114,4 +114,12 @@ function __nepjua_common_init
   set -gx PNPM_HOME "$HOME/.local/share/pnpm"
   set -gx PATH "$PNPM_HOME" $PATH
 
+  function git-remove-branches-except --argument-names branches --description "Remove all git branches except the specified ones"
+    if test -z "$branches"
+      git branch | grep -v main | xargs git branch -D
+    else
+      set -l branch_regex (string join '|' $branches)
+      git branch | grep -vE "main|$branch_regex" | xargs git branch -D
+    end
+  end
 end
