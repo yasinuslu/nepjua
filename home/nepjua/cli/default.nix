@@ -4,6 +4,7 @@
     ./git
     ./fzf.nix
     ./tmux.nix
+    ./node.nix
   ];
 
   home.packages = with pkgs; [
@@ -18,9 +19,6 @@
     bat
     starship
     vim
-    nodejs
-    yarn
-    nodePackages.pnpm
 
     # FIXME: Python area, should be in a separate file
     # Python
