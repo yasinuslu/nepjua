@@ -58,7 +58,7 @@
     };
 
     darwinConfigurations = {
-      hostname = darwin.lib.darwinSystem {
+      over-9000 = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           {
@@ -67,12 +67,15 @@
             ];
           }
           ./darwin/configuration.nix
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.nepjua = import ./home/kaori.nix;
-          }
+          # home-manager.darwinModules.home-manager
+          # {
+          #   home-manager = {
+          #     useGlobalPkgs = true;
+          #     useUserPackages = true;
+          #     users.nepjua = import ./home/nepjua/darwin.nix;
+          #     extraSpecialArgs = {inherit inputs;};
+          #   };
+          # }
         ];
       };
     };
@@ -85,7 +88,7 @@
         extraSpecialArgs = {inherit inputs;}; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
         modules = [
-          ./home/nepjua/kaori.nix
+          ./home/nepjua/nixos.nix
           nix-index-database.hmModules.nix-index
           {programs.nix-index-database.comma.enable = true;}
         ];
