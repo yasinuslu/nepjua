@@ -9,6 +9,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # hardware.url = "github:nixos/nixos-hardware";
 
     # Shameless plug: looking for a way to nixify your themes and make
@@ -25,6 +30,7 @@
   outputs = {
     nixpkgs,
     home-manager,
+    darwin,
     alejandra,
     self,
     nix-index-database,
@@ -47,6 +53,26 @@
           ./nixos/configuration.nix
           # nix-index-database.nixosModules.nix-index
           # {programs.nix-index-database.comma.enable = true;}
+        ];
+      };
+    };
+
+    darwinConfigurations = {
+      hostname = darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage.${system}
+            ];
+          }
+          ./darwin/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.nepjua = import ./home/kaori.nix;
+          }
         ];
       };
     };
