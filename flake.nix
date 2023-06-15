@@ -36,8 +36,8 @@
     nix-index-database,
     ...
   } @ inputs: rec {
-    system = "x86_64-linux";
-    formatter.${system} = alejandra.defaultPackage.${system};
+    # system = "x86_64-linux";
+    # formatter.${system} = alejandra.defaultPackage.${system};
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
@@ -47,7 +47,7 @@
         modules = [
           {
             environment.systemPackages = [
-              alejandra.defaultPackage.${system}
+              # alejandra.defaultPackage.${system}
             ];
           }
           ./nixos/configuration.nix
@@ -62,20 +62,23 @@
         system = "aarch64-darwin";
         modules = [
           {
-            environment.systemPackages = [
-              alejandra.defaultPackage.${system}
-            ];
+            users.users.nepjua.home = "/Users/nepjua";
           }
-          ./darwin/configuration.nix
-          # home-manager.darwinModules.home-manager
           # {
-          #   home-manager = {
-          #     useGlobalPkgs = true;
-          #     useUserPackages = true;
-          #     users.nepjua = import ./home/nepjua/darwin.nix;
-          #     extraSpecialArgs = {inherit inputs;};
-          #   };
+          #   environment.systemPackages = [
+          #     alejandra.defaultPackage.${system}
+          #   ];
           # }
+          ./darwin/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/nepjua/darwin.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
         ];
       };
     };
