@@ -49,7 +49,7 @@
     #         environment.systemPackages = [
     #           alejandra.defaultPackage."x86_64-linux"
     #         ];
-    #       }
+    #       }±±
     #       ./nixos/configuration.nix
     #       nix-index-database.nixosModules.nix-index
     #       {programs.nix-index-database.comma.enable = true;}
@@ -75,6 +75,29 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users.nepjua = import ./home/nepjua/darwin.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+        ];
+      };
+
+      ryuko = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."aarch64-darwin"
+            ];
+          }
+          ./darwin/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {programs.nix-index-database.comma.enable = true;}
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.musu = import ./home/darwin.nix;
               extraSpecialArgs = {inherit inputs;};
             };
           }
