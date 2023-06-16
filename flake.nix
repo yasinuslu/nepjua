@@ -66,7 +66,7 @@
               alejandra.defaultPackage."aarch64-darwin"
             ];
           }
-          ./darwin/configuration.nix
+          ./darwin/over-9000.nix
           nix-index-database.nixosModules.nix-index
           {programs.nix-index-database.comma.enable = true;}
           home-manager.darwinModules.home-manager
@@ -89,7 +89,7 @@
               alejandra.defaultPackage."aarch64-darwin"
             ];
           }
-          ./darwin/configuration.nix
+          ./darwin/ryuko.nix
           nix-index-database.nixosModules.nix-index
           {programs.nix-index-database.comma.enable = true;}
           home-manager.darwinModules.home-manager
@@ -97,7 +97,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.musu = import ./home/darwin.nix;
+              users.musu = import ./home/musu-darwin.nix;
               extraSpecialArgs = {inherit inputs;};
             };
           }
