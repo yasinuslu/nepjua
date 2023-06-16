@@ -35,38 +35,40 @@
     self,
     nix-index-database,
     ...
-  } @ inputs: rec {
-    # system = "x86_64-linux";
-    # formatter.${system} = alejandra.defaultPackage.${system};
+  } @ inputs: {
+    # formatter."x86_64-linux" = alejandra.defaultPackage."x86_64-linux";
+    formatter."aarch64-darwin" = alejandra.defaultPackage."aarch64-darwin";
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
-    nixosConfigurations = {
-      kaori = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+    # nixosConfigurations = {
+    #   kaori = nixpkgs.lib.nixosSystem {
+    #     specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
-        modules = [
-          {
-            environment.systemPackages = [
-              # alejandra.defaultPackage.${system}
-            ];
-          }
-          ./nixos/configuration.nix
-          # nix-index-database.nixosModules.nix-index
-          # {programs.nix-index-database.comma.enable = true;}
-        ];
-      };
-    };
+    #     modules = [
+    #       {
+    #         environment.systemPackages = [
+    #           alejandra.defaultPackage."x86_64-linux"
+    #         ];
+    #       }
+    #       ./nixos/configuration.nix
+    #       nix-index-database.nixosModules.nix-index
+    #       {programs.nix-index-database.comma.enable = true;}
+    #     ];
+    #   };
+    # };
 
     darwinConfigurations = {
       over-9000 = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
-          # {
-          #   environment.systemPackages = [
-          #     alejandra.defaultPackage.${system}
-          #   ];
-          # }
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."aarch64-darwin"
+            ];
+          }
           ./darwin/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {programs.nix-index-database.comma.enable = true;}
           home-manager.darwinModules.home-manager
           {
             home-manager = {

@@ -9,14 +9,6 @@
     # ./development
   ];
 
-  home.packages = with pkgs; [
-    rectangle
-  ];
-
-  programs.vscode = {
-    enable = true;
-  };
-
   # # Enable home-manager
   # programs.home-manager.enable = true;
 

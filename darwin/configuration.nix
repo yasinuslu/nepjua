@@ -1,15 +1,13 @@
-{ config, pkgs, ... }:
-
 {
-  programs.fish = {
-    enable = true;
-  };
-  
-  users.users.nepjua.home = "/Users/nepjua";
-  users.users.nepjua.shell = pkgs.fish;
-  
+  config,
+  pkgs,
+  ...
+}: {
   nix.extraOptions = ''
-    #build-user-group = nixbld
+    extra-nix-path = nixpkgs=flake:nixpkgs
+    bash-prompt-prefix = (nix:$name)\040
+    auto-optimise-store = true
+    build-users-group = nixbld
     experimental-features = nix-command flakes
     extra-platforms = aarch64-darwin x86_64-darwin
   '';
@@ -38,7 +36,34 @@
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; [];
+  environment.systemPackages = with pkgs; [
+    bashInteractive
+    zsh
+    fish
+  ];
+
+  environment.shells = [pkgs.bashInteractive pkgs.zsh pkgs.fish];
+  programs.zsh.enable = true;
+  programs.fish.enable = true;
+
+  users.users.nepjua.home = "/Users/nepjua";
+  users.users.nepjua.shell = pkgs.fish;
+
+  services.spotifyd.enable = true;
+
+  homebrew = {
+    enable = true;
+    casks = [
+      "google-chrome"
+      "1password"
+      "alt-tab"
+      "iterm2"
+      "microsoft-edge"
+      "copyq"
+      "visual-studio-code"
+      "rectangle"
+    ];
+  };
 
   fonts = {
     fontDir.enable = true;
@@ -55,9 +80,35 @@
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true;  # default shell on catalina
-  # programs.fish.enable = true;
+  system.keyboard = {
+    enableKeyMapping = true;
+    nonUS.remapTilde = true;
+  };
+
+  system.defaults = {
+    dock = {
+      autohide = true;
+      # orientation = "right";
+    };
+
+    finder = {
+      AppleShowAllExtensions = true;
+      _FXShowPosixPathInTitle = true;
+      FXEnableExtensionChangeWarning = false;
+    };
+
+    NSGlobalDomain = {
+      _HIHideMenuBar = false;
+      "com.apple.swipescrolldirection" = true;
+    };
+
+    screencapture.location = "/tmp";
+
+    trackpad = {
+      Clicking = true;
+      TrackpadThreeFingerDrag = true;
+    };
+  };
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

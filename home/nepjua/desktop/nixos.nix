@@ -10,7 +10,6 @@
     ./common.nix
     ./gnome
     ./browser.nix
-    ./_1password.nix
   ];
 
   home.file = {
@@ -22,8 +21,17 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    vlc
     copyq
     parsec-bin
+    obs-studio
+    bottles
+    qbittorrent
+    discord
+    slack
+    obsidian
+    zoom-us
+    spotify
   ];
 
   services.spotifyd = {
