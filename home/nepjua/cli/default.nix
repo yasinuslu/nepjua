@@ -12,7 +12,6 @@
 
     wget
     tldr
-    parsec-bin
     jq
     lsd
     bat

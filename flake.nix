@@ -61,9 +61,6 @@
       over-9000 = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
-          {
-            users.users.nepjua.home = "/Users/nepjua";
-          }
           # {
           #   environment.systemPackages = [
           #     alejandra.defaultPackage.${system}

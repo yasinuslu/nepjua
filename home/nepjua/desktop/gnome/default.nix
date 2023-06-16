@@ -7,6 +7,7 @@
   ...
 }: {
   imports = [
+    ./guake
     ./fonts.dconf.nix
     ./extensions.dconf.nix
     ./keybindings.dconf.nix

@@ -1,6 +1,13 @@
 { config, pkgs, ... }:
 
 {
+  programs.fish = {
+    enable = true;
+  };
+  
+  users.users.nepjua.home = "/Users/nepjua";
+  users.users.nepjua.shell = pkgs.fish;
+  
   nix.extraOptions = ''
     #build-user-group = nixbld
     experimental-features = nix-command flakes
@@ -32,6 +39,13 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [];
+
+  fonts = {
+    fontDir.enable = true;
+    fonts = with pkgs; [
+      (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
+    ];
+  };
 
   # Use a custom configuration.nix location.
   # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
