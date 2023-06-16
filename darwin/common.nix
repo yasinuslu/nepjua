@@ -46,9 +46,6 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
-  users.users.nepjua.home = "/Users/nepjua";
-  users.users.nepjua.shell = pkgs.fish;
-
   services.spotifyd.enable = true;
 
   homebrew = {
