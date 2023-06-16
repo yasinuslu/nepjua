@@ -46,10 +46,18 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
+  environment.shellAliases = {
+    docker = "podman";
+    "docker-compose" = "podman-compose";
+  };
   services.spotifyd.enable = true;
 
   homebrew = {
     enable = true;
+    brews = [
+      "podman"
+      "podman-compose"
+    ];
     casks = [
       "google-chrome"
       "1password"
@@ -59,6 +67,13 @@
       "copyq"
       "visual-studio-code"
       "rectangle"
+      "slack"
+      "microsoft-office"
+      "zoom"
+      "podman-desktop"
+      "whatsapp"
+      "notion"
+      "obsidian"
     ];
   };
 
