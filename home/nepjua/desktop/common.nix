@@ -25,10 +25,6 @@
     bottles
   ];
 
-  services.spotifyd = {
-    enable = true;
-  };
-
   home.sessionVariables = {
     NIXPKGS_ALLOW_UNFREE = "1";
   };
