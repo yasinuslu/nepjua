@@ -1,12 +1,9 @@
 {inputs, pkgs, ...}: {
   # You can import other home-manager modules here
   imports = [
-    # You can also split up your configuration and import pieces of it here:
     ./common.nix
     ./cli
     ./desktop/darwin.nix
-    # ./desktop
-    # ./development
   ];
 
   # # Enable home-manager

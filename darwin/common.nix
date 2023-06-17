@@ -74,6 +74,10 @@
       "whatsapp"
       "notion"
       "obsidian"
+      "spotify"
+      "steam"
+      "vlc"
+      "qbittorrent"
     ];
   };
 
