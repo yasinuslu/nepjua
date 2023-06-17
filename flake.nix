@@ -9,6 +9,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # hardware.url = "github:nixos/nixos-hardware";
 
     # Shameless plug: looking for a way to nixify your themes and make
@@ -25,28 +30,77 @@
   outputs = {
     nixpkgs,
     home-manager,
+    darwin,
     alejandra,
     self,
     nix-index-database,
     ...
-  } @ inputs: rec {
-    system = "x86_64-linux";
-    formatter.${system} = alejandra.defaultPackage.${system};
+  } @ inputs: {
+    # formatter."x86_64-linux" = alejandra.defaultPackage."x86_64-linux";
+    formatter."aarch64-darwin" = alejandra.defaultPackage."aarch64-darwin";
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
-    nixosConfigurations = {
-      kaori = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+    # nixosConfigurations = {
+    #   kaori = nixpkgs.lib.nixosSystem {
+    #     specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
+    #     modules = [
+    #       {
+    #         environment.systemPackages = [
+    #           alejandra.defaultPackage."x86_64-linux"
+    #         ];
+    #       }±±
+    #       ./nixos/configuration.nix
+    #       nix-index-database.nixosModules.nix-index
+    #       {programs.nix-index-database.comma.enable = true;}
+    #     ];
+    #   };
+    # };
+
+    darwinConfigurations = {
+      over-9000 = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
         modules = [
           {
             environment.systemPackages = [
-              alejandra.defaultPackage.${system}
+              alejandra.defaultPackage."aarch64-darwin"
             ];
           }
-          ./nixos/configuration.nix
-          # nix-index-database.nixosModules.nix-index
-          # {programs.nix-index-database.comma.enable = true;}
+          ./darwin/over-9000.nix
+          nix-index-database.nixosModules.nix-index
+          {programs.nix-index-database.comma.enable = true;}
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/darwin.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+        ];
+      };
+
+      ryuko = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."aarch64-darwin"
+            ];
+          }
+          ./darwin/ryuko.nix
+          nix-index-database.nixosModules.nix-index
+          {programs.nix-index-database.comma.enable = true;}
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.musu = import ./home/musu-darwin.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
         ];
       };
     };
@@ -59,7 +113,7 @@
         extraSpecialArgs = {inherit inputs;}; # Pass flake inputs to our config
         # > Our main home-manager configuration file <
         modules = [
-          ./home/nepjua/kaori.nix
+          ./home/nixos.nix
           nix-index-database.hmModules.nix-index
           {programs.nix-index-database.comma.enable = true;}
         ];

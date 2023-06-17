@@ -7,27 +7,31 @@
   ...
 }: {
   imports = [
+    ./common.nix
     ./gnome
-    ./guake
     ./browser.nix
-    ./_1password.nix
   ];
+
+  home.file = {
+    ".config/autostart/1password.desktop".source = "${pkgs._1password-gui.outPath}/share/applications/1password.desktop";
+    ".config/autostart/copyq.desktop".source = "${pkgs.copyq.outPath}/share/applications/com.github.hluk.copyq.desktop";
+    ".config/autostart/guake.desktop".source = "${pkgs.guake.outPath}/share/applications/guake.desktop";
+  };
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    # Applications
-    copyq
-    qbittorrent
     vlc
+    copyq
+    parsec-bin
+    obs-studio
+    bottles
+    qbittorrent
     discord
-    betterdiscordctl
     slack
     obsidian
     zoom-us
     spotify
-    obs-studio
-    bottles
   ];
 
   services.spotifyd = {
@@ -36,7 +40,5 @@
 
   home.sessionVariables = {
     XDG_DATA_DIRS = "/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
-    # NIXPKGS_ALLOW_INSECURE = "1";
-    NIXPKGS_ALLOW_UNFREE = "1";
   };
 }
