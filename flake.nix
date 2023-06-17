@@ -36,12 +36,13 @@
     nix-index-database,
     ...
   } @ inputs: {
-    # formatter."x86_64-linux" = alejandra.defaultPackage."x86_64-linux";
+    formatter."x86_64-linux" = alejandra.defaultPackage."x86_64-linux";
     formatter."aarch64-darwin" = alejandra.defaultPackage."aarch64-darwin";
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
       kaori = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
         specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
         modules = [
@@ -53,9 +54,18 @@
           ./nixos/configuration.nix
           nix-index-database.nixosModules.nix-index
           {
-            programs.nix-index-database.comma.enable = true; 
+            programs.nix-index-database.comma.enable = true;
             programs.nix-index.enable = true;
             programs.command-not-found.enable = false;
+          }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/nixos.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
           }
         ];
       };
@@ -105,21 +115,6 @@
               extraSpecialArgs = {inherit inputs;};
             };
           }
-        ];
-      };
-    };
-
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-      "nepjua@kaori" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs;}; # Pass flake inputs to our config
-        # > Our main home-manager configuration file <
-        modules = [
-          ./home/nixos.nix
-          nix-index-database.hmModules.nix-index
-          {programs.nix-index-database.comma.enable = true;}
         ];
       };
     };
