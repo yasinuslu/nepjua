@@ -40,22 +40,26 @@
     formatter."aarch64-darwin" = alejandra.defaultPackage."aarch64-darwin";
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
-    # nixosConfigurations = {
-    #   kaori = nixpkgs.lib.nixosSystem {
-    #     specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+    nixosConfigurations = {
+      kaori = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
-    #     modules = [
-    #       {
-    #         environment.systemPackages = [
-    #           alejandra.defaultPackage."x86_64-linux"
-    #         ];
-    #       }±±
-    #       ./nixos/configuration.nix
-    #       nix-index-database.nixosModules.nix-index
-    #       {programs.nix-index-database.comma.enable = true;}
-    #     ];
-    #   };
-    # };
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."x86_64-linux"
+            ];
+          }
+          ./nixos/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {
+            programs.nix-index-database.comma.enable = true; 
+            programs.nix-index.enable = true;
+            programs.command-not-found.enable = false;
+          }
+        ];
+      };
+    };
 
     darwinConfigurations = {
       over-9000 = darwin.lib.darwinSystem {

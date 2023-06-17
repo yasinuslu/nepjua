@@ -28,8 +28,5 @@
     btop
   ];
 
-  programs.nix-index.enable = true;
-  programs.command-not-found.enable = false;
-
   # home.sessionVariables.PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
 }

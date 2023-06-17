@@ -31,8 +31,8 @@
     #   nfsd args - -maproot=nobody -mapall=nogroup
     # '';
     exports = ''
-      /export        192.168.50.21(rw,fsid=0,no_subtree_check,all_squash) 192.168.50.22(rw,fsid=0,no_subtree_check,all_squash)
-      /export/ayame  192.168.50.21(rw,nohide,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=100) 192.168.50.22(rw,nohide,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=100)
+      /export        192.168.50.21(rw,fsid=0,no_subtree_check,all_squash) 192.168.50.22(rw,fsid=0,no_subtree_check,all_squash) 192.168.50.23(rw,fsid=0,no_subtree_check,all_squash)
+      /export/ayame  192.168.50.21(rw,nohide,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=100) 192.168.50.22(rw,nohide,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=100) 192.168.50.23(rw,nohide,insecure,no_subtree_check,all_squash,anonuid=1000,anongid=100)
     '';
   };
 
