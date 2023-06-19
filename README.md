@@ -1,22 +1,17 @@
 # Nepjua Nix Config
 
-## TLDR
+## Installation
+
+### MacOS Configuration
 
 ```sh
-sudo nixos-rebuild switch --flake .#kaori
-home-manager switch --flake .#nepjua@kaori
+darwin-rebuild switch --flake .#over-9000
 ```
 
-## Installation
+### NixOS Configuration
 
 Install the system
 
 ```sh
 sudo nixos-rebuild switch --flake .#kaori
-```
-
-Install home-manager
-
-```sh
-home-manager switch --flake .#nepjua@kaori
 ```
