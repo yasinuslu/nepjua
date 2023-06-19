@@ -3,6 +3,10 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./programs/alt-tab.nix
+  ];
+
   nix.extraOptions = ''
     extra-nix-path = nixpkgs=flake:nixpkgs
     bash-prompt-prefix = (nix:$name)\040
@@ -78,6 +82,8 @@
       "steam"
       "vlc"
       "qbittorrent"
+      "mullvadvpn"
+      "parsec"
     ];
   };
 
