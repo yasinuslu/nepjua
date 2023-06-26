@@ -50,11 +50,12 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
+  services.spotifyd.enable = true;
+
   environment.shellAliases = {
     docker = "podman";
     "docker-compose" = "podman-compose";
   };
-  services.spotifyd.enable = true;
 
   homebrew = {
     enable = true;

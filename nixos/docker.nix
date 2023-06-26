@@ -11,4 +11,9 @@
   environment.systemPackages = with pkgs; [
     docker-compose
   ];
+
+  environment.shellAliases = {
+    docker = "podman";
+    "docker-compose" = "podman-compose";
+  };
 }
