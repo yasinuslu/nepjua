@@ -47,15 +47,11 @@
   ];
 
   environment.shells = [pkgs.bashInteractive pkgs.zsh pkgs.fish];
+  programs.bash.enable = true;
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
   services.spotifyd.enable = true;
-
-  environment.shellAliases = {
-    docker = "podman";
-    "docker-compose" = "podman-compose";
-  };
 
   homebrew = {
     enable = true;
