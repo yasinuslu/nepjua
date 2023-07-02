@@ -81,6 +81,8 @@
       "qbittorrent"
       "mullvadvpn"
       "parsec"
+      "discord"
+      "anydesk"
     ];
   };
 

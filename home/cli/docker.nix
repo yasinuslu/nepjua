@@ -17,9 +17,4 @@
     docker = "podman";
     "docker-compose" = "podman-compose";
   };
-
-  environment.shellAliases = {
-    docker = "podman";
-    "docker-compose" = "podman-compose";
-  };
 }
