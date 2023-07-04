@@ -1,6 +1,13 @@
-{inputs, pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     inputs.nix-colors.homeManagerModule
   ];
+
+  programs.java.enable = true;
+  programs.gh.enable = true;
 }

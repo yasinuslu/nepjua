@@ -7,6 +7,7 @@
     "alt-tab"
   ];
 
+  system.defaults.menuExtraClock.ShowDayOfWeek = true;
   system.defaults.CustomUserPreferences = {
     "com.lwouis.alt-tab-macos" = {
       blacklist = builtins.toJSON [
@@ -71,10 +72,10 @@
           ignore = "0";
         }
       ];
-      cursorFollowFocusEnabled = false;
+      cursorFollowFocusEnabled = "true";
       holdShortcut = builtins.fromJSON "\"\\u2318\"";
       holdShortcut2 = builtins.fromJSON "\"\\u2318\"";
-      mouseHoverEnabled = true;
+      mouseHoverEnabled = "true";
       nextWindowShortcut3 = builtins.fromJSON "\"\\u21e5\"";
       screensToShow = 1;
       showFullscreenWindows = 1;
