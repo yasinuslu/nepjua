@@ -32,11 +32,6 @@ function __nepjua_common_init
     set -xg KUBECONFIG (echo $HOME/.kube/config* | sed -e "s/\ /:/g")
   end
 
-  if type -q podman
-    alias docker podman
-    alias docker-compose podman-compose
-  end
-
   if [ "$IS_WSL" = "0" ]
     # we're in a non-wsl unix environment
     __nepjua_unix_init

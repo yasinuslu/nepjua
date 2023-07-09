@@ -1,14 +1,12 @@
 [tool.poetry]
-name = "nix-config"
+name = "tooling"
 version = "0.1.0"
 description = ""
 authors = ["Yasin Uslu <nepjua@gmail.com>"]
 readme = "README.md"
-packages = [{include = "tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-poetry = "^1.5.1"
 
 
 [build-system]

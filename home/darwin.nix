@@ -1,8 +1,12 @@
-{inputs, pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   # You can import other home-manager modules here
   imports = [
     ./common.nix
-    ./cli
+    ./cli/darwin.nix
     ./desktop/darwin.nix
   ];
 

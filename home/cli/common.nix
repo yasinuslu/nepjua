@@ -5,7 +5,6 @@
     ./fzf.nix
     ./tmux.nix
     ./node.nix
-    ./docker.nix
   ];
 
   home.packages = with pkgs; [

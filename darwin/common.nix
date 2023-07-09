@@ -56,8 +56,7 @@
   homebrew = {
     enable = true;
     brews = [
-      "podman"
-      "podman-compose"
+      "composer"
     ];
     casks = [
       "google-chrome"
@@ -71,7 +70,6 @@
       "slack"
       "microsoft-office"
       "zoom"
-      "podman-desktop"
       "whatsapp"
       "notion"
       "obsidian"
@@ -83,6 +81,7 @@
       "parsec"
       "discord"
       "anydesk"
+      "rancher"
     ];
   };
 
