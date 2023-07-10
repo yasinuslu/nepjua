@@ -10,6 +10,8 @@
     ./desktop/darwin.nix
   ];
 
+  home.file.".config/karabiner/karabiner.json".source = ./karabiner.json;
+
   # # Enable home-manager
   # programs.home-manager.enable = true;
 

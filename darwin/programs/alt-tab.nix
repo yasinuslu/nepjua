@@ -72,7 +72,7 @@
           ignore = "0";
         }
       ];
-      cursorFollowFocusEnabled = "true";
+      cursorFollowFocusEnabled = "false";
       holdShortcut = builtins.fromJSON "\"\\u2318\"";
       holdShortcut2 = builtins.fromJSON "\"\\u2318\"";
       mouseHoverEnabled = "true";

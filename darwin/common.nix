@@ -100,6 +100,8 @@
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
+  services.karabiner-elements.enable = true;
+
   system.keyboard = {
     enableKeyMapping = true;
     nonUS.remapTilde = true;
