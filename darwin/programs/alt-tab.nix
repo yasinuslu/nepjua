@@ -71,6 +71,36 @@
           hide = "2";
           ignore = "0";
         }
+        {
+          ignore = "0";
+          bundleIdentifier = "com.googlecode.iterm2";
+          hide = "2";
+        }
+        {
+          ignore = "0";
+          bundleIdentifier = "com.microsoft.Outlook";
+          hide = "2";
+        }
+        {
+          ignore = "0";
+          bundleIdentifier = "notion.id";
+          hide = "2";
+        }
+        {
+          ignore = "0";
+          bundleIdentifier = "com.microsoft.VSCode";
+          hide = "2";
+        }
+        {
+          ignore = "0";
+          bundleIdentifier = "us.zoom.xos";
+          hide = "2";
+        }
+        {
+          ignore = "0";
+          bundleIdentifier = "com.spotify.client";
+          hide = "2";
+        }
       ];
       cursorFollowFocusEnabled = "false";
       holdShortcut = builtins.fromJSON "\"\\u2318\"";

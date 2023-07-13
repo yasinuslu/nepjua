@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  config,
   ...
 }: {
   # You can import other home-manager modules here
@@ -10,7 +11,9 @@
     ./desktop/darwin.nix
   ];
 
-  home.file.".config/karabiner/karabiner.json".source = ./karabiner.json;
+  home.file = {
+    ".config/karabiner/karabiner.json".source = config.lib.file.mkOutOfStoreSymlink ./darwin/karabiner.json;
+  };
 
   # # Enable home-manager
   # programs.home-manager.enable = true;
