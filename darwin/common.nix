@@ -7,6 +7,11 @@
     ./programs/alt-tab.nix
   ];
 
+  nix.settings = {
+    keep-outputs = true;
+    keep-derivations = true;
+  };
+
   nix.extraOptions = ''
     extra-nix-path = nixpkgs=flake:nixpkgs
     bash-prompt-prefix = (nix:$name)\040

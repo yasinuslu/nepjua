@@ -8,6 +8,10 @@
     inputs.nix-colors.homeManagerModule
   ];
 
-  programs.java.enable = true;
-  programs.gh.enable = true;
+  programs = {
+    java.enable = true;
+    gh.enable = true;
+    direnv.enable = true;
+    direnv.nix-direnv.enable = true;
+  };
 }

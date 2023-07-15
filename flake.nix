@@ -36,8 +36,6 @@
     nix-index-database,
     ...
   } @ inputs: {
-    formatter."x86_64-linux" = alejandra.defaultPackage."x86_64-linux";
-    formatter."aarch64-darwin" = alejandra.defaultPackage."aarch64-darwin";
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {

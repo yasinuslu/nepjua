@@ -23,8 +23,6 @@
     # Python
     python311Full
 
-    # Direnv
-    direnv
     btop
   ];
 
