@@ -26,5 +26,7 @@
     btop
   ];
 
-  # home.sessionVariables.PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+  home.sessionVariables = {
+    DIRENV_LOG_FORMAT = "";
+  };
 }
