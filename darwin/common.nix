@@ -60,9 +60,6 @@
 
   homebrew = {
     enable = true;
-    brews = [
-      "composer"
-    ];
     casks = [
       "google-chrome"
       "1password"
