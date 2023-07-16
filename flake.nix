@@ -70,7 +70,7 @@
     };
 
     darwinConfigurations = {
-      over-9000 = darwin.lib.darwinSystem {
+      raiden = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           {
@@ -78,7 +78,7 @@
               alejandra.defaultPackage."aarch64-darwin"
             ];
           }
-          ./darwin/over-9000.nix
+          ./darwin/raiden.nix
           nix-index-database.nixosModules.nix-index
           {programs.nix-index-database.comma.enable = true;}
           home-manager.darwinModules.home-manager

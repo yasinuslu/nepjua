@@ -13,7 +13,7 @@
 Execute this every time you make a change to the configuration
 
 ```sh
-darwin-rebuild switch --flake .#over-9000
+darwin-rebuild switch --flake .#raiden
 ```
 
 ### NixOS Configuration
