@@ -117,4 +117,17 @@ function __nepjua_common_init
       git branch | grep -vE "main|$branch_regex" | xargs git branch -D
     end
   end
+
+  function git-local-upstream-exec --description "Execute given command in an upstream that is defined via local filesystem"
+    set current_dir (pwd)
+    set upstream (git config --local --get remote.origin.url | sed -e 's/.*\/\([^ ]*\/[^.]*\)\.git/\1/')
+    cd $upstream
+    eval $argv
+    cd $current_dir
+  end
+
+  function git-with-all-upstream-exec --description "Execute given command both in current git and upstream"
+    git-local-upstream-exec $argv
+    eval $argv
+  end
 end

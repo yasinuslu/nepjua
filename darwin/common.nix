@@ -84,6 +84,7 @@
       "discord"
       "anydesk"
       "rancher"
+      "teamviewer"
     ];
   };
 
