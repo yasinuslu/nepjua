@@ -127,7 +127,7 @@
       "com.apple.swipescrolldirection" = true;
     };
 
-    screencapture.location = "/tmp";
+    screencapture.location = "/tmp/screencapture";
 
     trackpad = {
       Clicking = true;
