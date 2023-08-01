@@ -85,6 +85,7 @@
       "anydesk"
       "rancher"
       "teamviewer"
+      "mos"
     ];
   };
 
