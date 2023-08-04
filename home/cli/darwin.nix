@@ -1,9 +1,11 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [
     ./common.nix
   ];
 
-  home.sessionVariables = {
-    PATH = "$PATH:$HOME/.rd/bin";
-  };
+  home.extraPaths = ["$HOME/.rd/bin"];
 }

@@ -8,10 +8,11 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
-    ./common.nix
+    ./entry.nix
     ./cli/nixos.nix
     ./desktop/nixos.nix
     ./development
+    ./exit.nix
   ];
 
   # nixpkgs = {
