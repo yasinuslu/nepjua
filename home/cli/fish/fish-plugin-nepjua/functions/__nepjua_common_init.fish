@@ -73,14 +73,6 @@ function __nepjua_common_init
     source $HOME/.config/op/plugins.sh
   end
 
-  if type -q npm
-    fish_add_path (npm -g bin)
-  end
-
-  if type -q yarn
-    fish_add_path (yarn global bin)
-  end
-
   if type -q starship
     starship init fish | source
   end
@@ -105,9 +97,6 @@ function __nepjua_common_init
   #   # To apply the command to CTRL-T as well
   #   set -xg FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
   # end
-
-  set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-  set -gx PATH "$PNPM_HOME" $PATH
 
   function git-remove-branches-except --argument-names branches --description "Remove all git branches except the specified ones"
     if test -z "$branches"
