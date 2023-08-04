@@ -4,7 +4,6 @@
   config,
   ...
 }: {
-  # You can import other home-manager modules here
   imports = [
     ./entry.nix
     ./cli/darwin.nix
