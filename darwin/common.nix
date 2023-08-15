@@ -4,7 +4,8 @@
   ...
 }: {
   imports = [
-    ./programs/alt-tab.nix
+    ./apps/alt-tab.nix
+    ./apps/all-apps.nix
   ];
 
   nix.settings = {
@@ -57,37 +58,6 @@
   programs.fish.enable = true;
 
   services.spotifyd.enable = true;
-
-  homebrew = {
-    enable = true;
-    casks = [
-      "google-chrome"
-      "1password"
-      "alt-tab"
-      "iterm2"
-      "microsoft-edge"
-      "copyq"
-      "visual-studio-code"
-      "rectangle"
-      "slack"
-      "microsoft-office"
-      "zoom"
-      "whatsapp"
-      "notion"
-      "obsidian"
-      "spotify"
-      "steam"
-      "vlc"
-      "qbittorrent"
-      "mullvadvpn"
-      "parsec"
-      "discord"
-      "anydesk"
-      "rancher"
-      "teamviewer"
-      "mos"
-    ];
-  };
 
   fonts = {
     fontDir.enable = true;
