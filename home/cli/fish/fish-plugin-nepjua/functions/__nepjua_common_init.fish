@@ -73,14 +73,6 @@ function __nepjua_common_init
     source $HOME/.config/op/plugins.sh
   end
 
-  if type -q npm
-    fish_add_path (npm -g bin)
-  end
-
-  if type -q yarn
-    fish_add_path (yarn global bin)
-  end
-
   if type -q starship
     starship init fish | source
   end
@@ -106,9 +98,6 @@ function __nepjua_common_init
   #   set -xg FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
   # end
 
-  set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-  set -gx PATH "$PNPM_HOME" $PATH
-
   function git-remove-branches-except --argument-names branches --description "Remove all git branches except the specified ones"
     if test -z "$branches"
       git branch | grep -v main | xargs git branch -D
@@ -116,5 +105,18 @@ function __nepjua_common_init
       set -l branch_regex (string join '|' $branches)
       git branch | grep -vE "main|$branch_regex" | xargs git branch -D
     end
+  end
+
+  function git-local-upstream-exec --description "Execute given command in an upstream that is defined via local filesystem"
+    set current_dir (pwd)
+    set upstream (git config --local --get remote.origin.url | sed -e 's/.*\/\([^ ]*\/[^.]*\)\.git/\1/')
+    cd $upstream
+    eval $argv
+    cd $current_dir
+  end
+
+  function git-with-all-upstream-exec --description "Execute given command both in current git and upstream"
+    git-local-upstream-exec $argv
+    eval $argv
   end
 end

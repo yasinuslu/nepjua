@@ -4,11 +4,11 @@
   config,
   ...
 }: {
-  # You can import other home-manager modules here
   imports = [
-    ./common.nix
+    ./entry.nix
     ./cli/darwin.nix
     ./desktop/darwin.nix
+    ./exit.nix
   ];
 
   home.file = {
