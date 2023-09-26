@@ -6,6 +6,7 @@
   imports = [
     ./apps/alt-tab.nix
     ./apps/all-apps.nix
+    ./gui-apps.nix
   ];
 
   nix.settings = {
