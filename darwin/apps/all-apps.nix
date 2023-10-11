@@ -30,9 +30,10 @@
       "anydesk"
       "rancher"
       "teamviewer"
-      "mos"
       "lunar"
       "hiddenbar"
+      "bettermouse"
+      "background-music"
     ];
   };
 }
