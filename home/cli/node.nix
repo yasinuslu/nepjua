@@ -7,6 +7,7 @@
   nodeBinDir = "${pkgs.nodejs}/bin";
   nodeHome = "$HOME/.npm";
   pnpmHome = "$HOME/.nix-mutable/pnpm";
+  bunHome = "$HOME/.bun";
   globalNodeModules = "$HOME/.nix-mutable/npm/node_modules";
 in {
   home.packages = with pkgs; [
@@ -32,7 +33,7 @@ in {
     '';
   };
 
-  home.extraPaths = ["${pnpmHome}" "${globalNodeModules}/bin"];
+  home.extraPaths = ["${pnpmHome}" "${globalNodeModules}/bin" "${bunHome}/bin"];
 
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = globalNodeModules;
