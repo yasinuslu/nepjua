@@ -33,7 +33,6 @@
       "lunar"
       "hiddenbar"
       "bettermouse"
-      "background-music"
     ];
   };
 }
