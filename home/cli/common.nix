@@ -29,6 +29,8 @@
     python311Full
 
     btop
+
+    dos2unix
   ];
 
   home.sessionVariables = {

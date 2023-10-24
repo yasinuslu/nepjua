@@ -30,9 +30,9 @@
       "anydesk"
       "rancher"
       "teamviewer"
-      "mos"
       "lunar"
       "hiddenbar"
+      "bettermouse"
     ];
   };
 }
