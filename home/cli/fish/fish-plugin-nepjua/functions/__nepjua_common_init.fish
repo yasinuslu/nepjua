@@ -18,7 +18,6 @@ function __nepjua_common_init
 
   set -xg NODEJS_CHECK_SIGNATURES no
 
-  fish_add_path $HOME/.fzf/bin
   fish_add_path $HOME/.local/bin
 
   set -xg TERM xterm-256color
@@ -89,14 +88,6 @@ function __nepjua_common_init
   if test -d /etc/nix
     set -xg NIXPKGS_ALLOW_UNFREE 1
   end
-
-  # TODO: install fd with dotfiles and remove if check
-  # if type -q fd
-  #   # use https://github.com/sharkdp/fd for fzf if available, respects .gitignore
-  #   set -xg FZF_DEFAULT_COMMAND 'fd --type f'
-  #   # To apply the command to CTRL-T as well
-  #   set -xg FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
-  # end
 
   function git-remove-branches-except --argument-names branches --description "Remove all git branches except the specified ones"
     if test -z "$branches"
