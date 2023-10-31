@@ -13,7 +13,7 @@
     enableFishIntegration = true;
     enableBashIntegration = true;
 
-    fileWidgetCommand = ''
+    defaultCommand = ''
       fd --type f --strip-cwd-prefix --hidden --follow --exclude .git
     '';
   };
