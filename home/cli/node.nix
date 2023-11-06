@@ -17,8 +17,9 @@ in {
   home.activation = {
     mutableNodeModules = dag.entryAfter ["writeBoundary"] ''
       echo "Cleaning up existing global node_modules..."
-      rm -rf "${npmHome}" "${pnpmHome}"
+      rm -rf "${npmHome}"
       # Optional, when needed
+      # rm -rf "${pnpmHome}"
       # rm -rf "${bunHome}"
       rm -rf "${globalNodeModules}"
       mkdir -p "${globalNodeModules}"
