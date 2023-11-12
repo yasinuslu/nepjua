@@ -11,7 +11,7 @@
   config = {
     programs = {
       java.enable = true;
-      gh.enable = true;
+      gh.enable = false;
       direnv.enable = true;
       direnv.nix-direnv.enable = true;
     };
