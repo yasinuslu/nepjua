@@ -10,6 +10,7 @@
     ./fzf.nix
     ./tmux.nix
     ./node.nix
+    ./deno.nix
   ];
 
   home.packages = with pkgs; [
