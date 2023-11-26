@@ -14,7 +14,7 @@
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
-  networking.hostName = "w3yz.nepjua.org";
+  networking.hostName = "w3yz";
   networking.domain = "w3yz.nepjua.org";
 
   # This setups a SSH server. Very important if you're setting up a headless system.
