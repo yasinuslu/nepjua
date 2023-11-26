@@ -12,7 +12,7 @@
     /etc/nixos/networking.nix
   ];
 
-  boot.cleanTmpDir = true;
+  boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
   networking.hostName = "nix-test";
   networking.domain = "";
@@ -117,4 +117,6 @@
   };
 
   programs.java.enable = true;
+
+  system.stateVersion = "23.11";
 }
