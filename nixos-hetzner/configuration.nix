@@ -14,8 +14,8 @@
 
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
-  networking.hostName = "nix-test";
-  networking.domain = "";
+  networking.hostName = "w3yz.nepjua.org";
+  networking.domain = "w3yz.nepjua.org";
 
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
@@ -33,7 +33,7 @@
       initialPassword = "line-flanker-wingman-sidle";
       isNormalUser = true;
       description = "Yasin Uslu";
-      openssh.authorizedKeys.keys = [];
+      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
       extraGroups = ["networkmanager" "wheel" "docker"];
       shell = pkgs.fish;
     };
