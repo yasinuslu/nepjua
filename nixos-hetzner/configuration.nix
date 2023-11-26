@@ -108,6 +108,7 @@
     htop
     git
     _1password
+    vscode
   ];
 
   programs.fish.enable = true;
