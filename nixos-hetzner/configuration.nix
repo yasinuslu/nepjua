@@ -108,7 +108,6 @@
     htop
     git
     _1password
-    openvscode-server
   ];
 
   programs.fish.enable = true;
