@@ -25,6 +25,8 @@
 
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
   outputs = {
@@ -34,6 +36,7 @@
     alejandra,
     self,
     nix-index-database,
+    vscode-server,
     ...
   } @ inputs: {
     # NixOS configuration entrypoint
@@ -94,6 +97,14 @@
               extraSpecialArgs = {inherit inputs;};
             };
           }
+          vscode-server.nixosModules.default
+          ({
+            config,
+            pkgs,
+            ...
+          }: {
+            services.vscode-server.enable = true;
+          })
         ];
       };
     };
