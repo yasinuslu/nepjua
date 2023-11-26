@@ -87,6 +87,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users.nepjua = import ./home/darwin.nix;
+              users.yasinuslu-mc = import ./home/darwin.nix;
               extraSpecialArgs = {inherit inputs;};
             };
           }
