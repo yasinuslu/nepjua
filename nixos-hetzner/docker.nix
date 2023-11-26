@@ -5,11 +5,14 @@
   pkgs,
   ...
 }: {
-  virtualisation.docker.enable = true;
-  virtualisation.docker.storageDriver = "btrfs";
+  virtualisation.podman = {
+    enable = true;
+    dockerSocket.enable = true;
+    dockerCompat = true;
+  };
 
   environment.systemPackages = with pkgs; [
-    docker-compose
+    podman-compose
   ];
 
   # environment.shellAliases = {
