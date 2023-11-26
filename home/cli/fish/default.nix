@@ -75,7 +75,7 @@
           owner = "jhillyerd";
           repo = "plugin-git";
           rev = "master";
-          sha256 = "sha256-tsw+npcOga8NBM1F8hnsT69k33FS5nK1zaPB1ohasPk=";
+          sha256 = "sha256-efKPbsXxjHm1wVWPJCV8teG4DgZN5dshEzX8PWuhKo4=";
         };
       }
       {
