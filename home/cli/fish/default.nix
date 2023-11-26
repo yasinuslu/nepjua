@@ -57,7 +57,7 @@
           owner = "oh-my-fish";
           repo = "plugin-node-binpath";
           rev = "master";
-          sha256 = "sha256-1pzEf3KabfXRqtNr/rBWAaKAMsWNMvK2UjrR14nf5LQ=";
+          sha256 = "sha256-Hkm9dhTC9lf2sviTIEBa56nayHgNVg8NOIvYg6EslH0=";
         };
       }
       {
