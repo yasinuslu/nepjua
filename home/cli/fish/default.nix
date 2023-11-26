@@ -21,7 +21,7 @@
           owner = "edc";
           repo = "bass";
           rev = "master";
-          sha256 = "sha256-3mFlFiqGfQ+GfNshwKfhQ39AuNMdt8Nv2Vgb7bBV7L4=";
+          sha256 = "sha256-zon5yBcCvL99L2Q5Cf++dfILvkwTezqWpkFUGIoD8Wc=";
         };
       }
       {
