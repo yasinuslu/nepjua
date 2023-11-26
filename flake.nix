@@ -67,6 +67,35 @@
           }
         ];
       };
+
+      hetzner = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."aarch64-linux"
+            ];
+          }
+          ./nixos-hetzner/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {
+            programs.nix-index-database.comma.enable = true;
+            programs.nix-index.enable = true;
+            programs.command-not-found.enable = false;
+          }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/nixos.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+        ];
+      };
     };
 
     darwinConfigurations = {
