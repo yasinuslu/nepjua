@@ -10,6 +10,7 @@
   imports = [
     /etc/nixos/hardware-configuration.nix
     /etc/nixos/networking.nix
+    ./docker.nix
   ];
 
   boot.tmp.cleanOnBoot = true;
@@ -25,6 +26,9 @@
     settings = {
       PermitRootLogin = "yes";
       PasswordAuthentication = false;
+      TCPKeepAlive = true;
+      ClientAliveInterval = 60;
+      ClientAliveCountMax = 120;
     };
   };
 
@@ -34,7 +38,7 @@
       isNormalUser = true;
       description = "Yasin Uslu";
       openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
-      extraGroups = ["networkmanager" "wheel" "docker"];
+      extraGroups = ["networkmanager" "wheel"];
       shell = pkgs.fish;
     };
 
