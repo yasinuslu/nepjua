@@ -69,13 +69,13 @@
       };
 
       hetzner = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
+        system = "aarch64-unknown-linux-gnu";
         specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
         modules = [
           {
             environment.systemPackages = [
-              alejandra.defaultPackage."aarch64-linux"
+              alejandra.defaultPackage."aarch64-unknown-linux-gnu"
             ];
           }
           ./nixos-hetzner/configuration.nix
