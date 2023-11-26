@@ -90,7 +90,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.nepjua = import ./home/nixos.nix;
+              users.nepjua = import ./home/nixos-cloud.nix;
               extraSpecialArgs = {inherit inputs;};
             };
           }
