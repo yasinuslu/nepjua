@@ -24,7 +24,7 @@
     allowSFTP = true;
     settings = {
       PermitRootLogin = "yes";
-      PasswordAuthentication = true;
+      PasswordAuthentication = false;
     };
   };
 
