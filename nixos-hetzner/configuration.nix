@@ -18,6 +18,23 @@
   networking.hostName = "w3yz";
   networking.domain = "w3yz.nepjua.org";
 
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [80 443 22];
+    allowedTCPPortRanges = [
+      {
+        from = 2000;
+        to = 10000;
+      }
+    ];
+    allowedUDPPortRanges = [
+      {
+        from = 2000;
+        to = 10000;
+      }
+    ];
+  };
+
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
