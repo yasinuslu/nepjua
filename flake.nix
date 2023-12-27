@@ -135,7 +135,7 @@
               nix-alien
             ];
             # Optional, needed for `nix-alien-ld`
-            programs.nix-ld.enable = true;
+            # programs.nix-ld.enable = true;
           }
           ./machines/wsl/configuration.nix
           nix-index-database.nixosModules.nix-index
