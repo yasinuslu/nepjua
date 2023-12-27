@@ -7,9 +7,19 @@
   pkgs,
   ...
 }: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./rancher.nix
+  ];
+
   wsl.enable = true;
   wsl.defaultUser = "nepjua";
   wsl.nativeSystemd = true;
+  # wsl.docker-desktop.enable = true;
+
+  # virtualisation.docker = {
+  #   enable = true;
+  # };
 
   # # This setups a SSH server. Very important if you're setting up a headless system.
   # # Feel free to remove if you don't need it.
