@@ -120,7 +120,7 @@
               alejandra.defaultPackage."x86_64-linux"
             ];
           }
-          <nixos-wsl/modules>,
+          <nixos-wsl/modules>
           ./nixos-wsl/configuration.nix
           nix-index-database.nixosModules.nix-index
           {
