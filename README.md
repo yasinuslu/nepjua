@@ -26,6 +26,14 @@ Install the system
 sudo nixos-rebuild switch --flake .#kaori
 ```
 
+### NixOS-WSL Configuration
+
+Install the system
+
+```sh
+sudo nixos-rebuild switch --flake .#wsl --impure
+```
+
 ### Hetzner Cloud Configuration
 
 Add this cloud-config:

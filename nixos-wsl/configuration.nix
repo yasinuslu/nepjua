@@ -49,19 +49,19 @@
   time.timeZone = "Europe/Istanbul";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  # i18n.defaultLocale = "en_US.UTF-8";
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "tr_TR.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "tr_TR.UTF-8";
-    LC_TIME = "tr_TR.UTF-8";
-  };
+  # i18n.extraLocaleSettings = {
+  #   LC_ADDRESS = "en_US.UTF-8";
+  #   LC_IDENTIFICATION = "en_US.UTF-8";
+  #   LC_MEASUREMENT = "tr_TR.UTF-8";
+  #   LC_MONETARY = "en_US.UTF-8";
+  #   LC_NAME = "en_US.UTF-8";
+  #   LC_NUMERIC = "en_US.UTF-8";
+  #   LC_PAPER = "en_US.UTF-8";
+  #   LC_TELEPHONE = "tr_TR.UTF-8";
+  #   LC_TIME = "tr_TR.UTF-8";
+  # };
 
   nixpkgs = {
     # You can add overlays here
