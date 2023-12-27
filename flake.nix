@@ -54,7 +54,7 @@
               alejandra.defaultPackage."x86_64-linux"
             ];
           }
-          ./nixos/configuration.nix
+          ./machines/linux/configuration.nix
           nix-index-database.nixosModules.nix-index
           {
             programs.nix-index-database.comma.enable = true;
@@ -83,7 +83,7 @@
               alejandra.defaultPackage."aarch64-linux"
             ];
           }
-          ./nixos-hetzner/configuration.nix
+          ./machines/hetzner/configuration.nix
           nix-index-database.nixosModules.nix-index
           {
             programs.nix-index-database.comma.enable = true;
@@ -121,7 +121,7 @@
             ];
           }
           <nixos-wsl/modules>
-          ./nixos-wsl/configuration.nix
+          ./machines/wsl/configuration.nix
           nix-index-database.nixosModules.nix-index
           {
             programs.nix-index-database.comma.enable = true;
