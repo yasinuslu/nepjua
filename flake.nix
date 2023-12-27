@@ -29,6 +29,11 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
     nixos-wsl.url = "https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz";
+
+    inputs.nix-ld.url = "github:Mic92/nix-ld";
+    # this line assume that you also have nixpkgs as an input
+    inputs.nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    inputs.nix-alien.url = "github:thiagokokada/nix-alien";
   };
 
   outputs = {
@@ -40,6 +45,7 @@
     nix-index-database,
     vscode-server,
     nixos-wsl,
+    nix-ld,
     ...
   } @ inputs: {
     # NixOS configuration entrypoint
@@ -113,7 +119,7 @@
 
       wsl = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+        specialArgs = {inherit inputs; inherit self system; }; # Pass flake inputs to our config
 
         modules = [
           {
@@ -122,6 +128,15 @@
             ];
           }
           nixos-wsl.nixosModules.wsl
+          nix-ld.nixosModules.nix-ld
+          { programs.nix-ld.dev.enable = true; }
+          {
+            environment.systemPackages = with self.inputs.nix-alien.packages.${system}; [
+              nix-alien
+            ];
+            # Optional, needed for `nix-alien-ld`
+            programs.nix-ld.enable = true;
+          }
           ./machines/wsl/configuration.nix
           nix-index-database.nixosModules.nix-index
           {

@@ -7,11 +7,6 @@
   pkgs,
   ...
 }: {
-
-  imports = [
-    ./libraries.nix
-  ];
-
   wsl.enable = true;
   wsl.defaultUser = "nepjua";
   wsl.nativeSystemd = true;
