@@ -30,10 +30,10 @@
 
     nixos-wsl.url = "https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz";
 
-    inputs.nix-ld.url = "github:Mic92/nix-ld";
+    nix-ld.url = "github:Mic92/nix-ld";
     # this line assume that you also have nixpkgs as an input
-    inputs.nix-ld.inputs.nixpkgs.follows = "nixpkgs";
-    inputs.nix-alien.url = "github:thiagokokada/nix-alien";
+    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    nix-alien.url = "github:thiagokokada/nix-alien";
   };
 
   outputs = {
@@ -129,11 +129,11 @@
           }
           nixos-wsl.nixosModules.wsl
           nix-ld.nixosModules.nix-ld
-          { programs.nix-ld.dev.enable = true; }
           {
             environment.systemPackages = with self.inputs.nix-alien.packages.${system}; [
               nix-alien
             ];
+            programs.nix-ld.dev.enable = true;
             # Optional, needed for `nix-alien-ld`
             programs.nix-ld.enable = true;
           }
@@ -153,14 +153,6 @@
               extraSpecialArgs = {inherit inputs;};
             };
           }
-          # vscode-server.nixosModules.default
-          # ({
-          #   config,
-          #   pkgs,
-          #   ...
-          # }: {
-          #   services.vscode-server.enable = true;
-          # })
         ];
       };
     };
