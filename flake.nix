@@ -117,7 +117,7 @@
         ];
       };
 
-      wsl = nixpkgs.lib.nixosSystem {
+      wsl = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {inherit inputs; inherit self system; }; # Pass flake inputs to our config
 
