@@ -129,11 +129,11 @@
           }
           nixos-wsl.nixosModules.wsl
           nix-ld.nixosModules.nix-ld
+          { programs.nix-ld.dev.enable = true; }
           {
             environment.systemPackages = with self.inputs.nix-alien.packages.${system}; [
               nix-alien
             ];
-            programs.nix-ld.dev.enable = true;
             # Optional, needed for `nix-alien-ld`
             programs.nix-ld.enable = true;
           }
