@@ -39,6 +39,7 @@
     self,
     nix-index-database,
     vscode-server,
+    nixos-wsl,
     ...
   } @ inputs: {
     # NixOS configuration entrypoint
@@ -120,7 +121,7 @@
               alejandra.defaultPackage."x86_64-linux"
             ];
           }
-          <nixos-wsl/modules>
+          nixos-wsl.nixosModules.wsl
           ./machines/wsl/configuration.nix
           nix-index-database.nixosModules.nix-index
           {
