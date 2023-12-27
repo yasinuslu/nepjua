@@ -107,6 +107,43 @@
           })
         ];
       };
+
+      wsl = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."x86_64-linux"
+            ];
+          }
+          ./nixos-wsl/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {
+            programs.nix-index-database.comma.enable = true;
+            programs.nix-index.enable = true;
+            programs.command-not-found.enable = false;
+          }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/nixos-wsl.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+          vscode-server.nixosModules.default
+          ({
+            config,
+            pkgs,
+            ...
+          }: {
+            services.vscode-server.enable = true;
+          })
+        ];
+      };
     };
 
     darwinConfigurations = {
