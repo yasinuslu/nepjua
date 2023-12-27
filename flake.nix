@@ -27,6 +27,8 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+
+    nixos-wsl.url = "https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz";
   };
 
   outputs = {
@@ -118,6 +120,7 @@
               alejandra.defaultPackage."x86_64-linux"
             ];
           }
+          <nixos-wsl/modules>,
           ./nixos-wsl/configuration.nix
           nix-index-database.nixosModules.nix-index
           {
