@@ -1,6 +1,6 @@
 {
   inputs,
-  self,
+  flake,
 }: let
   inherit
     (inputs)
@@ -9,25 +9,26 @@
     nixos-wsl
     nix-index-database
     home-manager
+    nix-alien
     ;
 in
   nixpkgs.lib.nixosSystem rec {
     system = "x86_64-linux";
     specialArgs = {
       inherit inputs;
-      inherit self system;
+      inherit flake system;
     }; # Pass flake inputs to our config
 
     modules = [
       {
         environment.systemPackages = [
-          alejandra.defaultPackage."x86_64-linux"
+          alejandra.defaultPackage.${system}
         ];
       }
       nixos-wsl.nixosModules.wsl
       {
-        environment.systemPackages = with self.inputs.nix-alien.packages.${system}; [
-          nix-alien
+        environment.systemPackages = [
+          nix-alien.packages.${system}.nix-alien
         ];
         # Optional, needed for `nix-alien-ld`
         programs.nix-ld.enable = true;

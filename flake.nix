@@ -36,30 +36,36 @@
     nix-alien.url = "github:thiagokokada/nix-alien";
   };
 
-  outputs = {self}: {
+  outputs = {self, ...}: {
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
       kaori = import ./configurations/kaori.nix {
         inputs = self.inputs;
+        flake = self;
       };
 
       hetzner = import ./configurations/hetzner.nix {
         inputs = self.inputs;
+        flake = self;
       };
 
       kryon = import ./configurations/kryon.nix {
         inputs = self.inputs;
+        flake = self;
       };
     };
 
     darwinConfigurations = {
       raiden = (import ./configurations/raiden.nix) {
         inputs = self.inputs;
+        flake = self;
       };
 
       ryuko = (import ./configurations/ryuko.nix) {
         inputs = self.inputs;
+        flake = self;
       };
+    };
   };
 }
