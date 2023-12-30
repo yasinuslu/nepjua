@@ -1,5 +1,0 @@
-{pkgs, ...}: {
-  imports = [
-    ./playwright.nix
-  ];
-}
