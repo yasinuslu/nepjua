@@ -36,138 +36,30 @@
     nix-alien.url = "github:thiagokokada/nix-alien";
   };
 
-  outputs = {
-    nixpkgs,
-    home-manager,
-    darwin,
-    alejandra,
-    self,
-    nix-index-database,
-    vscode-server,
-    nixos-wsl,
-    nix-ld,
-    ...
-  } @ inputs: {
+  outputs = {self}: {
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
-      kaori = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
-
-        modules = [
-          {
-            environment.systemPackages = [
-              alejandra.defaultPackage."x86_64-linux"
-            ];
-          }
-          ./machines/linux/configuration.nix
-          nix-index-database.nixosModules.nix-index
-          {
-            programs.nix-index-database.comma.enable = true;
-            programs.nix-index.enable = true;
-            programs.command-not-found.enable = false;
-          }
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.nepjua = import ./home/profiles/nixos-linux-desktop;
-              extraSpecialArgs = {inherit inputs;};
-            };
-          }
-        ];
+      kaori = import ./configurations/kaori.nix {
+        inputs = self.inputs;
       };
 
-      hetzner = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
-
-        modules = [
-          {
-            environment.systemPackages = [
-              alejandra.defaultPackage."aarch64-linux"
-            ];
-          }
-          ./machines/hetzner/configuration.nix
-          nix-index-database.nixosModules.nix-index
-          {
-            programs.nix-index-database.comma.enable = true;
-            programs.nix-index.enable = true;
-            programs.command-not-found.enable = false;
-          }
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.nepjua = import ./home/profiles/nixos-cloud;
-              extraSpecialArgs = {inherit inputs;};
-            };
-          }
-          vscode-server.nixosModules.default
-          ({
-            config,
-            pkgs,
-            ...
-          }: {
-            services.vscode-server.enable = true;
-          })
-        ];
+      hetzner = import ./configurations/hetzner.nix {
+        inputs = self.inputs;
       };
 
-      wsl = import ./machines/wsl/definition.nix {
-        inherit inputs;
+      kryon = import ./configurations/kryon.nix {
+        inputs = self.inputs;
       };
     };
 
     darwinConfigurations = {
-      raiden = darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          {
-            environment.systemPackages = [
-              alejandra.defaultPackage."aarch64-darwin"
-            ];
-          }
-          ./darwin/raiden.nix
-          nix-index-database.nixosModules.nix-index
-          {programs.nix-index-database.comma.enable = true;}
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.nepjua = import ./home/profiles/darwin;
-              extraSpecialArgs = {inherit inputs;};
-            };
-          }
-        ];
+      raiden = (import ./configurations/raiden.nix) {
+        inputs = self.inputs;
       };
 
-      ryuko = darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          {
-            environment.systemPackages = [
-              alejandra.defaultPackage."aarch64-darwin"
-            ];
-          }
-          ./darwin/ryuko.nix
-          nix-index-database.nixosModules.nix-index
-          {programs.nix-index-database.comma.enable = true;}
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.musu = import ./home/profiles/musu-darwin;
-              extraSpecialArgs = {inherit inputs;};
-            };
-          }
-        ];
+      ryuko = (import ./configurations/ryuko.nix) {
+        inputs = self.inputs;
       };
-    };
   };
 }
