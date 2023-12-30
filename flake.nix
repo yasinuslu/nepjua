@@ -48,8 +48,162 @@
     nix-ld,
     ...
   } @ inputs: {
-    imports = [
-      ./new-machines/nepjua-wsl.nix
-    ];
+    # NixOS configuration entrypoint
+    # Available through 'nixos-rebuild --flake .#your-hostname'
+    nixosConfigurations = {
+      kaori = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."x86_64-linux"
+            ];
+          }
+          ./machines/linux/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {
+            programs.nix-index-database.comma.enable = true;
+            programs.nix-index.enable = true;
+            programs.command-not-found.enable = false;
+          }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/profiles/nixos.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+        ];
+      };
+
+      hetzner = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        specialArgs = {inherit inputs;}; # Pass flake inputs to our config
+
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."aarch64-linux"
+            ];
+          }
+          ./machines/hetzner/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {
+            programs.nix-index-database.comma.enable = true;
+            programs.nix-index.enable = true;
+            programs.command-not-found.enable = false;
+          }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/profiles/nixos-cloud.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+          vscode-server.nixosModules.default
+          ({
+            config,
+            pkgs,
+            ...
+          }: {
+            services.vscode-server.enable = true;
+          })
+        ];
+      };
+
+      wsl = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          inherit inputs;
+          inherit self system;
+        }; # Pass flake inputs to our config
+
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."x86_64-linux"
+            ];
+          }
+          nixos-wsl.nixosModules.wsl
+          {
+            environment.systemPackages = with self.inputs.nix-alien.packages.${system}; [
+              nix-alien
+            ];
+            # Optional, needed for `nix-alien-ld`
+            programs.nix-ld.enable = true;
+          }
+          ./machines/wsl/configuration.nix
+          nix-index-database.nixosModules.nix-index
+          {
+            programs.nix-index-database.comma.enable = true;
+            programs.nix-index.enable = true;
+            programs.command-not-found.enable = false;
+          }
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/profiles/nixos-wsl.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+        ];
+      };
+    };
+
+    darwinConfigurations = {
+      raiden = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."aarch64-darwin"
+            ];
+          }
+          ./darwin/raiden.nix
+          nix-index-database.nixosModules.nix-index
+          {programs.nix-index-database.comma.enable = true;}
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.nepjua = import ./home/profiles/darwin.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+        ];
+      };
+
+      ryuko = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          {
+            environment.systemPackages = [
+              alejandra.defaultPackage."aarch64-darwin"
+            ];
+          }
+          ./darwin/ryuko.nix
+          nix-index-database.nixosModules.nix-index
+          {programs.nix-index-database.comma.enable = true;}
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.musu = import ./home/profiles/musu-darwin.nix;
+              extraSpecialArgs = {inherit inputs;};
+            };
+          }
+        ];
+      };
+    };
   };
 }
