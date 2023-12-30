@@ -73,7 +73,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.nepjua = import ./home/profiles/nixos.nix;
+              users.nepjua = import ./home/profiles/nixos-linux-desktop;
               extraSpecialArgs = {inherit inputs;};
             };
           }
@@ -102,7 +102,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.nepjua = import ./home/profiles/nixos-cloud.nix;
+              users.nepjua = import ./home/profiles/nixos-cloud;
               extraSpecialArgs = {inherit inputs;};
             };
           }
@@ -150,7 +150,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.nepjua = import ./home/profiles/nixos-wsl.nix;
+              users.nepjua = import ./home/profiles/nixos-wsl;
               extraSpecialArgs = {inherit inputs;};
             };
           }
@@ -175,7 +175,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.nepjua = import ./home/profiles/darwin.nix;
+              users.nepjua = import ./home/profiles/darwin;
               extraSpecialArgs = {inherit inputs;};
             };
           }
@@ -198,7 +198,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.musu = import ./home/profiles/musu-darwin.nix;
+              users.musu = import ./home/profiles/musu-darwin;
               extraSpecialArgs = {inherit inputs;};
             };
           }
