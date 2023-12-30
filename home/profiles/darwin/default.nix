@@ -1,9 +1,4 @@
-{
-  inputs,
-  pkgs,
-  config,
-  ...
-}: {
+{}: {
   imports = [
     ../../src/extensions/extra-paths/__enter.nix
     ../../profiles/minimal
