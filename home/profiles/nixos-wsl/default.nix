@@ -4,7 +4,7 @@
     ../../profiles/minimal
 
     # Actual darwin configuration
-    ../../profiles/darwin/profiles-darwin.nix
+    ../../profiles/nixos-wsl/profiles-nixos-wsl.nix
 
     ../../src/extensions/extra-paths/__exit.nix
   ];
