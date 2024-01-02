@@ -7,6 +7,6 @@
   ];
 
   environment.sessionVariables = {
-    DOCKER_HOST = "unix:///mnt/wsl/rancher-desktop/run";
+    DOCKER_HOST = "unix:///mnt/wsl/rancher-desktop/run/docker.sock";
   };
 }
