@@ -36,6 +36,7 @@
       "vlc"
       "whatsapp"
       "zoom"
+      "karabiner-elements"
     ];
   };
 }
