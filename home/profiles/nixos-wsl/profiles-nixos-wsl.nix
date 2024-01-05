@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ../../src/cli/packages.nix
+    ../../src/cli/playwright.nix
   ];
 
   home.extraPaths = ["$HOME/.rd/bin"];
