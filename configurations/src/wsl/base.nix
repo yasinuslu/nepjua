@@ -16,24 +16,6 @@
     ssh-add = "ssh-add.exe";
   };
 
-  # virtualisation.docker = {
-  #   enable = true;
-  # };
-
-  # # This setups a SSH server. Very important if you're setting up a headless system.
-  # # Feel free to remove if you don't need it.
-  # services.openssh = {
-  #   enable = true;
-  #   allowSFTP = true;
-  #   settings = {
-  #     PermitRootLogin = "yes";
-  #     PasswordAuthentication = false;
-  #     TCPKeepAlive = true;
-  #     ClientAliveInterval = 60;
-  #     ClientAliveCountMax = 120;
-  #   };
-  # };
-
   users.users = {
     nepjua = {
       initialPassword = "line-flanker-wingman-sidle";
@@ -53,19 +35,19 @@
   time.timeZone = "Europe/Istanbul";
 
   # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
 
-  # i18n.extraLocaleSettings = {
-  #   LC_ADDRESS = "en_US.UTF-8";
-  #   LC_IDENTIFICATION = "en_US.UTF-8";
-  #   LC_MEASUREMENT = "tr_TR.UTF-8";
-  #   LC_MONETARY = "en_US.UTF-8";
-  #   LC_NAME = "en_US.UTF-8";
-  #   LC_NUMERIC = "en_US.UTF-8";
-  #   LC_PAPER = "en_US.UTF-8";
-  #   LC_TELEPHONE = "tr_TR.UTF-8";
-  #   LC_TIME = "tr_TR.UTF-8";
-  # };
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "tr_TR.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    # LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "tr_TR.UTF-8";
+    # LC_TIME = "tr_TR.UTF-8";
+  };
 
   nixpkgs = {
     # You can add overlays here
@@ -110,6 +92,7 @@
     vim
     htop
     git
+    steam-run
     # _1password
   ];
 

@@ -31,7 +31,7 @@ sudo nixos-rebuild switch --flake .#kaori
 Install the system
 
 ```sh
-sudo nixos-rebuild switch --flake .#kryon --impure
+sudo nixos-rebuild switch --flake .#tristan --impure
 ```
 
 ### Hetzner Cloud Configuration

@@ -48,7 +48,7 @@
         flake = self;
       };
 
-      kryon = import ./configurations/kryon.nix {
+      tristan = import ./configurations/tristan.nix {
         inputs = self.inputs;
         flake = self;
       };
