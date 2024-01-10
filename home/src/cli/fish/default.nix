@@ -95,6 +95,9 @@
       git_branch = {
         truncation_length = 24;
       };
+      docker_context = {
+        disabled = true;
+      };
     };
   };
 
