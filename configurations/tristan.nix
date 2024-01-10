@@ -25,18 +25,13 @@ in
           alejandra.defaultPackage.${system}
         ];
       }
-      nix-ld.nixosModules.nix-ld
-      ({
-        self,
-        system,
-        ...
-      }: {
-        environment.systemPackages = with self.inputs.nix-alien.packages.${system}; [
+      {
+        environment.systemPackages = with inputs.nix-alien.packages.${system}; [
           nix-alien
         ];
         # Optional, needed for `nix-alien-ld`
-        programs.nix-ld.dev.enable = true;
-      })
+        programs.nix-ld.enable = true;
+      }
       ./src/nix-ld-libraries.nix
       nixos-wsl.nixosModules.wsl
       ./src/wsl/base.nix

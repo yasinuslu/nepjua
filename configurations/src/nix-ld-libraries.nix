@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  programs.nix-ld.dev.libraries = with pkgs; [
+  programs.nix-ld.libraries = with pkgs; [
     alsa-lib
     at-spi2-atk
     at-spi2-core
