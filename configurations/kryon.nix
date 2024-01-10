@@ -9,7 +9,7 @@
     nixos-wsl
     nix-index-database
     home-manager
-    nix-alien
+    nix-ld
     ;
 in
   nixpkgs.lib.nixosSystem rec {
@@ -25,8 +25,9 @@ in
           alejandra.defaultPackage.${system}
         ];
       }
-      nixos-wsl.nixosModules.wsl
+      nix-ld.nixosModules.nix-ld
       ./src/nix-ld.nix
+      nixos-wsl.nixosModules.wsl
       ./src/wsl/base.nix
       ./src/wsl/rancher.nix
       nix-index-database.nixosModules.nix-index
