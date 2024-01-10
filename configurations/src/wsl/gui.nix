@@ -14,15 +14,14 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
+    LC_ALL = "en_US.UTF-8";
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
     LC_MEASUREMENT = "tr_TR.UTF-8";
     LC_MONETARY = "en_US.UTF-8";
     LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
     LC_PAPER = "en_US.UTF-8";
     LC_TELEPHONE = "tr_TR.UTF-8";
-    LC_TIME = "tr_TR.UTF-8";
   };
 
   # Configure keymap in X11
@@ -77,12 +76,12 @@
     (with pkgs; [
       gnome-photos
       gnome-tour
+      gedit
     ])
     ++ (with pkgs.gnome; [
       cheese # webcam tool
       gnome-music
       gnome-terminal
-      gedit # text editor
       epiphany # web browser
       geary # email reader
       evince # document viewer
@@ -114,7 +113,7 @@
   #   };
   # };
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
   ];
 

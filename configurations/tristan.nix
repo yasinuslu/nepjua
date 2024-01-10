@@ -9,6 +9,7 @@
     nixos-wsl
     nix-index-database
     home-manager
+    nixgl
     ;
 in
   nixpkgs.lib.nixosSystem rec {
@@ -16,7 +17,7 @@ in
     specialArgs = {
       inherit inputs;
       inherit flake system;
-    }; # Pass flake inputs to our config
+    };
 
     modules = [
       {

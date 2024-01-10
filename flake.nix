@@ -31,6 +31,8 @@
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     nix-alien.url = "github:thiagokokada/nix-alien";
+
+    nixgl.url = "github:guibou/nixGL";
   };
 
   outputs = {self, ...}: {
