@@ -26,9 +26,9 @@ in
         ];
       }
       nixos-wsl.nixosModules.wsl
-      ./lib/nix-ld.nix
-      ./lib/wsl/base.nix
-      ./lib/wsl/rancher.nix
+      ./src/nix-ld.nix
+      ./src/wsl/base.nix
+      ./src/wsl/rancher.nix
       nix-index-database.nixosModules.nix-index
       {
         programs.nix-index-database.comma.enable = true;
