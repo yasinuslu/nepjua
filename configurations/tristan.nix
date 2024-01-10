@@ -26,7 +26,18 @@ in
         ];
       }
       nix-ld.nixosModules.nix-ld
-      ./src/nix-ld.nix
+      ({
+        self,
+        system,
+        ...
+      }: {
+        environment.systemPackages = with self.inputs.nix-alien.packages.${system}; [
+          nix-alien
+        ];
+        # Optional, needed for `nix-alien-ld`
+        programs.nix-ld.dev.enable = true;
+      })
+      ./src/nix-ld-libraries.nix
       nixos-wsl.nixosModules.wsl
       ./src/wsl/base.nix
       ./src/wsl/rancher.nix

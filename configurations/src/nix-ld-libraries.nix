@@ -1,7 +1,4 @@
 {pkgs, ...}: {
-  # Enable nix ld
-  programs.nix-ld.dev.enable = true;
-
   programs.nix-ld.dev.libraries = with pkgs; [
     alsa-lib
     at-spi2-atk
