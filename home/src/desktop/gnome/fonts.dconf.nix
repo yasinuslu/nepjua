@@ -1,9 +1,6 @@
 # Generated via dconf2nix: https://github.com/gvolpe/dconf2nix
-{ lib, ... }:
-
-with lib.hm.gvariant;
-
-{
+{lib, ...}:
+with lib.hm.gvariant; {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
@@ -14,6 +11,5 @@ with lib.hm.gvariant;
       monospace-font-name = "JetBrainsMono Nerd Font Mono 11";
       text-scaling-factor = 1.2000000000000002;
     };
-
   };
 }
