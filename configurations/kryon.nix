@@ -26,14 +26,9 @@ in
         ];
       }
       nixos-wsl.nixosModules.wsl
-      {
-        environment.systemPackages = [
-          nix-alien.packages.${system}.nix-alien
-        ];
-        # Optional, needed for `nix-alien-ld`
-        programs.nix-ld.enable = true;
-      }
-      ../machines/wsl/configuration.nix
+      ./lib/nix-ld.nix
+      ./lib/wsl/base.nix
+      ./lib/wsl/rancher.nix
       nix-index-database.nixosModules.nix-index
       {
         programs.nix-index-database.comma.enable = true;
