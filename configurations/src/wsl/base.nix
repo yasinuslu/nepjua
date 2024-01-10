@@ -97,11 +97,6 @@
   ];
 
   programs.fish.enable = true;
-
-  # programs._1password = {
-  #   enable = true;
-  # };
-
   programs.java.enable = true;
 
   system.stateVersion = "23.11";

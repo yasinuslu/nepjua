@@ -16,9 +16,9 @@
     glib
     gtk3
     icu
-    libGL
     libappindicator-gtk3
     libdrm
+    libGL
     libglvnd
     libnotify
     libpulseaudio
@@ -29,7 +29,7 @@
     libxml2
     mesa
     nspr
-    nss
+    nss_latest
     openssl
     pango
     pipewire
@@ -37,19 +37,19 @@
     systemd
     vulkan-loader
     xorg.libX11
-    xorg.libXScrnSaver
+    xorg.libxcb
     xorg.libXcomposite
     xorg.libXcursor
     xorg.libXdamage
     xorg.libXext
     xorg.libXfixes
     xorg.libXi
+    xorg.libxkbfile
     xorg.libXrandr
     xorg.libXrender
-    xorg.libXtst
-    xorg.libxcb
-    xorg.libxkbfile
+    xorg.libXScrnSaver
     xorg.libxshmfence
+    xorg.libXtst
     zlib
   ];
 }

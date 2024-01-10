@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/master";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,7 +28,7 @@
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
-    nixos-wsl.url = "https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     nix-alien.url = "github:thiagokokada/nix-alien";
   };

@@ -309,12 +309,16 @@
       "locked": {
         "lastModified": 1704880572,
         "narHash": "sha256-Z0xrFX0Vm2lVj489g9fsFW97+kCbI7Uw6HdEUgomyKs=",
-        "type": "tarball",
-        "url": "https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz"
+        "owner": "nix-community",
+        "repo": "NixOS-WSL",
+        "rev": "2a88d9e4ab32c05fa70334ab39531c0154f9757b",
+        "type": "github"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://github.com/nix-community/NixOS-WSL/archive/refs/heads/main.tar.gz"
+        "owner": "nix-community",
+        "ref": "main",
+        "repo": "NixOS-WSL",
+        "type": "github"
       }
     },
     "nixpkgs": {
@@ -366,16 +370,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1704722960,
-        "narHash": "sha256-mKGJ3sPsT6//s+Knglai5YflJUF2DGj7Ai6Ynopz0kI=",
+        "lastModified": 1704922680,
+        "narHash": "sha256-lYcKL+nA31vhAHH9MMIVQmaqZ3wWbc4Vdcki6a/3v4M=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "317484b1ead87b9c1b8ac5261a8d2dd748a0492d",
+        "rev": "419841756adc1c58e29e6a5131d49f0326ef97e2",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "master",
         "repo": "nixpkgs",
         "type": "github"
       }
