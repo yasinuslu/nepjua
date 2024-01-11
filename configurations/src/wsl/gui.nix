@@ -25,10 +25,12 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
+    busybox
     gparted
     _1password
     _1password-gui
     gnome.dconf-editor
+    gnome.gnome-session
     vlc
     copyq
     parsec-bin
@@ -43,7 +45,10 @@
     google-chrome
     microsoft-edge
     glxinfo
-    gnome.gnome-session
+    ffmpeg-full
+    x264
+    x265
+    xpra
   ];
 
   services.spotifyd = {
@@ -53,27 +58,39 @@
   xdg.portal.enable = true;
   services.flatpak.enable = true;
 
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
+  services.xrdp = {
+    enable = true;
+    defaultWindowManager = "gnome-session";
+    openFirewall = false;
+    port = 3389;
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.videoDrivers = ["nvidia"];
+  # Configure keymap in X11
+  services.xserver = {
+    enable = true;
+    layout = "us";
+    xkbVariant = "";
+    videoDrivers = ["nvidia"];
+
+    desktopManager = {
+      xterm.enable = false;
+      xfce.enable = false;
+      gnome.enable = true;
+    };
+    displayManager = {
+      defaultSession = "gnome-xorg";
+      gdm = {
+        enable = true;
+        wayland = true;
+      };
+    };
+  };
+
   hardware.opengl.enable = true;
   hardware.opengl.driSupport = true;
 
-  programs.hyprland.enable = true;
-
-  # # Enable the GNOME Desktop Environment.
-  # services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.displayManager.gdm.wayland = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  services.printing.enable = true;
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -122,14 +139,15 @@
 
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
-  # services.openssh = {
-  #   enable = true;
-  #   allowSFTP = true;
-  #   settings = {
-  #     PermitRootLogin = "yes";
-  #     PasswordAuthentication = true;
-  #   };
-  # };
+  services.openssh = {
+    enable = true;
+    allowSFTP = true;
+    settings = {
+      PermitRootLogin = "yes";
+      PasswordAuthentication = true;
+    };
+    ports = [2222];
+  };
 
   fonts.packages = with pkgs; [
     (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
