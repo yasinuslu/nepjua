@@ -1,12 +1,14 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
 {
-  inputs,
-  lib,
   config,
   pkgs,
   ...
 }: {
+  # environment.sessionVariables = {
+  #   XDG_DATA_DIRS = "/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
+  # };
+
   # Set your time zone.
   time.timeZone = "Europe/Istanbul";
 
@@ -18,27 +20,8 @@
     "tr_TR.UTF-8/UTF-8"
   ];
 
-  # i18n.extraLocaleSettings = {
-  #   LC_ALL = "en_US.UTF-8";
-  #   LC_ADDRESS = "en_US.UTF-8";
-  #   LC_IDENTIFICATION = "en_US.UTF-8";
-  #   LC_MEASUREMENT = "tr_TR.UTF-8";
-  #   LC_MONETARY = "en_US.UTF-8";
-  #   LC_NAME = "en_US.UTF-8";
-  #   LC_NUMERIC = "en_US.UTF-8";
-  #   LC_PAPER = "en_US.UTF-8";
-  #   LC_TELEPHONE = "tr_TR.UTF-8";
-  #   LC_TIME = "tr_TR.UTF-8";
-  # };
-
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-  };
-
   # Enable automatic login for the user.
-  services.getty.autologinUser = "nepjua";
+  # services.getty.autologinUser = "nepjua";
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
@@ -57,30 +40,40 @@
     obsidian
     zoom-us
     spotify
+    google-chrome
+    microsoft-edge
+    glxinfo
+    gnome.gnome-session
   ];
 
   services.spotifyd = {
     enable = true;
   };
 
-  environment.sessionVariables = {
-    XDG_DATA_DIRS = "/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
-  };
-
+  xdg.portal.enable = true;
   services.flatpak.enable = true;
+
+  # Configure keymap in X11
+  services.xserver = {
+    layout = "us";
+    xkbVariant = "";
+  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
   hardware.opengl.enable = true;
+  hardware.opengl.driSupport = true;
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
+  programs.hyprland.enable = true;
+
+  # # Enable the GNOME Desktop Environment.
+  # services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.displayManager.gdm.wayland = true;
   services.xserver.desktopManager.gnome.enable = true;
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  # services.printing.enable = true;
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -102,7 +95,6 @@
     (with pkgs; [
       gnome-photos
       gnome-tour
-      gedit
     ])
     ++ (with pkgs.gnome; [
       cheese # webcam tool

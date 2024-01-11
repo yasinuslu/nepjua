@@ -3,8 +3,8 @@
 {
   inputs,
   lib,
-  config,
   pkgs,
+  config,
   ...
 }: {
   wsl.enable = true;
@@ -48,6 +48,10 @@
     config = {
       # Disable if you don't want unfree packages
       allowUnfree = true;
+
+      permittedInsecurePackages = [
+        "electron-25.9.0"
+      ];
     };
   };
 
