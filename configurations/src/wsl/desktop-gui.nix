@@ -25,9 +25,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
-    busybox
     gparted
-    _1password
     _1password-gui
     gnome.dconf-editor
     gnome.gnome-session
@@ -49,7 +47,10 @@
     x264
     x265
     xpra
+    weston
   ];
+
+  programs.xwayland.enable = true;
 
   services.spotifyd = {
     enable = true;
@@ -60,21 +61,23 @@
 
   services.xrdp = {
     enable = true;
-    defaultWindowManager = "gnome-session";
+    defaultWindowManager = "xfce4-session";
     openFirewall = false;
-    port = 3389;
+    port = 3390;
   };
+
+  services.acpid.enable = false;
 
   # Configure keymap in X11
   services.xserver = {
     enable = true;
     layout = "us";
     xkbVariant = "";
-    videoDrivers = ["nvidia"];
+    # videoDrivers = ["nvidia"];
 
     desktopManager = {
       xterm.enable = false;
-      xfce.enable = false;
+      xfce.enable = true;
       gnome.enable = true;
     };
     displayManager = {
@@ -94,14 +97,14 @@
 
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
+  hardware.pulseaudio.enable = true;
+  # security.rtkit.enable = true;
+  # services.pipewire = {
+  #   enable = true;
+  #   alsa.enable = true;
+  #   alsa.support32Bit = true;
+  #   pulse.enable = true;
+  # };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
@@ -155,4 +158,5 @@
 
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
+  services.gnome.gnome-remote-desktop.enable = true;
 }

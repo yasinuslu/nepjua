@@ -80,8 +80,8 @@
     vim
     htop
     git
-    steam-run
-    # _1password
+    busybox
+    _1password
   ];
 
   programs.fish.enable = true;

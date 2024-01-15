@@ -5,5 +5,5 @@
   ...
 }: {
   home.extraPaths = ["$HOME/.rd/bin"];
-  xsession.enable = true;
+  xsession.enable = false;
 }
