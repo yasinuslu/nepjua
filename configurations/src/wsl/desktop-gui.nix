@@ -56,48 +56,48 @@
     enable = true;
   };
 
-  xdg.portal.enable = true;
-  services.flatpak.enable = true;
+  # xdg.portal.enable = true;
+  # services.flatpak.enable = true;
 
-  services.xrdp = {
-    enable = true;
-    defaultWindowManager = "xfce4-session";
-    openFirewall = false;
-    port = 3390;
-  };
+  # services.xrdp = {
+  #   enable = true;
+  #   defaultWindowManager = "xfce4-session";
+  #   openFirewall = false;
+  #   port = 3390;
+  # };
 
-  services.acpid.enable = false;
+  # services.acpid.enable = false;
 
   # Configure keymap in X11
-  services.xserver = {
-    enable = true;
-    layout = "us";
-    xkbVariant = "";
-    # videoDrivers = ["nvidia"];
+  # services.xserver = {
+  #   enable = true;
+  #   layout = "us";
+  #   xkbVariant = "";
+  #   # videoDrivers = ["nvidia"];
 
-    desktopManager = {
-      xterm.enable = false;
-      xfce.enable = true;
-      gnome.enable = true;
-    };
-    displayManager = {
-      defaultSession = "gnome-xorg";
-      gdm = {
-        enable = true;
-        wayland = true;
-      };
-    };
-  };
+  #   desktopManager = {
+  #     xterm.enable = false;
+  #     xfce.enable = true;
+  #     gnome.enable = true;
+  #   };
+  #   displayManager = {
+  #     defaultSession = "gnome-xorg";
+  #     gdm = {
+  #       enable = true;
+  #       wayland = true;
+  #     };
+  #   };
+  # };
 
   hardware.opengl.enable = true;
   hardware.opengl.driSupport = true;
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  # services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  # sound.enable = true;
+  # hardware.pulseaudio.enable = true;
   # security.rtkit.enable = true;
   # services.pipewire = {
   #   enable = true;
@@ -107,7 +107,7 @@
   # };
 
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
+  # services.xserver.libinput.enable = true;
 
   programs.fish.enable = true;
 
@@ -142,15 +142,15 @@
 
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
-  services.openssh = {
-    enable = true;
-    allowSFTP = true;
-    settings = {
-      PermitRootLogin = "yes";
-      PasswordAuthentication = true;
-    };
-    ports = [2222];
-  };
+  # services.openssh = {
+  #   enable = true;
+  #   allowSFTP = true;
+  #   settings = {
+  #     PermitRootLogin = "yes";
+  #     PasswordAuthentication = true;
+  #   };
+  #   ports = [2222];
+  # };
 
   fonts.packages = with pkgs; [
     (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
