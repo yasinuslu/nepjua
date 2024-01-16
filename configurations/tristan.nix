@@ -9,7 +9,6 @@
     nixos-wsl
     nix-index-database
     home-manager
-    nixgl
     ;
 in
   nixpkgs.lib.nixosSystem rec {
@@ -36,7 +35,7 @@ in
       nixos-wsl.nixosModules.wsl
       ./src/wsl/base.nix
       ./src/wsl/rancher.nix
-      ./src/wsl/gui.nix
+      ./src/wsl/desktop-gui.nix
       nix-index-database.nixosModules.nix-index
       {
         programs.nix-index-database.comma.enable = true;

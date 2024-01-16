@@ -1,22 +1,24 @@
 {pkgs, ...}: {
   programs.nix-ld.libraries = with pkgs; [
-    alsa-lib
-    at-spi2-atk
-    at-spi2-core
+    alsa-lib.out
+    at-spi2-atk.out
+    at-spi2-core.out
     atk
-    cairo
-    cups
+    cairo.out
+    glamoroustoolkit.out
+    cups.lib
     curl
-    dbus
+    dbus.lib
     expat
     fontconfig
     freetype
     fuse3
     gdk-pixbuf
-    glib
+    glib.out
     gtk3
     icu
     libappindicator-gtk3
+    libgcc.lib
     libdrm
     libGL
     libglvnd
@@ -25,31 +27,32 @@
     libunwind
     libusb1
     libuuid
-    libxkbcommon
+    libxkbcommon.out
     libxml2
-    mesa
-    nspr
-    nss_latest
+    mesa.out
+    nspr.out
+    nss_latest.out
     openssl
-    pango
+    pango.out
     pipewire
     stdenv.cc.cc
     systemd
     vulkan-loader
-    xorg.libX11
-    xorg.libxcb
-    xorg.libXcomposite
-    xorg.libXcursor
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXi
-    xorg.libxkbfile
-    xorg.libXrandr
-    xorg.libXrender
-    xorg.libXScrnSaver
-    xorg.libxshmfence
-    xorg.libXtst
-    zlib
+    xorg.libX11.out
+    xorg.libxcb.out
+    xorg.libXcomposite.out
+    xorg.libXcursor.out
+    xorg.libXdamage.out
+    xorg.libXext.out
+    xorg.libXfixes.out
+    xorg.libXi.out
+    xorg.libxkbfile.out
+    xorg.libXrandr.out
+    xorg.libXrender.out
+    xorg.libXScrnSaver.out
+    xorg.libxshmfence.out
+    xorg.libXtst.out
+    xorg_sys_opengl.out
+    zlib.out
   ];
 }
