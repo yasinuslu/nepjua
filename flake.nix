@@ -42,6 +42,7 @@
 
   outputs =
     { self
+    , inputs
     , alejandra
     , nixpkgs
     , ...
@@ -53,29 +54,29 @@
       # Available through 'nixos-rebuild --flake .#your-hostname'
       nixosConfigurations = {
         kaori = import ./configurations/kaori.nix {
-          inputs = self.inputs;
+          inherit inputs;
           flake = self;
         };
 
         hetzner = import ./configurations/hetzner.nix {
-          inputs = self.inputs;
+          inherit inputs;
           flake = self;
         };
 
         tristan = import ./configurations/tristan.nix {
-          inputs = self.inputs;
+          inherit inputs;
           flake = self;
         };
       };
 
       darwinConfigurations = {
         raiden = (import ./configurations/raiden.nix) {
-          inputs = self.inputs;
+          inherit inputs;
           flake = self;
         };
 
         ryuko = (import ./configurations/ryuko.nix) {
-          inputs = self.inputs;
+          inherit inputs;
           flake = self;
         };
       };
