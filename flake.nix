@@ -33,38 +33,51 @@
     nix-alien.url = "github:thiagokokada/nix-alien";
 
     nixgl.url = "github:guibou/nixGL";
-  };
 
-  outputs = {self, ...}: {
-    # NixOS configuration entrypoint
-    # Available through 'nixos-rebuild --flake .#your-hostname'
-    nixosConfigurations = {
-      kaori = import ./configurations/kaori.nix {
-        inputs = self.inputs;
-        flake = self;
-      };
-
-      hetzner = import ./configurations/hetzner.nix {
-        inputs = self.inputs;
-        flake = self;
-      };
-
-      tristan = import ./configurations/tristan.nix {
-        inputs = self.inputs;
-        flake = self;
-      };
-    };
-
-    darwinConfigurations = {
-      raiden = (import ./configurations/raiden.nix) {
-        inputs = self.inputs;
-        flake = self;
-      };
-
-      ryuko = (import ./configurations/ryuko.nix) {
-        inputs = self.inputs;
-        flake = self;
-      };
+    flake-compat = {
+      url = "github:inclyc/flake-compat";
+      flake = false;
     };
   };
+
+  outputs =
+    { self
+    , alejandra
+    , nixpkgs
+    , ...
+    }: {
+      foo = nixpkgs.lib.mkIf true;
+      formatter.x86_64-linux = alejandra.defaultPackage."x86_64-linux";
+      formatter.aarch64-darwin = alejandra.defaultPackage."aarch64-darwin";
+      # NixOS configuration entrypoint
+      # Available through 'nixos-rebuild --flake .#your-hostname'
+      nixosConfigurations = {
+        kaori = import ./configurations/kaori.nix {
+          inputs = self.inputs;
+          flake = self;
+        };
+
+        hetzner = import ./configurations/hetzner.nix {
+          inputs = self.inputs;
+          flake = self;
+        };
+
+        tristan = import ./configurations/tristan.nix {
+          inputs = self.inputs;
+          flake = self;
+        };
+      };
+
+      darwinConfigurations = {
+        raiden = (import ./configurations/raiden.nix) {
+          inputs = self.inputs;
+          flake = self;
+        };
+
+        ryuko = (import ./configurations/ryuko.nix) {
+          inputs = self.inputs;
+          flake = self;
+        };
+      };
+    };
 }

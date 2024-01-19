@@ -53,3 +53,9 @@ git clone https://github.com/yasinuslu/nix-config
 cd nix-config
 sudo nixos-rebuild switch --flake .#hetzner --impure
 ```
+
+## Updating .nixd.json
+
+```
+nix eval --json --file .nixd.nix > .nixd.json
+```

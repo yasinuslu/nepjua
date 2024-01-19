@@ -1,0 +1,16 @@
+{
+  "eval": {
+    "depth": 10,
+    "target": {
+      "args": ["-f", "default.nix"],
+      "installable": "foo"
+    }
+  },
+  "options": {
+    "enable": true,
+    "target": {
+      "args": [],
+      "installable": "<flakeref>#nixosConfigurations.<name>.options"
+    }
+  }
+}
