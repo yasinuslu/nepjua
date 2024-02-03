@@ -26,6 +26,7 @@ in
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
+          backupFileExtension = "backup";
           users.nepjua = import ../home/profiles/darwin;
           extraSpecialArgs = {inherit inputs;};
         };
