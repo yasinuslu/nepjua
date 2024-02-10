@@ -25,7 +25,6 @@
         buildInputs = [codeOverride];
         shellHook = ''
           echo "Welcome in $name"
-          export OPENAI_API_KEY=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
           export HF_HUB_ENABLE_HF_TRANSFER=1
         '';
       };
