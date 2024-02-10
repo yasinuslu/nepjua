@@ -29,8 +29,8 @@
     in {
       packages.hello = pkgs.hello;
 
-      formatter.${system} = alejandra.defaultPackage.${system};
-      
+      formatter = alejandra.defaultPackage.${system};
+
       devShell = pkgs.mkShell {
         name = "nepjua";
         buildInputs = [
