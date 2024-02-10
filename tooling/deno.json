@@ -1,0 +1,15 @@
+{
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 80,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": false,
+    "proseWrap": "preserve",
+    "include": ["src/"],
+    "exclude": ["src/testdata/", "data/fixtures/**/*.ts"]
+  },
+  "tasks": {
+    "do": "deno run --allow-all src/main.ts"
+  }
+}

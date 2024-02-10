@@ -46,13 +46,6 @@
     nixpkgs,
     ...
   }: {
-    # lib.meta = {
-    #   configPath = "${config.my.home}/git/config";
-    #   mkMutableSymlink = path:
-    #     config.hm.lib.file.mkOutOfStoreSymlink
-    #     (config.lib.meta.configPath + removePrefix (toString self) (toString path));
-    # };
-
     formatter.x86_64-linux = alejandra.defaultPackage."x86_64-linux";
     formatter.aarch64-darwin = alejandra.defaultPackage."aarch64-darwin";
     # NixOS configuration entrypoint
