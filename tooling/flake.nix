@@ -1,6 +1,6 @@
 {
-  description = "personal-env";
-  nixConfig.bash-prompt = "[nix(personal)] ";
+  description = "nepjua-env";
+  nixConfig.bash-prompt = "[nix(nepjua)] ";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
