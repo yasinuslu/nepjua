@@ -21,7 +21,7 @@
       packages.hello = pkgs.hello;
 
       devShell = pkgs.mkShell {
-        name = "personal";
+        name = "nepjua";
         buildInputs = [codeOverride];
         shellHook = ''
           echo "Welcome in $name"

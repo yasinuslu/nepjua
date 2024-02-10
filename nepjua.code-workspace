@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "nix-config"
+		},
+		{
+			"path": "tooling"
+		}
+	],
+	"settings": {}
+}

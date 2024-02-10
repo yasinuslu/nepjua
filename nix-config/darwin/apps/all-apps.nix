@@ -7,6 +7,7 @@
     enable = true;
     brews = [
       "gh"
+      "1password-cli"
     ];
     casks = [
       "1password"
