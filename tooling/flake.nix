@@ -22,10 +22,6 @@
         CODE_EXEC="$(type -a code | awk '{sub(/^code is /, ""); print}' | awk 'NR==2')"
         "$CODE_EXEC" --profile Default "$@"
       '';
-      do = pkgs.writeScriptBin "do" ''
-        #!/usr/bin/env bash
-        deno run --allow-all "$HOME/code/nepjua/tooling/src/main.ts" "$@"
-      '';
     in {
       packages.hello = pkgs.hello;
 
@@ -33,10 +29,7 @@
 
       devShell = pkgs.mkShell {
         name = "nepjua";
-        buildInputs = [
-          codeOverride
-          do
-        ];
+        buildInputs = [codeOverride];
         shellHook = ''
           echo "Welcome in $name"
           export HF_HUB_ENABLE_HF_TRANSFER=1

@@ -7,10 +7,10 @@
     enable = true;
     brews = [
       "gh"
-      "1password-cli"
     ];
     casks = [
       "1password"
+      "1password-cli"
       "alt-tab"
       "anydesk"
       "bettermouse"
