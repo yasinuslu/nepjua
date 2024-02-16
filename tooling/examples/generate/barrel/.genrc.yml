@@ -1,0 +1,8 @@
+config:
+  filenamePattern: "[basename].generated.[ext]"
+generators:
+  barrel:
+    - name: barrel
+      output: "barrel.ts"
+      plugins:
+        - barrel

@@ -1,6 +1,9 @@
 {
   "folders": [
     {
+      "path": "."
+    },
+    {
       "path": "tooling"
     },
     {
@@ -9,6 +12,14 @@
   ],
   "settings": {
     "deno.cacheOnSave": true,
-    "deno.enable": true
+    "deno.enable": true,
+    "debug.javascript.pickAndAttachOptions": {
+      "autoAttachChildProcesses": true
+    }
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [],
+    "compounds": []
   }
 }
