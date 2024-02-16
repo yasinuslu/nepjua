@@ -3,10 +3,6 @@
   pkgs,
   ...
 }: {
-  homebrew.casks = [
-    "alt-tab"
-  ];
-
   system.defaults.menuExtraClock.ShowDayOfWeek = true;
   system.defaults.CustomUserPreferences = {
     "com.lwouis.alt-tab-macos" = {

@@ -6,7 +6,7 @@
 }: {
   imports = [
     ./apps/alt-tab.nix
-    ./apps/all-apps.nix
+    ./apps/homebrew.nix
     ./gui-apps.nix
   ];
 
