@@ -1,12 +1,11 @@
 {
   "folders": [
     {
-      "path": "."
-    },
-    {
+      "name": "tooling",
       "path": "tooling"
     },
     {
+      "name": "nix-config",
       "path": "nix-config"
     }
   ],
@@ -15,6 +14,14 @@
     "deno.enable": true,
     "debug.javascript.pickAndAttachOptions": {
       "autoAttachChildProcesses": true
+    },
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true
     }
   },
   "launch": {

@@ -5,8 +5,27 @@
 }: {
   homebrew = {
     enable = true;
+    taps = [
+      "hashicorp/tap"
+      "hmarr/tap"
+      "homebrew/bundle"
+      "homebrew/cask-versions"
+    ];
     brews = [
+      "openjdk"
+      "bfg"
+      "cloudflared"
+      "docker"
+      "docker-compose"
+      "tesseract"
+      "ffmpeg"
       "gh"
+      "imagemagick"
+      "lazygit"
+      "ncdu"
+      "telnet"
+      "tig"
+      "hashicorp/tap/vault"
     ];
     casks = [
       "1password"
@@ -14,12 +33,16 @@
       "alt-tab"
       "anydesk"
       "bettermouse"
+      "cloudflare-warp"
       "copyq"
+      "dbeaver-community"
       "discord"
       "google-chrome"
+      "google-chrome-canary"
       "hiddenbar"
       "iterm2"
-      "lunar"
+      "karabiner-elements"
+      "microsoft-auto-update"
       "microsoft-edge"
       "microsoft-office"
       "mullvadvpn"
@@ -27,7 +50,6 @@
       "obsidian"
       "parsec"
       "qbittorrent"
-      "rancher"
       "rectangle"
       "slack"
       "spotify"
@@ -35,9 +57,9 @@
       "teamviewer"
       "visual-studio-code"
       "vlc"
+      "warp"
       "whatsapp"
       "zoom"
-      "karabiner-elements"
     ];
   };
 }
