@@ -18,7 +18,7 @@
 
     # FIXME: Python area, should be in a separate file
     # Python
-    python311Full
+    python312
 
     btop
 
