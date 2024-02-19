@@ -4,6 +4,11 @@
   ...
 }: {
   homebrew = {
+    onActivation = {
+      cleanup = "zap";
+      autoUpdate = true;
+      upgrade = true;
+    };
     enable = true;
     taps = [
       "hashicorp/tap"
@@ -41,7 +46,7 @@
       "google-chrome-canary"
       "hiddenbar"
       "iterm2"
-      "karabiner-elements"
+      "hyperkey"
       "microsoft-auto-update"
       "microsoft-edge"
       "microsoft-office"

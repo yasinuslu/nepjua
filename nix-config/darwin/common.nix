@@ -85,6 +85,7 @@
   system.keyboard = {
     enableKeyMapping = true;
     nonUS.remapTilde = true;
+    swapLeftCommandAndLeftAlt = true;
   };
 
   system.defaults = {
