@@ -8,6 +8,7 @@
     ./apps/alt-tab.nix
     ./apps/homebrew.nix
     ./gui-apps.nix
+    ./keyboard.nix
   ];
 
   nix.settings = {
@@ -82,16 +83,9 @@
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
-  system.keyboard = {
-    enableKeyMapping = true;
-    nonUS.remapTilde = true;
-    # swapLeftCommandAndLeftAlt = true;
-  };
-
   system.defaults = {
     dock = {
       autohide = true;
-      # orientation = "right";
     };
 
     finder = {
@@ -105,7 +99,7 @@
       "com.apple.swipescrolldirection" = true;
     };
 
-    screencapture.location = "/tmp/screencapture";
+    screencapture.location = "~/Desktop/screencapture";
 
     trackpad = {
       Clicking = true;

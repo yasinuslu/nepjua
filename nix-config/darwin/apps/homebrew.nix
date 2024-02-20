@@ -46,7 +46,6 @@
       "google-chrome-canary"
       "hiddenbar"
       "iterm2"
-      "hyperkey"
       "microsoft-auto-update"
       "microsoft-edge"
       "microsoft-office"
