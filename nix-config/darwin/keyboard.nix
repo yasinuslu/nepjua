@@ -59,8 +59,6 @@ in {
   #   customKeyboardMappingList = customKeyboardMappingList;
   #   externalMappingToHidUtil = externalMappingToHidUtil;
   #   nonExternalMappingToHidUtil = nonExternalMappingToHidUtil;
-  #   hidUtilCommandList = hidUtilCommandList;
-  #   combinedCommand = combinedCommand;
   # };
   system.activationScripts.postActivation.text = ''
     #!/usr/bin/env bash
