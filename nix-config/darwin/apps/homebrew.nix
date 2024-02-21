@@ -20,8 +20,6 @@
       "openjdk"
       "bfg"
       "cloudflared"
-      "docker"
-      "docker-compose"
       "tesseract"
       "ffmpeg"
       "gh"
@@ -31,6 +29,9 @@
       "telnet"
       "tig"
       "hashicorp/tap/vault"
+      "colima"
+      "docker"
+      "docker-compose"
     ];
     casks = [
       "1password"

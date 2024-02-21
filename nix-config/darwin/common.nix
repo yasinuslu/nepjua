@@ -53,6 +53,9 @@
     bashInteractive
     zsh
     fish
+    # colima
+    # docker-client
+    # docker-compose
   ];
 
   environment.shells = [pkgs.bashInteractive pkgs.zsh pkgs.fish];
