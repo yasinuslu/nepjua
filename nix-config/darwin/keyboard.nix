@@ -43,26 +43,29 @@
     }
   ];
   externalMappingToHidUtil = mapping: ''
-    hidutil property --matching '{"Product": "${builtins.toJSON mapping.name}"' --set '{"UserKeyMapping": ${builtins.toJSON mapping.mappingList}}';
+    hidutil property --matching '{"Product": ${builtins.toJSON mapping.name}}' --set '{"UserKeyMapping": ${builtins.toJSON mapping.mappingList}}' > /dev/null;
   '';
   nonExternalMappingToHidUtil = mapping: ''
-    hidutil property --set '{"UserKeyMapping": ${builtins.toJSON mapping.mappingList}}';
+    hidutil property --set '{"UserKeyMapping": ${builtins.toJSON mapping.mappingList}}' > /dev/null;
   '';
-  hidUtilCommandList = lib.forEach customKeyboardMappingList (mapping:
+  hidUtilCommand = lib.concatMapStringsSep "\n" (mapping:
     if mapping.external
     then externalMappingToHidUtil mapping
-    else nonExternalMappingToHidUtil mapping);
-  combinedCommand = lib.concatLines hidUtilCommandList;
-  # hidUtilCommand = lib.concatMapStringsSep "\n" (mapping:
-  #   if mapping.external
-  #   then externalMappingToHidUtil mapping
-  #   else nonExternalMappingToHidUtil mapping)
-  # customKeyboardMappingList;
+    else nonExternalMappingToHidUtil mapping)
+  customKeyboardMappingList;
 in {
-  config.debugFields = ["aaaa"];
-  # system.activationScripts.labada.text = ''
-  #   #!/usr/bin/env bash
-  #   # Configuring keyboard
-  #   echo "changeddd hid Util Command:"
-  # '';
+  # config.debugFields = {
+  #   mappingDefinitions = mappingDefinitions;
+  #   customKeyboardMappingList = customKeyboardMappingList;
+  #   externalMappingToHidUtil = externalMappingToHidUtil;
+  #   nonExternalMappingToHidUtil = nonExternalMappingToHidUtil;
+  #   hidUtilCommandList = hidUtilCommandList;
+  #   combinedCommand = combinedCommand;
+  # };
+  system.activationScripts.postActivation.text = ''
+    #!/usr/bin/env bash
+    # Configuring keyboard
+    echo "configuring custom keyboard mappings:"
+    ${hidUtilCommand}
+  '';
 }
