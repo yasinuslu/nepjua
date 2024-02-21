@@ -20,6 +20,7 @@ nixpkgs.lib.nixosSystem rec {
   };
 
   modules = [
+    ../utils
     {
       environment.systemPackages = [
         alejandra.defaultPackage.${system}

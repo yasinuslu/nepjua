@@ -13,6 +13,7 @@ in
     specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
     modules = [
+      ../utils
       {
         environment.systemPackages = [
           alejandra.defaultPackage."aarch64-linux"

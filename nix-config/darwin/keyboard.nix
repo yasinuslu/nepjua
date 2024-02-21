@@ -23,11 +23,11 @@
       HIDKeyboardModifierMappingDst = 30064771299;
     };
   };
-  customKeyboardMapping = [
+  customKeyboardMappingList = [
     {
       external = true;
       name = "G815 RGB MECHANICAL GAMING KEYBOARD";
-      mapping = [
+      mappingList = [
         mappingDefinitions.remapCapsLockToEscape
         mappingDefinitions.remapTilde
         mappingDefinitions.swapLeftCommandAndLeftAlt1
@@ -36,29 +36,33 @@
     }
     {
       external = false;
-      mapping = [
+      mappingList = [
         mappingDefinitions.remapCapsLockToEscape
         mappingDefinitions.remapTilde
       ];
     }
   ];
-  # commands = lib.
-in {
-  system.activationScripts.postActivation.text = ''
-    #!/usr/bin/env bash
-    # Configuring keyboard
-    echo "heyyy, configuring custom keyboard mapping..." >&2
-    hidutil property --matching '{"Product": "G815 RGB MECHANICAL GAMING KEYBOARD"}' --set '{
-      "UserKeyMapping":[
-        {
-          "HIDKeyboardModifierMappingSrc": 30064771299,
-          "HIDKeyboardModifierMappingDst": 30064771298
-        },
-        {
-          "HIDKeyboardModifierMappingSrc": 30064771298,
-          "HIDKeyboardModifierMappingDst": 30064771299
-        }
-      ]
-    }'
+  externalMappingToHidUtil = mapping: ''
+    hidutil property --matching '{"Product": "${builtins.toJSON mapping.name}"' --set '{"UserKeyMapping": ${builtins.toJSON mapping.mappingList}}';
   '';
+  nonExternalMappingToHidUtil = mapping: ''
+    hidutil property --set '{"UserKeyMapping": ${builtins.toJSON mapping.mappingList}}';
+  '';
+  hidUtilCommandList = lib.forEach customKeyboardMappingList (mapping:
+    if mapping.external
+    then externalMappingToHidUtil mapping
+    else nonExternalMappingToHidUtil mapping);
+  combinedCommand = lib.concatLines hidUtilCommandList;
+  # hidUtilCommand = lib.concatMapStringsSep "\n" (mapping:
+  #   if mapping.external
+  #   then externalMappingToHidUtil mapping
+  #   else nonExternalMappingToHidUtil mapping)
+  # customKeyboardMappingList;
+in {
+  config.debugFields = ["aaaa"];
+  # system.activationScripts.labada.text = ''
+  #   #!/usr/bin/env bash
+  #   # Configuring keyboard
+  #   echo "changeddd hid Util Command:"
+  # '';
 }

@@ -13,6 +13,7 @@ in
   darwin.lib.darwinSystem {
     system = "aarch64-darwin";
     modules = [
+      ../utils
       {
         environment.systemPackages = [
           alejandra.defaultPackage."aarch64-darwin"
