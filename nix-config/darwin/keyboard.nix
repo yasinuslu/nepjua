@@ -25,6 +25,13 @@
   };
   customKeyboardMappingList = [
     {
+      external = false;
+      mappingList = [
+        mappingDefinitions.remapCapsLockToEscape
+        mappingDefinitions.remapTilde
+      ];
+    }
+    {
       external = true;
       name = "G815 RGB MECHANICAL GAMING KEYBOARD";
       mappingList = [
@@ -32,13 +39,6 @@
         mappingDefinitions.remapTilde
         mappingDefinitions.swapLeftCommandAndLeftAlt1
         mappingDefinitions.swapLeftCommandAndLeftAlt2
-      ];
-    }
-    {
-      external = false;
-      mappingList = [
-        mappingDefinitions.remapCapsLockToEscape
-        mappingDefinitions.remapTilde
       ];
     }
   ];
