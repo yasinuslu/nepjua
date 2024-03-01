@@ -51,7 +51,16 @@
           sha256 = "sha256-Hkm9dhTC9lf2sviTIEBa56nayHgNVg8NOIvYg6EslH0=";
         };
       }
-      # {
+      {
+        name = "oh-my-fish-plugin-osx"; # FIXME: Move this into a newly created osx-specific configuration
+        src = pkgs.fetchFromGitHub {
+          owner = "oh-my-fish";
+          repo = "plugin-osx";
+          rev = "master";
+          sha256 = "sha256-jSUIk3ewM6QnfoAtp16l96N1TlX6vR0d99dvEH53Xgw=";
+        };
+      }
+      # (lib.mkIf (userConfig.system == "aarch64-darwin") {
       #   name = "oh-my-fish-plugin-osx"; # FIXME: Move this into a newly created osx-specific configuration
       #   src = pkgs.fetchFromGitHub {
       #     owner = "oh-my-fish";
@@ -59,7 +68,7 @@
       #     rev = "master";
       #     sha256 = "sha256-jSUIk3ewM6QnfoAtp16l96N1TlX6vR0d99dvEH53Xgw=";
       #   };
-      # }
+      # })
       {
         name = "jhillyerd-plugin-git";
         src = pkgs.fetchFromGitHub {
@@ -78,11 +87,77 @@
           sha256 = "sha256-OYiYTW+g71vD9NWOcX1i2/TaQfAg+c2dJZ5ohwWSDCc=";
         };
       }
-      {
-        name = "nepjua";
-        src = ./fish-plugin-nepjua;
-      }
     ];
+
+    shellAliases = {
+      lsl = "command ls --color";
+      ls = "lsd";
+      cat = "bat";
+      pcat = "bat --plain";
+    };
+
+    shellAbbrs = {
+      cls = "clear; echo 'Shell cleared'";
+      gcom = "git checkout (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')";
+      gcd = "cd (git rev-parse --show-toplevel)";
+      d = "docker";
+      doc = "docker compose";
+      docp = "docker compose -f docker-compose.yml -f docker-compose.prod.yml";
+      docd = "docker compose -f docker-compose.yml -f docker-compose.dev.yml";
+      k = "kubectl";
+      mk = "microk8s.kubectl";
+      md = "microk8s.docker";
+      sk = "skaffold";
+      df = "df -x'squashfs'";
+    };
+
+    functions = {
+      git-remove-branches-except = {
+        argumentNames = ["branches"];
+        description = "Remove all git branches except the specified ones";
+        body = ''
+          if test -z "$branches"
+            git branch | grep -v main | xargs git branch -D
+          else
+            set -l branch_regex (string join '|' $branches)
+            git branch | grep -vE "main|$branch_regex" | xargs git branch -D
+          end
+        '';
+      };
+
+      git-local-upstream-exec = {
+        description = "Execute given command in an upstream that is defined via local filesystem";
+        body = ''
+          set current_dir (pwd)
+          set upstream (git config --local --get remote.origin.url | sed -e 's/.*\/\([^ ]*\/[^.]*\)\.git/\1/')
+          cd $upstream
+          eval $argv
+          cd $current_dir
+        '';
+      };
+
+      git-with-all-upstream-exec = {
+        description = "Execute given command both in current git and upstream";
+        body = ''
+          git-local-upstream-exec $argv
+          eval $argv
+        '';
+      };
+    };
+
+    shellInitLast = ''
+      if type -q code-insiders
+        set -xg EDITOR "code-insiders --wait"
+      else if type -q code
+        set -xg EDITOR "code --wait"
+      else if type -q subl
+        set -xg EDITOR "subl --wait"
+      end
+
+      if type -q gpg
+        set -xg GPG_TTY (tty)
+      end
+    '';
   };
 
   programs.starship = {
@@ -99,6 +174,13 @@
         disabled = true;
       };
     };
+  };
+
+  home.extraPaths = ["$HOME/.local/bin"];
+
+  home.sessionVariables = {
+    EDITOR = "vim";
+    DOCKER_DEFAULT_PLATFORM = "linux/amd64";
   };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

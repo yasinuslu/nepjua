@@ -12,6 +12,7 @@
     enable = true;
     enableFishIntegration = true;
     enableBashIntegration = true;
+    enableZshIntegration = true;
 
     defaultCommand = ''
       fd --type f --strip-cwd-prefix --hidden --follow --exclude .git

@@ -1,2 +1,0 @@
-__nepjua_common_init
-__nepjua_mcs
