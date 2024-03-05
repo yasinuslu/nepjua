@@ -10,13 +10,6 @@
       upgrade = true;
     };
     enable = true;
-    taps = [
-      "hashicorp/tap"
-      "hmarr/tap"
-      "homebrew/bundle"
-      "homebrew/cask-versions"
-      "homebrew/cask"
-    ];
     brews = [
       "openjdk"
       "bfg"
