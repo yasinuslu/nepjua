@@ -9,6 +9,13 @@
       autoUpdate = true;
       upgrade = true;
     };
+    taps = [
+      "hashicorp/tap"
+      {
+        name = "yasinuslu/cask";
+        clone_target = "https://github.com/yasinuslu/homebrew-cask.git";
+      }
+    ];
     enable = true;
     brews = [
       "openjdk"
@@ -32,7 +39,6 @@
       "1password-cli"
       "alt-tab"
       "anydesk"
-      "bettermouse"
       "cloudflare-warp"
       "copyq"
       "dbeaver-community"
@@ -59,6 +65,7 @@
       "warp"
       "whatsapp"
       "zoom"
+      "yasinuslu/cask/bettermouse"
     ];
   };
 }

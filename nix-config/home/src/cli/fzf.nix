@@ -25,6 +25,6 @@
     enableZshIntegration = true;
 
     defaultCommand = "fd --type f --strip-cwd-prefix --hidden --follow";
-    fileWidgetCommand = "fd --type f --strip-cwd-prefix --hidden --follow";
+    fileWidgetCommand = "fd --type f --strip-cwd-prefix --hidden";
   };
 }
