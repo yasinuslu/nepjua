@@ -1,6 +1,10 @@
 {
   "folders": [
     {
+      "name": "nepjua",
+      "path": "."
+    },
+    {
       "name": "tooling",
       "path": "tooling"
     },
@@ -21,7 +25,9 @@
       "**/.hg": true,
       "**/CVS": true,
       "**/.DS_Store": true,
-      "**/Thumbs.db": true
+      "**/Thumbs.db": true,
+      "tooling": true,
+      "nix-config": true
     }
   },
   "launch": {
