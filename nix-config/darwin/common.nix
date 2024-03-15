@@ -53,6 +53,7 @@
     bashInteractive
     zsh
     fish
+    act
     # colima
     # docker-client
     # docker-compose

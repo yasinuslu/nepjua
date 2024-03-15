@@ -23,7 +23,7 @@
       formatter = alejandra.defaultPackage.${system};
 
       devShell = pkgs.mkShell {
-        name = "nepjua";
+        name = "nepjua-nodejs_18";
         buildInputs = [
           pkgs.nodejs_18
         ];

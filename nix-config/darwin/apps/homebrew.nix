@@ -11,10 +11,6 @@
     };
     taps = [
       "hashicorp/tap"
-      {
-        name = "yasinuslu/cask";
-        clone_target = "https://github.com/yasinuslu/homebrew-cask.git";
-      }
     ];
     enable = true;
     brews = [
@@ -65,7 +61,7 @@
       "warp"
       "whatsapp"
       "zoom"
-      "yasinuslu/cask/bettermouse"
+      "bettermouse"
     ];
   };
 }
