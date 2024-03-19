@@ -51,13 +51,7 @@
 
   environment.shells = [pkgs.bashInteractive pkgs.zsh pkgs.fish];
   programs.bash.enable = true;
-  programs.bash.interactiveShellInit = ''
-    . /etc/profiles/per-user/nepjua/etc/profile.d/*
-  '';
   programs.zsh.enable = true;
-  programs.zsh.interactiveShellInit = ''
-    . /etc/profiles/per-user/nepjua/etc/profile.d/*
-  '';
   programs.fish.enable = true;
 
   fonts = {

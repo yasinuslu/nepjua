@@ -73,7 +73,7 @@
         flake = self;
       };
 
-      ryuko = (import ./configurations/ryuko.nix) {
+      chained = (import ./configurations/chained.nix) {
         inputs = self.inputs;
         flake = self;
       };

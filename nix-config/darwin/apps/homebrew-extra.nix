@@ -10,6 +10,7 @@
     "obsidian"
     "parsec"
     "qbittorrent"
+    "copyq"
     "slack"
     "spotify"
     "steam"
@@ -18,5 +19,7 @@
     "warp"
     "whatsapp"
     "mullvadvpn"
+    "discord"
+    "cloudflared"
   ];
 }

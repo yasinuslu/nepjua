@@ -28,7 +28,7 @@ in
           useGlobalPkgs = true;
           useUserPackages = true;
           backupFileExtension = "backup";
-          users.nepjua = import ../home/profiles/darwin;
+          users.yahmet = import ../home/profiles/darwin;
           extraSpecialArgs = {inherit inputs;};
         };
       }

@@ -12,6 +12,20 @@
     ./keyboard.nix
   ];
 
+  programs.bash.interactiveShellInit = ''
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    . /etc/profiles/per-user/yahmet/etc/profile.d/*
+  '';
+  
+  programs.zsh.interactiveShellInit = ''
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    . /etc/profiles/per-user/yahmet/etc/profile.d/*
+  '';
+
+  programs.fish.interactiveShellInit = ''
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  '';
+
   users.users.yahmet.home = "/Users/yahmet";
   users.users.yahmet.shell = pkgs.fish;
 
