@@ -6,7 +6,7 @@
   "configurations": [
     {
       "request": "attach",
-      "name": "Launch Program",
+      "name": "Attach",
       "port": 9229,
       "autoAttachChildProcesses": true,
       "type": "node",

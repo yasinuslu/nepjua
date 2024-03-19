@@ -10,6 +10,7 @@
     "exclude": ["src/testdata/", "data/fixtures/**/*.ts"]
   },
   "tasks": {
-    "install": "deno install --unstable --allow-all --name=do src/main.ts"
+    "install": "deno install --unstable --allow-all --name=do src/main.ts",
+    "install:debug": "deno install --inspect-brk --unstable --allow-all --name=do src/main.ts"
   }
 }
