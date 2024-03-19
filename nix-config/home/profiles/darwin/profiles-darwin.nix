@@ -4,5 +4,5 @@
   config,
   ...
 }: {
-  home.extraPaths = ["$HOME/.rd/bin"];
+  home.extraPaths = [];
 }

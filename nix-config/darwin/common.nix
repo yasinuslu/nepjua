@@ -4,13 +4,6 @@
   username,
   ...
 }: {
-  imports = [
-    ./apps/alt-tab.nix
-    ./apps/homebrew.nix
-    ./gui-apps.nix
-    ./keyboard.nix
-  ];
-
   nix.settings = {
     keep-outputs = true;
     keep-derivations = true;
@@ -54,9 +47,6 @@
     zsh
     fish
     act
-    # colima
-    # docker-client
-    # docker-compose
   ];
 
   environment.shells = [pkgs.bashInteractive pkgs.zsh pkgs.fish];
@@ -69,8 +59,6 @@
     . /etc/profiles/per-user/nepjua/etc/profile.d/*
   '';
   programs.fish.enable = true;
-
-  services.spotifyd.enable = true;
 
   fonts = {
     fontDir.enable = true;
