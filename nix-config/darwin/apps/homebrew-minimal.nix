@@ -36,7 +36,6 @@
       "alt-tab"
       "dbeaver-community"
       "google-chrome"
-      "hiddenbar"
       "iterm2"
       "microsoft-auto-update"
       "microsoft-edge"
