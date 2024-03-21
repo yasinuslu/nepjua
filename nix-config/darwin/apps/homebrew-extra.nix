@@ -12,7 +12,6 @@
     "qbittorrent"
     "copyq"
     "slack"
-    "spotify"
     "steam"
     "teamviewer"
     "zoom"

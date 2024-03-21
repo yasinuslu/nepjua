@@ -28,6 +28,7 @@
       "colima"
       "docker"
       "docker-compose"
+      "git-lfs"
     ];
     casks = [
       "1password"
@@ -44,6 +45,8 @@
       "visual-studio-code"
       "vlc"
       "bettermouse"
+      "betterdisplay"
+      "spotify"
     ];
   };
 }
