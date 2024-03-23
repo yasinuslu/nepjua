@@ -14,7 +14,7 @@
   programs = {
     home-manager.enable = true;
     java.enable = true;
-    gh.enable = false;
+    gh.enable = true;
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
   };

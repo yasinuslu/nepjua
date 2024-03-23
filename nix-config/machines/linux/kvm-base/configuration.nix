@@ -11,6 +11,7 @@
     # FIXME: Generate this import with `nixos-generate-config`
     /etc/nixos/hardware-configuration.nix
     ./gaming
+    ./display.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -35,14 +36,6 @@
     LC_PAPER = "en_US.UTF-8";
     LC_TELEPHONE = "tr_TR.UTF-8";
     LC_TIME = "tr_TR.UTF-8";
-  };
-
-  # Configure keymap in X11
-  services.xserver = {
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
   };
 
   users.users = {
@@ -103,7 +96,6 @@
       auto-optimise-store = true;
       auto-allocate-uids = true;
       trusted-users = ["root" "nepjua"];
-      # impure-env = true;
     };
   };
 
@@ -131,15 +123,7 @@
   services.spice-vdagentd.enable = true;
   services.spice-webdavd.enable = true;
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.videoDrivers = ["ati" "qxl" "nvidia"];
   hardware.opengl.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
-  services.xserver.desktopManager.gnome.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -154,9 +138,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
 
   environment.gnome.excludePackages =
     (with pkgs; [
