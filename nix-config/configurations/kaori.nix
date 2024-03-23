@@ -12,7 +12,6 @@
 in
   nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
-    specialArgs = {inherit inputs;}; # Pass flake inputs to our config
 
     modules = [
       ../utils
