@@ -126,9 +126,14 @@
 
   services.flatpak.enable = true;
 
+  services.qemuGuest.enable = true;
+  services.spice-autorandr.enable = true;
+  services.spice-vdagentd.enable = true;
+  services.spice-webdavd.enable = true;
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = ["ati" "qxl" "nvidia"];
   hardware.opengl.enable = true;
 
   # Enable the GNOME Desktop Environment.
