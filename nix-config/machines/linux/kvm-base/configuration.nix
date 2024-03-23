@@ -7,26 +7,11 @@
   pkgs,
   ...
 }: {
-  # You can import other NixOS modules here
   imports = [
-    # If you want to use modules from other flakes (such as nixos-hardware):
-    # inputs.hardware.nixosModules.common-cpu-amd
-    # inputs.hardware.nixosModules.common-ssd
-
-    # You can also split up your configuration and import pieces of it here:
-    # ./users.nix
-
-    # Import your generated (nixos-generate-config) hardware configuration
-    ./hardware-configuration.nix
+    # FIXME: Generate this import with `nixos-generate-config`
+    /etc/nixos/hardware-configuration.nix
     ./gaming
-    ./fs.nix
-    ./docker.nix
-    ./bootloader.nix
   ];
-
-  
-
-  networking.hostName = "kaori"; # Define your hostname.
 
   # Enable networking
   networking.networkmanager.enable = true;

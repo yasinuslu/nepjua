@@ -7,7 +7,6 @@
   ...
 }: {
   imports = [
-    ./common.nix
     ./gnome
     ./browser.nix
   ];
