@@ -48,9 +48,13 @@
       initialPassword = "line-flanker-wingman-sidle";
       isNormalUser = true;
       description = "Yasin Uslu";
-      openssh.authorizedKeys.keys = [];
+      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
       extraGroups = ["networkmanager" "wheel" "docker"];
       shell = pkgs.fish;
+    };
+
+    root = {
+      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
     };
   };
 
@@ -74,6 +78,10 @@
     config = {
       # Disable if you don't want unfree packages
       allowUnfree = true;
+
+      permittedInsecurePackages = [
+        "electron-25.9.0"
+      ];
     };
   };
 
@@ -88,9 +96,12 @@
 
     settings = {
       # Enable flakes and new 'nix' command
-      experimental-features = "nix-command flakes";
-      # Deduplicate and optimize nix store
+      experimental-features = "nix-command flakes auto-allocate-uids";
+      accept-flake-config = true;
       auto-optimise-store = true;
+      auto-allocate-uids = true;
+      trusted-users = ["root" "nepjua"];
+      # impure-env = true;
     };
   };
 
@@ -104,7 +115,12 @@
     _1password
     _1password-gui
     gnome.dconf-editor
+    cachix
+    nixd
   ];
+
+  programs.fish.enable = true;
+  programs.java.enable = true;
 
   services.flatpak.enable = true;
 
@@ -134,8 +150,6 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
-
-  programs.fish.enable = true;
 
   environment.gnome.excludePackages =
     (with pkgs; [

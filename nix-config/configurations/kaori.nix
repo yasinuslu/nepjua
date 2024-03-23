@@ -10,18 +10,30 @@
     home-manager
     ;
 in
-  nixpkgs.lib.nixosSystem {
+  nixpkgs.lib.nixosSystem rec {
     system = "x86_64-linux";
+    specialArgs = {
+      inherit inputs;
+      inherit flake system;
+    };
 
     modules = [
       ../utils
       {
         environment.systemPackages = [
-          alejandra.defaultPackage."x86_64-linux"
+          alejandra.defaultPackage.${system}
         ];
       }
       {networking.hostName = "kaori";}
       ../machines/linux/kvm-base/configuration.nix
+      {
+        environment.systemPackages = with inputs.nix-alien.packages.${system}; [
+          nix-alien
+        ];
+        # Optional, needed for `nix-alien-ld`
+        programs.nix-ld.enable = true;
+      }
+      ./src/nix-ld-libraries.nix
       nix-index-database.nixosModules.nix-index
       {
         programs.nix-index-database.comma.enable = true;
