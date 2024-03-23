@@ -1,4 +1,5 @@
 {
+  specialArgs,
   options,
   inputs,
   lib,
