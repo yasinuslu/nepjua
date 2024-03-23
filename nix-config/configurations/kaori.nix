@@ -1,4 +1,7 @@
-{inputs}: let
+{
+  inputs,
+  flake
+}: let
   inherit
     (inputs)
     nixpkgs

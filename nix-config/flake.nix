@@ -53,7 +53,7 @@
     nixosConfigurations = {
       kaori = import ./configurations/kaori.nix {
         inputs = self.inputs;
-        # flake = self;
+        flake = self;
       };
 
       hetzner = import ./configurations/hetzner.nix {
