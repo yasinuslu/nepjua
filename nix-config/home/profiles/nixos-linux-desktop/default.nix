@@ -1,10 +1,9 @@
 {
-  specialArgs,
-  options,
   inputs,
   lib,
   config,
   pkgs,
+  ...
 }: {
   imports = [
     ../../src/extensions/extra-paths/__enter.nix
