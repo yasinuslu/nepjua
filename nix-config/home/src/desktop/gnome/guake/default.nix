@@ -1,4 +1,11 @@
-{ inputs, lib, config, pkgs, colors, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  colors,
+  ...
+}: {
   imports = [
     ./guake.dconf.nix
   ];

@@ -1,10 +1,11 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
-{ inputs
-, lib
-, pkgs
-, config
-, ...
+{
+  inputs,
+  lib,
+  pkgs,
+  config,
+  ...
 }: {
   wsl.enable = true;
   wsl.defaultUser = "nepjua";
@@ -20,13 +21,13 @@
       initialPassword = "line-flanker-wingman-sidle";
       isNormalUser = true;
       description = "Yasin Uslu";
-      openssh.authorizedKeys.keys = [ ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd'' ];
-      extraGroups = [ "networkmanager" "wheel" "docker" ];
+      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
+      extraGroups = ["networkmanager" "wheel" "docker"];
       shell = pkgs.fish;
     };
 
     root = {
-      openssh.authorizedKeys.keys = [ ''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd'' ];
+      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
     };
   };
 
@@ -57,7 +58,7 @@
   nix = {
     # This will add each flake input as a registry
     # To make nix3 commands consistent with your flake
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+    registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
 
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
@@ -69,7 +70,7 @@
       accept-flake-config = true;
       auto-optimise-store = true;
       auto-allocate-uids = true;
-      trusted-users = [ "root" "nepjua" ];
+      trusted-users = ["root" "nepjua"];
       # impure-env = true;
     };
   };

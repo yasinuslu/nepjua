@@ -1,6 +1,6 @@
 {
   inputs,
-  flake
+  flake,
 }: let
   inherit
     (inputs)
@@ -21,10 +21,10 @@ in
           alejandra.defaultPackage."x86_64-linux"
         ];
       }
-      { networking.hostName = "kaori"; }
+      {networking.hostName = "kaori";}
       ../machines/linux/kvm-base/configuration.nix
       nix-index-database.nixosModules.nix-index
-      { programs.nix-index-database.comma.enable = true; }
+      {programs.nix-index-database.comma.enable = true;}
       home-manager.nixosModules.home-manager
       {
         home-manager = {

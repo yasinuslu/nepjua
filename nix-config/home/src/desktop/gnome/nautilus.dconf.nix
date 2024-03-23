@@ -1,9 +1,6 @@
 # Generated via dconf2nix: https://github.com/gvolpe/dconf2nix
-{ lib, ... }:
-
-with lib.hm.gvariant;
-
-{
+{lib, ...}:
+with lib.hm.gvariant; {
   dconf.settings = {
     "org/gnome/nautilus/preferences" = {
       default-folder-viewer = "icon-view";
@@ -11,6 +8,5 @@ with lib.hm.gvariant;
       search-filter-time-type = "last_modified";
       search-view = "list-view";
     };
-
   };
 }

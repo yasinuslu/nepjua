@@ -1,16 +1,13 @@
 # Generated via dconf2nix: https://github.com/gvolpe/dconf2nix
-{ lib, ... }:
-
-with lib.hm.gvariant;
-
-{
+{lib, ...}:
+with lib.hm.gvariant; {
   dconf.settings = {
     "org/gnome/shell" = {
-      command-history = [ "r" ];
+      command-history = ["r"];
       disable-user-extensions = false;
-      disabled-extensions = [ "extensions-sync@elhan.io" "apps-menu@gnome-shell-extensions.gcampax.github.com" ];
-      enabled-extensions = [ "user-theme@gnome-shell-extensions.gcampax.github.com" "advanced-alt-tab@G-dH.github.com" "quick-settings-tweaks@qwreey" "appindicatorsupport@rgcjonas.gmail.com" ];
-      favorite-apps = [ "org.gnome.Geary.desktop" "org.gnome.Calendar.desktop" "org.gnome.Music.desktop" "org.gnome.Photos.desktop" "org.gnome.Nautilus.desktop" ];
+      disabled-extensions = ["extensions-sync@elhan.io" "apps-menu@gnome-shell-extensions.gcampax.github.com"];
+      enabled-extensions = ["user-theme@gnome-shell-extensions.gcampax.github.com" "advanced-alt-tab@G-dH.github.com" "quick-settings-tweaks@qwreey" "appindicatorsupport@rgcjonas.gmail.com"];
+      favorite-apps = ["org.gnome.Geary.desktop" "org.gnome.Calendar.desktop" "org.gnome.Music.desktop" "org.gnome.Photos.desktop" "org.gnome.Nautilus.desktop"];
       welcome-dialog-last-shown-version = "43.2";
     };
 
@@ -29,6 +26,5 @@ with lib.hm.gvariant;
     "org/gnome/tweaks" = {
       show-extensions-notice = false;
     };
-
   };
 }

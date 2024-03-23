@@ -1,9 +1,6 @@
 # Generated via dconf2nix: https://github.com/gvolpe/dconf2nix
-{ lib, ... }:
-
-with lib.hm.gvariant;
-
-{
+{lib, ...}:
+with lib.hm.gvariant; {
   dconf.settings = {
     "apps/guake/general" = {
       compat-delete = "delete-sequence";
@@ -49,6 +46,5 @@ with lib.hm.gvariant;
       palette-name = "Argonaut";
       style = "Monospace 11";
     };
-
   };
 }
