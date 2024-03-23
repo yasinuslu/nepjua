@@ -23,7 +23,11 @@ in
       {networking.hostName = "kaori";}
       ../machines/linux/kvm-base/configuration.nix
       nix-index-database.nixosModules.nix-index
-      {programs.nix-index-database.comma.enable = true;}
+      {
+        programs.nix-index-database.comma.enable = true;
+        programs.nix-index.enable = true;
+        programs.command-not-found.enable = false;
+      }
       home-manager.nixosModules.home-manager
       {
         home-manager = {
