@@ -14,6 +14,26 @@
     ./display.nix
   ];
 
+  zramSwap.enable = true;
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [80 443 22 3386];
+    allowedUDPPorts = [];
+    allowedTCPPortRanges = [
+      {
+        from = 20000;
+        to = 21000;
+      }
+    ];
+    allowedUDPPortRanges = [
+      {
+        from = 20000;
+        to = 21000;
+      }
+    ];
+  };
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -111,7 +131,13 @@
     gnome.dconf-editor
     cachix
     nixd
+    busybox
+    xrdp
   ];
+
+  hardware.opengl.enable = true;
+  hardware.opengl.driSupport = true;
+  hardware.opengl.driSupport32Bit = true;
 
   programs.fish.enable = true;
   programs.java.enable = true;
@@ -122,8 +148,6 @@
   services.spice-autorandr.enable = true;
   services.spice-vdagentd.enable = true;
   services.spice-webdavd.enable = true;
-
-  hardware.opengl.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -187,6 +211,7 @@
 
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
+  services.gnome.gnome-remote-desktop.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
