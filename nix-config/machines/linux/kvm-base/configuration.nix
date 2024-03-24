@@ -145,9 +145,9 @@
   services.flatpak.enable = true;
 
   services.qemuGuest.enable = true;
-  services.spice-autorandr.enable = true;
-  services.spice-vdagentd.enable = true;
-  services.spice-webdavd.enable = true;
+  services.spice-autorandr.enable = false;
+  services.spice-vdagentd.enable = false;
+  services.spice-webdavd.enable = false;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;

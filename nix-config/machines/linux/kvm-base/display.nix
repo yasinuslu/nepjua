@@ -10,12 +10,14 @@
   # services.xrdp.openFirewall = true;
   # services.xrdp.defaultWindowManager = "gnome-session";
 
+  hardware.bumblebee.connectDisplay = true;
+
   services.xserver.xkb.layout = "us";
   services.xserver.xkb.variant = "";
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-  services.xserver.videoDrivers = ["nouveau"];
+  services.xserver.videoDrivers = ["nvidia"];
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.displayManager.gdm.wayland = true;
@@ -24,6 +26,7 @@
   services.xserver.libinput.enable = true;
 
   services.autorandr.enable = true;
+  services.autorandr.defaultTarget = "multi";
   services.autorandr.profiles.multi = {
     fingerprint = {
       dp2-2k-oled = "00ffffffffffff004c2df2720000000008200104b55123783bbc55b04d3db7250f505421080081c0810081809500a9c0b300010101016d8870a0d0a0b25030203a0029623100001a000000fd0c30af1e1e66010a202020202020000000fc004f647973736579204738355342000000ff004831414b3530303030300a202002af020330f144903f04032309070783010000e305c3016d1a0000020730af000460024b02e6060501604a00e5018b849039565e00a0a0a029503020350029623100001a6fc200a0a0a055503020350029623100001a0474801871382d40582c450029623100001e00000000000000000000000000000000000000000000000000987012790300030150f21001886f0d9f002f801f009f05b10002000900568e01086f0d9f002f801f009f05b200020009004e230108ff099f002f801f009f057e0002000400fda600087f079f002f801f0037045e00020004000000000000000000000000000000000000000000000000000000000000000000000000000000bf90";
