@@ -9,7 +9,7 @@ with lib.hm.gvariant; {
       font-hinting = "slight";
       font-name = "Cantarell 11";
       monospace-font-name = "JetBrainsMono Nerd Font Mono 11";
-      # text-scaling-factor = 1.2000000000000002;
+      text-scaling-factor = 1.2000000000000002;
     };
   };
 }

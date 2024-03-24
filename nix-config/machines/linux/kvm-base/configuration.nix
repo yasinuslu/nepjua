@@ -63,13 +63,13 @@
       initialPassword = "line-flanker-wingman-sidle";
       isNormalUser = true;
       description = "Yasin Uslu";
-      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
+      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJdpt9EGv3VZwkxRUP0M90kVkkOCtC+huewLt6NJhKg''];
       extraGroups = ["networkmanager" "wheel" "docker"];
       shell = pkgs.fish;
     };
 
     root = {
-      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDuVv6WeFdiZ+xfszM28cDmQM1yL0qw4TtMfzMzu5/zd''];
+      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJdpt9EGv3VZwkxRUP0M90kVkkOCtC+huewLt6NJhKg''];
     };
   };
 
