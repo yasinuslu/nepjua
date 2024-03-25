@@ -38,6 +38,7 @@
   };
 
   home.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/share/flatpak/exports/share";
   };
 }

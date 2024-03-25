@@ -16,6 +16,10 @@
     ../../src/extensions/extra-paths/__exit.nix
   ];
 
+  home.packages = with pkgs; [
+    cloudflare-warp
+  ];
+
   # services.autorandr.enable = true;
 
   # programs.autorandr.enable = true;

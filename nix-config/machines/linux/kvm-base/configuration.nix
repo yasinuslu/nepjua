@@ -137,10 +137,6 @@
     xrdp
   ];
 
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport = true;
-  hardware.opengl.driSupport32Bit = true;
-
   programs.fish.enable = true;
   programs.java.enable = true;
 
