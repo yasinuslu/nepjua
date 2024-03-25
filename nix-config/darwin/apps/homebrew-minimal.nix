@@ -46,6 +46,7 @@
       "bettermouse"
       "betterdisplay"
       "spotify"
+      "whatsapp"
     ];
   };
 }

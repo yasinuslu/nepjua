@@ -16,7 +16,6 @@
     "teamviewer"
     "zoom"
     "warp"
-    "whatsapp"
     "mullvadvpn"
     "discord"
     "cloudflared"
