@@ -116,8 +116,8 @@
       auto-optimise-store = true;
       auto-allocate-uids = true;
       trusted-users = ["root" "nepjua"];
-      cores = 6;
-      max-jobs = 6;
+      # cores = 6;
+      # max-jobs = 6;
     };
   };
 
