@@ -47,7 +47,6 @@
       "betterdisplay"
       "spotify"
       "whatsapp"
-      "eqmac"
     ];
   };
 }
