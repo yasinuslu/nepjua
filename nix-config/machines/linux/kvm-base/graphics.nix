@@ -10,6 +10,12 @@
   # services.xrdp.openFirewall = true;
   # services.xrdp.defaultWindowManager = "gnome-session";
 
+  nixpkgs.overlays = [inputs.nixgl.overlay];
+  environment.systemPackages = with pkgs; [
+    mesa-demos
+    nixgl.auto.nixGLDefault
+  ];
+
   hardware.bumblebee.connectDisplay = true;
 
   services.xserver.xkb.layout = "us";
@@ -24,18 +30,6 @@
   services.xserver.desktopManager.gnome.enable = true;
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
-
-  # environment.systemPackages = with pkgs; [
-  #   libva
-  #   libdrm
-  #   libGL
-  #   mesa
-  #   mesa-demos
-  #   vaapiVdpau
-  #   libvdpau-va-gl
-  #   virtualgl
-  #   virtualglLib
-  # ];
 
   hardware.opengl.enable = true;
   hardware.opengl.driSupport = true;

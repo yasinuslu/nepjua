@@ -43,7 +43,6 @@
   outputs = {
     self,
     alejandra,
-    nixpkgs,
     ...
   }: {
     formatter.x86_64-linux = alejandra.defaultPackage."x86_64-linux";
