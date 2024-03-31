@@ -157,6 +157,8 @@
       if type -q gpg
         set -xg GPG_TTY (tty)
       end
+
+      printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish" }}\x9c'
     '';
   };
 

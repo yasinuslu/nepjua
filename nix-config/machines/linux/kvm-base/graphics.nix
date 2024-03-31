@@ -25,17 +25,17 @@
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    libva
-    libdrm
-    libGL
-    mesa
-    mesa-demos
-    vaapiVdpau
-    libvdpau-va-gl
-    virtualgl
-    virtualglLib
-  ];
+  # environment.systemPackages = with pkgs; [
+  #   libva
+  #   libdrm
+  #   libGL
+  #   mesa
+  #   mesa-demos
+  #   vaapiVdpau
+  #   libvdpau-va-gl
+  #   virtualgl
+  #   virtualglLib
+  # ];
 
   hardware.opengl.enable = true;
   hardware.opengl.driSupport = true;
@@ -44,6 +44,7 @@
   hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.powerManagement.enable = true;
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+  # hardware.nvidia.forceFullCompositionPipeline = true;
+  # hardware.nvidiaOptimus.disable = true;
   hardware.nvidia.open = true;
 }

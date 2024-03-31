@@ -29,10 +29,10 @@
     hooks = {
       preswitch = ''
         alias xrandr="${pkgs.xorg.xrandr.outPath}/bin/xrandr"
-        xrandr --delmode DP-2 "2560x1080_175.00" 2>/dev/null
-        xrandr --rmmode "2560x1080_175.00" 2>/dev/null
-        xrandr --newmode "2560x1080_175.00"  748.00  2560 2784 3064 3568  1080 1083 1093 1199 -hsync +vsync
-        xrandr --addmode DP-2 "2560x1080_175.00"
+        xrandr --delmode DP-2 "2580x1080_175" 2>/dev/null
+        xrandr --rmmode "2580x1080_175" 2>/dev/null
+        xrandr --newmode "2580x1080_175"  756.50  2584 2816 3096 3608  1080 1083 1093 1199 -hsync +vsync
+        xrandr --addmode DP-2 "2580x1080_175"
       '';
     };
     fingerprint = {
@@ -46,23 +46,24 @@
         mode = "1920x1080";
         rate = "75";
         position = "0x360";
-        scale = {
-          x = 1;
-          y = 1;
-          method = "factor";
-        };
+        # scale = {
+        #   x = 1;
+        #   y = 1;
+        #   method = "factor";
+        # };
       };
       DP-2 = {
         enable = true;
         primary = true;
         position = "1920x0";
-        mode = "2560x1080_175.00";
-        rate = "174.96";
-        scale = {
-          x = 1;
-          y = 1;
-          method = "factor";
-        };
+        # mode = "2580x1080_175";
+        mode = "3440x1440";
+        rate = "175.00";
+        # scale = {
+        #   x = 0.75;
+        #   y = 0.75;
+        #   method = "factor";
+        # };
       };
     };
   };
