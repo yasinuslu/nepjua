@@ -26,11 +26,11 @@
     obs-studio
     bottles
     qbittorrent
-    discord
     slack
     obsidian
     zoom-us
     spotify
+    warp-terminal
   ];
 
   services.spotifyd = {

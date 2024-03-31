@@ -16,23 +16,23 @@
 
   zramSwap.enable = true;
 
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [80 443 22 3386];
-    allowedUDPPorts = [];
-    allowedTCPPortRanges = [
-      {
-        from = 20000;
-        to = 21000;
-      }
-    ];
-    allowedUDPPortRanges = [
-      {
-        from = 20000;
-        to = 21000;
-      }
-    ];
-  };
+  # networking.firewall = {
+  #   enable = true;
+  #   allowedTCPPorts = [80 443 22 3386];
+  #   allowedUDPPorts = [];
+  #   allowedTCPPortRanges = [
+  #     {
+  #       from = 20000;
+  #       to = 21000;
+  #     }
+  #   ];
+  #   allowedUDPPortRanges = [
+  #     {
+  #       from = 20000;
+  #       to = 21000;
+  #     }
+  #   ];
+  # };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -135,6 +135,8 @@
     nixd
     busybox
     xrdp
+    discord
+    vesktop
   ];
 
   programs.fish.enable = true;
@@ -200,6 +202,7 @@
     settings = {
       PermitRootLogin = "yes";
       PasswordAuthentication = true;
+      ForceCommand = "${pkgs.bash.outPath}/bin/bash";
     };
   };
 
