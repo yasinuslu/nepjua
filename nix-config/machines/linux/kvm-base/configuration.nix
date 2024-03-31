@@ -11,7 +11,7 @@
     # FIXME: Generate this import with `nixos-generate-config`
     /etc/nixos/hardware-configuration.nix
     ./gaming
-    ./display.nix
+    ./graphics.nix
   ];
 
   zramSwap.enable = true;
