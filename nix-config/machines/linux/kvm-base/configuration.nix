@@ -58,19 +58,18 @@
     LC_TIME = "tr_TR.UTF-8";
   };
 
-  users.users = {
-    nepjua = {
-      initialPassword = "line-flanker-wingman-sidle";
-      isNormalUser = true;
-      description = "Yasin Uslu";
-      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJdpt9EGv3VZwkxRUP0M90kVkkOCtC+huewLt6NJhKg''];
-      extraGroups = ["networkmanager" "wheel" "docker"];
-      shell = pkgs.fish;
-    };
+  users.users.nepjua = {
+    initialPassword = "line-flanker-wingman-sidle";
+    isNormalUser = true;
+    description = "Yasin Uslu";
+    openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJdpt9EGv3VZwkxRUP0M90kVkkOCtC+huewLt6NJhKg''];
+    extraGroups = ["networkmanager" "wheel" "docker"];
+    shell = pkgs.fish;
+  };
 
-    root = {
-      openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJdpt9EGv3VZwkxRUP0M90kVkkOCtC+huewLt6NJhKg''];
-    };
+  users.users.root = {
+    openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJdpt9EGv3VZwkxRUP0M90kVkkOCtC+huewLt6NJhKg''];
+    extraGroups = ["networkmanager" "wheel" "docker"];
   };
 
   # Enable automatic login for the user.
@@ -106,6 +105,10 @@
       # max-jobs = 6;
     };
   };
+
+  virtualisation.docker.enable = true;
+  virtualisation.docker.enableNvidia = true;
+  virtualisation.docker.enableOnBoot = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
