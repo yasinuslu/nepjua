@@ -19,7 +19,7 @@ in
           alejandra.defaultPackage."aarch64-darwin"
         ];
       }
-      ../darwin/ryuko.nix
+      ../darwin/raiden.nix
       nix-index-database.nixosModules.nix-index
       {programs.nix-index-database.comma.enable = true;}
       home-manager.darwinModules.home-manager
@@ -28,7 +28,16 @@ in
           useGlobalPkgs = true;
           useUserPackages = true;
           backupFileExtension = "backup";
-          users.musu = import ../home/profiles/darwin;
+          users.nepjua = (import ../home/profiles/darwin) {
+            inherit inputs;
+            username = "nepjua";
+          };
+          
+          users.musu = (import ../home/profiles/darwin) {
+            inherit inputs;
+            username = "musu";
+          };
+
           extraSpecialArgs = {inherit inputs;};
         };
       }
