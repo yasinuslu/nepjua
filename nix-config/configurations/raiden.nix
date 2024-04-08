@@ -29,7 +29,7 @@ in
           useUserPackages = true;
           backupFileExtension = "backup";
           users.nepjua = import ../home/profiles/darwin/nepjua.nix;
-          users.musu = import ../home/profiles/darwin/musu.nix;
+          # users.musu = import ../home/profiles/darwin/musu.nix;
           extraSpecialArgs = {
             inherit inputs;
           };

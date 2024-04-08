@@ -18,17 +18,17 @@
     ../../src/extensions/extra-paths/__exit.nix
   ];
 
-  programs.bash.interactiveShellInit = ''
+  programs.bash.initExtra = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
     . /etc/profiles/per-user/nepjua/etc/profile.d/*
   '';
 
-  programs.zsh.interactiveShellInit = ''
+  programs.zsh.initExtra = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
     . /etc/profiles/per-user/nepjua/etc/profile.d/*
   '';
 
-  programs.fish.interactiveShellInit = ''
+  programs.fish.shellInit = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
   '';
 }
