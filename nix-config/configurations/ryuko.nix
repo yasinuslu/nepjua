@@ -1,4 +1,7 @@
-{inputs}: let
+{
+  inputs,
+  flake,
+}: let
   inherit
     (inputs)
     darwin
@@ -24,7 +27,8 @@ in
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
-          users.musu = import ../home/profiles/musu-darwin;
+          backupFileExtension = "backup";
+          users.musu = import ../home/profiles/darwin;
           extraSpecialArgs = {inherit inputs;};
         };
       }
