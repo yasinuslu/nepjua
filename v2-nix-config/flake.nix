@@ -31,6 +31,7 @@
 
     formatter = {
       url = "path:./src/subflakes/formatter";
+      inputs.root.url = "path:.";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
