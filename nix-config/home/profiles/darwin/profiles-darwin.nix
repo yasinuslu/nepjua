@@ -3,27 +3,26 @@
   pkgs,
   config,
   ...
-}: let
-  brew = "sudo -Hu nixrunner brew";
-in {
+}: {
   home.extraPaths = [];
 
   programs.bash.initExtra = ''
-    eval "$(${brew} shellenv)"
+    eval "$(/opt/homebrew/bin/brew shellenv bash)"
     . /etc/profiles/per-user/nepjua/etc/profile.d/*
   '';
 
+  programs.zsh.enable = true;
   programs.zsh.initExtra = ''
-    eval "$(${brew} shellenv)"
+    eval "$(/opt/homebrew/bin/brew shellenv zsh)"
     . /etc/profiles/per-user/nepjua/etc/profile.d/*
   '';
 
   programs.fish.shellInit = ''
-    eval "$(${brew} shellenv)"
+    eval "$(/opt/homebrew/bin/brew shellenv fish)"
   '';
 
   programs.fish.shellAbbrs = {
-    "brew" = "${brew}";
+    "brew" = "sudo -Hu nixrunner brew";
     "nix" = "sudo -Hu nixrunner nix";
     "nix-env" = "sudo -Hu nixrunner nix-env";
     "nix-shell" = "sudo -Hu nixrunner nix-shell";
