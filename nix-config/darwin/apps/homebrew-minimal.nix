@@ -47,6 +47,7 @@
       "betterdisplay"
       "spotify"
       "whatsapp"
+      "zed"
     ];
   };
 }

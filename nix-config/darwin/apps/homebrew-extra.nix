@@ -3,6 +3,10 @@
   pkgs,
   ...
 }: {
+  homebrew.brews = [
+    "cloudflared"
+  ];
+
   homebrew.casks = [
     "anydesk"
     "cloudflare-warp"
@@ -18,6 +22,6 @@
     "warp"
     "mullvadvpn"
     "discord"
-    "cloudflared"
+    "mtmr"
   ];
 }

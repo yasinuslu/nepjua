@@ -9,14 +9,15 @@
     nix-index-database
     home-manager
     ;
+  system = "aarch64-darwin";
 in
   darwin.lib.darwinSystem {
-    system = "aarch64-darwin";
+    system = "${system}";
     modules = [
       ../utils
       {
         environment.systemPackages = [
-          alejandra.defaultPackage."aarch64-darwin"
+          alejandra.defaultPackage.${system}
         ];
       }
       ../darwin/raiden.nix
@@ -28,17 +29,11 @@ in
           useGlobalPkgs = true;
           useUserPackages = true;
           backupFileExtension = "backup";
-          users.nepjua = (import ../home/profiles/darwin) {
+          users.nepjua = import ../home/profiles/darwin/nepjua.nix;
+          # users.musu = import ../home/profiles/darwin/musu.nix;
+          extraSpecialArgs = {
             inherit inputs;
-            username = "nepjua";
           };
-          
-          users.musu = (import ../home/profiles/darwin) {
-            inherit inputs;
-            username = "musu";
-          };
-
-          extraSpecialArgs = {inherit inputs;};
         };
       }
     ];

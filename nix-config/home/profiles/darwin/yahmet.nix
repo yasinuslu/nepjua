@@ -1,15 +1,21 @@
 {
-  lib,
   config,
-  pkgs,
-  ...
+  lib,
+  inputs,
+  specialArgs,
+  modulesPath,
+  options,
+  darwinConfig,
+  osConfig,
 }: {
   imports = [
-    ./common.nix
-    ./apps/alt-tab.nix
-    ./apps/homebrew-minimal.nix
-    ./gui-apps.nix
-    ./keyboard.nix
+    ../../src/extensions/extra-paths/__enter.nix
+    ../../profiles/minimal
+
+    # Actual darwin configuration
+    ../../profiles/darwin/profiles-darwin.nix
+
+    ../../src/extensions/extra-paths/__exit.nix
   ];
 
   programs.bash.interactiveShellInit = ''
@@ -25,10 +31,4 @@
   programs.fish.interactiveShellInit = ''
     eval "$(/opt/homebrew/bin/brew shellenv)"
   '';
-
-  users.users.musu.home = "/Users/musu";
-  users.users.musu.shell = pkgs.fish;
-
-  networking.hostName = "ryuko";
-  networking.computerName = "Musu's Mac";
 }
