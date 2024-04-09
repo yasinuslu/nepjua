@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/master";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,8 +31,8 @@
 
     formatter = {
       url = "path:./src/subflakes/formatter";
-      inputs.root.url = "path:.";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-compat.follows = "flake-compat";
     };
   };
 
@@ -40,8 +40,7 @@
     self,
     ...
   }: {
-    bar = "bar";
-    formatter = self.inputs.formatter.outputs.formatter-config;
+    formatter = self.inputs.formatter.outputs.formatter;
 
     # darwinConfigurations = {
     #   saiko = (import ./machines/saiko) {

@@ -3,10 +3,10 @@
 
   inputs = {
     nixpkgs = {};
-    root = {};
+    flake-compat = {};
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
-    alejandra.inputs.flakeCompat.follows = "root/flake-compat";
+    alejandra.inputs.flakeCompat.follows = "flake-compat";
   };
 
   outputs = {
