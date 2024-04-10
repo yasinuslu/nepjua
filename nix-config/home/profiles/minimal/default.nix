@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     inputs.nix-colors.homeManagerModule
@@ -14,9 +18,9 @@
   programs = {
     home-manager.enable = true;
     java.enable = true;
-    gh.enable = true;
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
+    gh.enable = true;
   };
 
   # Nicely reload system units when changing configs
