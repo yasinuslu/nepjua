@@ -15,6 +15,7 @@
 - [ ] Add multi-user support for darwin
 - [ ] Research lorri and integrate it
 - [ ] Research niv and integrate it if needed
+- [ ] Add monaspace font
 - [ ] 
 
 ## FAQ
