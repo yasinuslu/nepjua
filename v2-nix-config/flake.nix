@@ -30,7 +30,7 @@
     };
 
     formatter = {
-      url = "path:./src/subflakes/formatter";
+      url = "path:./src/packages/formatter";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-compat.follows = "flake-compat";
     };
