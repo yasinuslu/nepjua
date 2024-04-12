@@ -28,7 +28,7 @@ in
         home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
-          backupFileExtension = "backup";
+          backupFileExtension = "before-nix-flake";
           users.nepjua = import ../home/profiles/darwin/nepjua.nix;
           # users.musu = import ../home/profiles/darwin/musu.nix;
           extraSpecialArgs = {
