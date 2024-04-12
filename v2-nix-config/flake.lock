@@ -210,11 +210,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-JX0uXDr+q4Et6Wrq4oza4dL+YaH1pGtQKnWmYCivahc=",
-        "path": "./src/subflakes/formatter",
+        "path": "./src/packages/formatter",
         "type": "path"
       },
       "original": {
-        "path": "./src/subflakes/formatter",
+        "path": "./src/packages/formatter",
         "type": "path"
       }
     },
@@ -225,11 +225,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1712645849,
-        "narHash": "sha256-67v20E0gH7nvAaMsah2oRIocnxGO25fATUyzQHIywxQ=",
+        "lastModified": 1712759992,
+        "narHash": "sha256-2APpO3ZW4idlgtlb8hB04u/rmIcKA8O7pYqxF66xbNY=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "40a99619da804a78a0b166e5c6911108c059c3a8",
+        "rev": "31357486b0ef6f4e161e002b6893eeb4fafc3ca9",
         "type": "github"
       },
       "original": {
@@ -369,11 +369,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1712634594,
-        "narHash": "sha256-fzBqUvcJjjyIapioiaW5b/mj7V/xxljDt864JrDC5qI=",
+        "lastModified": 1712849433,
+        "narHash": "sha256-flQtf/ZPJgkLY/So3Fd+dGilw2DKIsiwgMEn7BbBHL0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "0dca19054c663a0cf3b471be3c3079acfd623924",
+        "rev": "f173d0881eff3b21ebb29a2ef8bedbc106c86ea5",
         "type": "github"
       },
       "original": {
