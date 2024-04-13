@@ -1,5 +1,5 @@
 {
-  description = "Subflake for downloading and setting formatter";
+  description = "Main library";
 
   inputs = {
     nixpkgs = {};

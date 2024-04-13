@@ -16,9 +16,6 @@
 
     nix-colors.url = "github:misterio77/nix-colors";
 
-    alejandra.url = "github:kamadorueda/alejandra/3.0.0";
-    alejandra.inputs.nixpkgs.follows = "nixpkgs";
-
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -41,12 +38,5 @@
     ...
   }: {
     formatter = self.inputs.formatter.outputs.formatter;
-
-    # darwinConfigurations = {
-    #   saiko = (import ./machines/saiko) {
-    #     inputs = self.inputs;
-    #     flake = self;
-    #   };
-    # };
   };
 }
