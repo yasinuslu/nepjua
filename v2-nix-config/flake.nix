@@ -46,9 +46,6 @@
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    # Your custom packages and modifications, exported as overlays
-    overlays = import ./overlays {inherit inputs;};
-
     # Reusable darwin modules you might want to export
     # These are usually stuff you would upstream into nixpkgs
     darwinModules = import ./modules/darwin;
@@ -61,18 +58,38 @@
     # These are usually stuff you would upstream into home-manager
     homeManagerModules = import ./modules/home-manager;
 
-    # NixOS configuration entrypoint
-    # Available through 'nixos-rebuild --flake .#your-hostname'
-    # nixosConfigurations = {
-    #   # FIXME replace with your hostname
-    #   your-hostname = nixpkgs.lib.nixosSystem {
-    #     specialArgs = {inherit inputs outputs;};
-    #     modules = [
-    #       # > Our main nixos configuration file <
-    #       ./nixos/configuration.nix
-    #     ];
-    #   };
-    # };
+    functions = {
+      mkNixosSystem = {
+        username,
+        hostname,
+        system,
+      }:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = {inherit inputs outputs;};
+          modules = [
+            outputs.nixosModules
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.${username} = import ./modules/home-manager {
+                  inherit inputs outputs hostname username system;
+                };
+                extraSpecialArgs = {inherit inputs outputs hostname username system;};
+              };
+            }
+          ];
+        };
+    };
+
+    nixosConfigurations = {
+      kaori = (self.functions.mkNixosSystem) {
+        username = "nepjua";
+        hostname = "kaori";
+        system = "x86_64-linux";
+      };
+    };
 
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'

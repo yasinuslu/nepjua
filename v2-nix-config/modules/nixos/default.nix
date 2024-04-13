@@ -1,4 +1,4 @@
-{}: {
+{...}: {
   imports = [
     ./gui-programs
     ./cli-programs
