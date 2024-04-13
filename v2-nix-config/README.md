@@ -18,7 +18,11 @@
 - [ ] Add monaspace font
 - [ ] 
 
-## FAQ
+## Structure
+
+The structure is heavily inspired by [this amazing youtube video](https://www.youtube.com/watch?v=vYc6IzKvAJQ) from @vimjoyer
+
+![Directory Structure](./assets/images/directory-structure.png)
 
 ### How do I avoid github rate limiting?
 
