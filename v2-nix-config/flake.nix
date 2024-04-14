@@ -46,50 +46,8 @@
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    # Reusable darwin modules you might want to export
-    # These are usually stuff you would upstream into nixpkgs
-    darwinModules = import ./modules/darwin;
-
-    # Reusable nixos modules you might want to export
-    # These are usually stuff you would upstream into nixpkgs
-    nixosModules = import ./modules/nixos;
-
-    # Reusable home-manager modules you might want to export
-    # These are usually stuff you would upstream into home-manager
-    homeManagerModules = import ./modules/home-manager;
-
-    functions = {
-      mkNixosSystem = {
-        username,
-        hostname,
-        system,
-      }:
-        nixpkgs.lib.nixosSystem {
-          specialArgs = {inherit inputs outputs;};
-          modules = [
-            outputs.nixosModules
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.${username} = import ./modules/home-manager {
-                  inherit inputs outputs hostname username system;
-                };
-                extraSpecialArgs = {inherit inputs outputs hostname username system;};
-              };
-            }
-          ];
-        };
-    };
-
-    nixosConfigurations = {
-      kaori = (self.functions.mkNixosSystem) {
-        username = "nepjua";
-        hostname = "kaori";
-        system = "x86_64-linux";
-      };
-    };
+    nixosModules = import ./nixosModules;
+    homeManagerModules = import ./homeManagerModules;
 
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'
