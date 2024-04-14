@@ -18,11 +18,12 @@
 - [ ] Add monaspace font
 - [ ] 
 
-## Structure
+## References
 
-The structure is heavily inspired by [this amazing youtube video](https://www.youtube.com/watch?v=vYc6IzKvAJQ) from @vimjoyer
+- Some configurations and ideas are taken from [vimjoyer/nixconf](https://github.com/vimjoyer/nixconf)
+- The structure is heavily inspired by [this amazing youtube video](https://www.youtube.com/watch?v=vYc6IzKvAJQ) from @vimjoyer
 
-![Directory Structure](./assets/images/directory-structure.png)
+  ![Directory Structure](./assets/images/directory-structure.png)
 
 ### How do I avoid github rate limiting?
 
