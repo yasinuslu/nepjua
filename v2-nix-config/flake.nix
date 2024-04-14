@@ -46,8 +46,8 @@
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-    nixosModules = import ./nixosModules;
-    homeManagerModules = import ./homeManagerModules;
+    nixosModules.default = import ./nixosModules;
+    homeManagerModules.default = import ./homeManagerModules;
 
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'
