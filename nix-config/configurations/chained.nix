@@ -28,7 +28,16 @@ in
           useGlobalPkgs = true;
           useUserPackages = true;
           backupFileExtension = "backup";
-          users.yahmet = import ../home/profiles/darwin/yahmet.nix;
+          users.yahmet = {...}: {
+            imports = [
+              ../home/src/extensions/extra-paths/__enter.nix
+              ../home/profiles/minimal
+
+              ../home/profiles/darwin/yahmet.nix
+
+              ../home/src/extensions/extra-paths/__exit.nix
+            ];
+          };
           extraSpecialArgs = {inherit inputs;};
         };
       }

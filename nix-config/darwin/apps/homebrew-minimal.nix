@@ -36,7 +36,6 @@
       "alt-tab"
       "dbeaver-community"
       "google-chrome"
-      "iterm2"
       "microsoft-auto-update"
       "microsoft-edge"
       "notion"
@@ -48,6 +47,7 @@
       "spotify"
       "whatsapp"
       "zed"
+      "warp"
     ];
   };
 }

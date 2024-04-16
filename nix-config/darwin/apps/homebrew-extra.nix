@@ -19,7 +19,6 @@
     "steam"
     "teamviewer"
     "zoom"
-    "warp"
     "mullvadvpn"
     "discord"
     "mtmr"

@@ -1,20 +1,16 @@
-{
-  config,
-  lib,
-  inputs,
-  specialArgs,
-  modulesPath,
-  options,
-  darwinConfig,
-  osConfig,
-}: {
-  imports = [
-    ../../src/extensions/extra-paths/__enter.nix
-    ../../profiles/minimal
+{...}: {
+  programs.bash.initExtra = ''
+    eval "$(/opt/homebrew/bin/brew shellenv bash)"
+    . /etc/profiles/per-user/nepjua/etc/profile.d/*
+  '';
 
-    # Actual darwin configuration
-    ../../profiles/darwin/profiles-darwin.nix
+  programs.zsh.enable = true;
+  programs.zsh.initExtra = ''
+    eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+    . /etc/profiles/per-user/nepjua/etc/profile.d/*
+  '';
 
-    ../../src/extensions/extra-paths/__exit.nix
-  ];
+  programs.fish.shellInit = ''
+    eval "$(/opt/homebrew/bin/brew shellenv fish)"
+  '';
 }
