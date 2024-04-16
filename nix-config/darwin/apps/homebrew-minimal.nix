@@ -48,6 +48,7 @@
       "whatsapp"
       "zed"
       "warp"
+      "discord"
     ];
   };
 }

@@ -20,7 +20,6 @@
     "teamviewer"
     "zoom"
     "mullvadvpn"
-    "discord"
     "mtmr"
   ];
 }
