@@ -10,15 +10,21 @@
       ./hardware-configuration.nix
     ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+    myNixOS = {
+      bundles.general-desktop.enable = true;
+      bundles.users.enable = true;
+      
+      features.gnome.enable = true;
+      features.xserver-nvidia.enable = true;
 
-  services.xserver.enable = true;
-
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  
-  system.stateVersion = "24.05"; # Did you read the comment?
-
+      home-users = {
+        nepjua = {
+          userConfig = ./nepjua.nix;
+          userSettings = {
+            extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];
+          };
+        };
+      };
+    };
 }
 
