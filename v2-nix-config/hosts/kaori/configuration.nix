@@ -13,9 +13,6 @@
     myNixOS = {
       bundles.general-desktop.enable = true;
       bundles.users.enable = true;
-      
-      features.gnome.enable = true;
-      features.xserver-nvidia.enable = true;
 
       home-users = {
         nepjua = {

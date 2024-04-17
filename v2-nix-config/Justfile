@@ -1,0 +1,8 @@
+set shell := ["fish", "-c"]
+
+repl:
+  nix repl -e ":lf ."
+
+# Open a nix shell with the nixpkgs
+repl-nixpkgs:
+  nix repl -f flake:nixpkgs
