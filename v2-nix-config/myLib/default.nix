@@ -2,6 +2,13 @@
   myLib = (import ./default.nix) {inherit inputs;};
   outputs = inputs.self.outputs;
 in rec {
+  systems = [
+    "aarch64-linux"
+    "i686-linux"
+    "x86_64-linux"
+    "aarch64-darwin"
+    "x86_64-darwin"
+  ];
   # ================================================================ #
   # =                            My Lib                            = #
   # ================================================================ #
@@ -92,11 +99,5 @@ in rec {
     modules;
 
   # ============================ Shell ============================= #
-  forAllSystems = pkgs:
-    inputs.nixpkgs.lib.genAttrs [
-      "x86_64-linux"
-      "aarch64-linux"
-      "aarch64-darwin"
-    ]
-    (system: pkgs inputs.nixpkgs.legacyPackages.${system});
+  forAllSystems = inputs.nixpkgs.lib.genAttrs systems;
 }
