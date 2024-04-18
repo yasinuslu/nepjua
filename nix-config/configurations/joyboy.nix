@@ -28,7 +28,7 @@ in
           useGlobalPkgs = true;
           useUserPackages = true;
           backupFileExtension = "before-nix-config";
-          users.yahmet = {...}: {
+          users.nepjua = {...}: {
             imports = [
               ../home/src/extensions/extra-paths/__enter.nix
               ../home/profiles/minimal
