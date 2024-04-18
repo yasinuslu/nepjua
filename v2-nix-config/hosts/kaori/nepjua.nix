@@ -1,9 +1,4 @@
-{
-  outputs,
-  ...
-}: {
-  imports = [outputs.homeManagerModules.default];
-
+{...}: {
   programs.git.userName = "Yasin Uslu";
   programs.git.userEmail = "nepjua@gmail.com";
 

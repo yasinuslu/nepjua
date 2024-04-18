@@ -1,5 +1,6 @@
 {config, inputs, pkgs, ...}: {
   nixpkgs.overlays = [inputs.nixgl.overlay];
+  
   environment.systemPackages = with pkgs; [
     mesa-demos
     nixgl.auto.nixGLDefault

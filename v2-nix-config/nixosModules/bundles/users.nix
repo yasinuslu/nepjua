@@ -50,13 +50,10 @@ in {
 
       users =
         builtins.mapAttrs (name: user: {...}: {
-          imports =
-            [
-              outputs.homeManagerModules.default
-            ]
-            ++ lib.mkIf user.userConfig [
-              (import user.userConfig)
-            ];
+          imports = [
+            (import user.userConfig)
+            outputs.homeManagerModules.default
+          ];
         })
         (config.myNixOS.home-users);
     };
