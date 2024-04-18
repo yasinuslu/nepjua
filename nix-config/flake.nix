@@ -77,6 +77,11 @@
         flake = self;
       };
 
+      joyboy = (import ./configurations/joyboy.nix) {
+        inputs = self.inputs;
+        flake = self;
+      };
+
       ryuko = (import ./configurations/ryuko.nix) {
         inputs = self.inputs;
         flake = self;
