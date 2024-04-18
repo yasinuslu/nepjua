@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -26,18 +26,13 @@
     nixgl.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: let
+  outputs = {...} @ inputs: let
     myLib = import ./myLib/default.nix {inherit inputs;};
   in
     with myLib; {
       myLib.default = myLib;
 
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+      formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.alejandra);
 
       nixosConfigurations = {
         kaori = mkSystem ./hosts/kaori/configuration.nix;
