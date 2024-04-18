@@ -50,11 +50,13 @@ in {
 
       users =
         builtins.mapAttrs (name: user: {...}: {
-          imports = [
-            outputs.homeManagerModules.default
-          ] ++ lib.mkIf user.userConfig [
-            (import user.userConfig)
-          ];
+          imports =
+            [
+              outputs.homeManagerModules.default
+            ]
+            ++ lib.mkIf user.userConfig [
+              (import user.userConfig)
+            ];
         })
         (config.myNixOS.home-users);
     };
@@ -65,7 +67,7 @@ in {
           isNormalUser = true;
           initialPassword = "123456";
           description = "";
-          shell = pkgs.zsh;
+          shell = pkgs.fish;
           extraGroups = ["libvirtd" "networkmanager" "wheel" "docker"];
         }
         // user.userSettings

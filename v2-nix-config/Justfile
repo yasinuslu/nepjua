@@ -1,8 +1,11 @@
 set shell := ["fish", "-c"]
 
 repl:
-  nix repl -e ":lf ."
+  nix repl --show-trace
 
 # Open a nix shell with the nixpkgs
 repl-nixpkgs:
   nix repl -f flake:nixpkgs
+
+build-verbose host="kaori":
+  nixos-rebuild build --flake .#{{host}} --option eval-cache false --show-trace --print-build-logs --verbose

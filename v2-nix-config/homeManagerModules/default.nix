@@ -1,7 +1,4 @@
 {
-  pkgs,
-  system,
-  inputs,
   config,
   lib,
   myLib,

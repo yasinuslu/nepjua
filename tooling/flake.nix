@@ -33,7 +33,7 @@
         shellHook = ''
           echo "Welcome in $name"
           export HF_HUB_ENABLE_HF_TRANSFER=1
-          export FLAKE="$HOME/code/nepjua/v2-nix-config#kaori"
+          export FLAKE="$HOME/code/nepjua/v2-nix-config"
         '';
       };
     });
