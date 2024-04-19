@@ -3,7 +3,7 @@
   nixConfig.bash-prompt = "[nix(nepjua)] ";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/master";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     alejandra.url = "github:kamadorueda/alejandra/3.0.0";
     alejandra.inputs.nixpkgs.follows = "nixpkgs";
@@ -16,7 +16,10 @@
     alejandra,
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
       codeOverride = pkgs.writeScriptBin "code" ''
         #!/usr/bin/env bash
         CODE_EXEC="$(type -a code | awk '{sub(/^code is /, ""); print}' | awk 'NR==2')"

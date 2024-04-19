@@ -14,7 +14,6 @@
     "obsidian"
     "parsec"
     "qbittorrent"
-    "copyq"
     "slack"
     "steam"
     "teamviewer"

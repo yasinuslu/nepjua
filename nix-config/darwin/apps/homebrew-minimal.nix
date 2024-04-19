@@ -23,9 +23,6 @@
       "telnet"
       "tig"
       "hashicorp/tap/vault"
-      "colima"
-      "docker"
-      "docker-compose"
       "git-lfs"
     ];
     casks = [

@@ -182,7 +182,7 @@
 
   home.sessionVariables = {
     EDITOR = "vim";
-    DOCKER_DEFAULT_PLATFORM = "linux/amd64";
+    # DOCKER_DEFAULT_PLATFORM = "linux/amd64";
   };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
