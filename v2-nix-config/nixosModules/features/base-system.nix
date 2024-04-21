@@ -48,11 +48,6 @@
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {
-      # Enable flakes and new 'nix' command
-      experimental-features = "nix-command flakes auto-allocate-uids";
-      accept-flake-config = true;
-      auto-optimise-store = true;
-      auto-allocate-uids = true;
       trusted-users = ["root" "nepjua"];
     };
   };

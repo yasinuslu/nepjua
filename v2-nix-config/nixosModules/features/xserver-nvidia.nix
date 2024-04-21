@@ -1,9 +1,14 @@
-{config, inputs, pkgs, ...}: {
-  nixpkgs.overlays = [inputs.nixgl.overlay];
-  
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}: {
+  # nixpkgs.overlays = [inputs.nixgl.overlay];
+
   environment.systemPackages = with pkgs; [
     mesa-demos
-    nixgl.auto.nixGLDefault
+    # nixgl.auto.nixGLDefault
   ];
 
   hardware.bumblebee.connectDisplay = true;

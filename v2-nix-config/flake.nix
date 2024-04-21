@@ -22,8 +22,8 @@
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
 
-    nixgl.url = "github:guibou/nixGL";
-    nixgl.inputs.nixpkgs.follows = "nixpkgs";
+    # nixgl.url = "github:guibou/nixGL";
+    # nixgl.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {...} @ inputs: let

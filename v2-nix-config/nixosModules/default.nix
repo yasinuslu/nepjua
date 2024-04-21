@@ -50,7 +50,14 @@ in {
   # ++ services;
 
   config = {
-    nix.settings.experimental-features = ["nix-command" "flakes"];
+    nix.settings = {
+      # Enable flakes and new 'nix' command
+      experimental-features = "nix-command flakes auto-allocate-uids";
+      accept-flake-config = true;
+      auto-optimise-store = true;
+      auto-allocate-uids = true;
+      trusted-users = ["root" "nepjua"];
+    };
     programs.nix-ld.enable = true;
     nixpkgs.config.allowUnfree = true;
 
