@@ -47,7 +47,7 @@
     (myLib.filesIn ./services);
 in {
   imports =
-    []
+    [inputs.home-manager.nixosModules.home-manager]
     ++ features
     ++ bundles
     ++ services;

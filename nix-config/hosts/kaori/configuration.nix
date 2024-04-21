@@ -11,7 +11,7 @@
   myNixOS = {
     bundles.general-desktop.enable = true;
 
-    linux-users = {
+    users = {
       nepjua = {
         userConfig = {...}: {
           programs.git.userName = "Yasin Uslu";

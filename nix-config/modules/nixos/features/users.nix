@@ -7,7 +7,7 @@
   pkgs,
   ...
 }: {
-  options.myNixOS.linux-users = lib.mkOption {
+  options.myNixOS.users = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
         userName = lib.mkOption {
@@ -36,7 +36,7 @@
     programs.fish.enable = true;
     programs.java.enable = true;
 
-    nix.settings.trusted-users = ["root"] ++ (builtins.attrNames config.myNixOS.linux-users);
+    nix.settings.trusted-users = ["root"] ++ (builtins.attrNames config.myNixOS.users);
 
     home-manager = {
       useGlobalPkgs = true;
@@ -59,7 +59,7 @@
             outputs.homeManagerModules.default
           ];
         })
-        (config.myNixOS.linux-users);
+        (config.myNixOS.users);
     };
 
     users.users = builtins.mapAttrs (
@@ -72,6 +72,6 @@
           extraGroups = ["libvirtd" "networkmanager" "wheel" "docker"];
         }
         // user.userSettings
-    ) (config.myNixOS.linux-users);
+    ) (config.myNixOS.users);
   };
 }
