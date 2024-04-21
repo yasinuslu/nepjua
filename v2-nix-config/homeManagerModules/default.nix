@@ -52,35 +52,36 @@
 in {
   home.stateVersion = "24.05";
 
-  options = {
-    myHomeManager = {
-      tui = {
-        enable = lib.mkEnableOption "enable my tui configuration";
-      };
+  imports =
+    [
+      ({...}: {
+        options = {
+          myHomeManager = {
+            tui = {
+              enable = lib.mkEnableOption "enable my tui configuration";
+            };
 
-      gui = {
-        enable = lib.mkEnableOption "enable my gui configuration";
-      };
-    };
-  };
+            gui = {
+              enable = lib.mkEnableOption "enable my gui configuration";
+            };
+          };
+        };
 
-  config = {
-    imports =
-      enterModules
-      ++ []
-      ++ tuiFeatures
-      ++ guiFeatures
-      ++ bundles
-      ++ exitModules;
+        myHomeManager = {
+          tui = {
+            enable = lib.mkDefault true;
+          };
 
-    myHomeManager = {
-      tui = {
-        enable = lib.mkDefault true;
-      };
-
-      gui = {
-        enable = lib.mkDefault true;
-      };
-    };
-  };
+          gui = {
+            enable = lib.mkDefault true;
+          };
+        };
+      })
+    ]
+    ++ enterModules
+    ++ []
+    ++ tuiFeatures
+    ++ guiFeatures
+    ++ bundles
+    ++ exitModules;
 }
