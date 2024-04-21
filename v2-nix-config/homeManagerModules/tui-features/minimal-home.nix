@@ -28,10 +28,9 @@
 
     # Python
     python312
-
     btop
-
     dos2unix
+    alejandra
   ];
 
   home.sessionVariables = {

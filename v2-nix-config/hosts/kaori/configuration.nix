@@ -8,6 +8,7 @@
 
   myNixOS = {
     bundles.general-desktop.enable = true;
+    networking.hostName = "kaori";
 
     home-users = {
       nepjua = {
@@ -16,8 +17,8 @@
           programs.git.userEmail = "nepjua@gmail.com";
 
           myHomeManager = {
-            bundles.cli-environment.enable = true;
-            bundles.desktop-environment.enable = true;
+            bundles.tui.enable = true;
+            bundles.gui.enable = true;
           };
         };
         userSettings = {
