@@ -1,11 +1,4 @@
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  colors,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     google-chrome
     microsoft-edge

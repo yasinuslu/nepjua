@@ -1,11 +1,4 @@
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  colors,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     flat-remix-icon-theme
     flat-remix-gtk
