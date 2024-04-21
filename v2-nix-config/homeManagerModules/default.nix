@@ -22,7 +22,11 @@
         myHomeManager.tui.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
-      configExtension = config: {myHomeManager.tui.${name}.enable = lib.mkDefault true;} // (lib.mkIf (cfg.tui.enable && cfg.tui.${name}.enable) config);
+      extraConfig = {
+        myHomeManager.tui.${name}.enable = lib.mkDefault true;
+      };
+
+      configExtension = config: (lib.mkIf (cfg.tui.enable && cfg.tui.${name}.enable) config);
     })
     (myLib.filesIn ./tui-features);
 
@@ -34,7 +38,11 @@
         myHomeManager.gui.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
-      configExtension = config: {myHomeManager.gui.${name}.enable = lib.mkDefault true;} // (lib.mkIf (cfg.gui.enable && cfg.gui.${name}.enable) config);
+      extraConfig = {
+        myHomeManager.gui.${name}.enable = lib.mkDefault true;
+      };
+
+      configExtension = config: (lib.mkIf (cfg.gui.enable && cfg.gui.${name}.enable) config);
     })
     (myLib.filesIn ./gui-features);
 
@@ -67,13 +75,15 @@ in {
           };
         };
 
-        myHomeManager = {
-          tui = {
-            enable = lib.mkDefault true;
-          };
+        config = {
+          myHomeManager = {
+            tui = {
+              enable = lib.mkDefault true;
+            };
 
-          gui = {
-            enable = lib.mkDefault true;
+            gui = {
+              enable = lib.mkDefault true;
+            };
           };
         };
       })
