@@ -1,5 +1,6 @@
 {inputs, ...}: let
   lib = inputs.nixpkgs.lib;
+  darwin = inputs.darwin;
   myLib = (import ./default.nix) {inherit inputs;};
   outputs = inputs.self.outputs;
 in rec {
@@ -22,6 +23,17 @@ in rec {
 
   mkSystem = config:
     lib.nixosSystem {
+      specialArgs = {
+        inherit inputs outputs myLib;
+      };
+      modules = [
+        config
+        outputs.nixosModules.default
+      ];
+    };
+
+  mkDarwinSystem = config:
+    darwin.lib.darwinSystem {
       specialArgs = {
         inherit inputs outputs myLib;
       };

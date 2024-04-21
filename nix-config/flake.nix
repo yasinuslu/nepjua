@@ -27,15 +27,18 @@
     myLib = import ./my-lib/default.nix {inherit inputs;};
   in
     with myLib; {
-      myLib.default = myLib;
-
-      formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.alejandra);
-
       nixosConfigurations = {
         kaori = mkSystem ./hosts/kaori/configuration.nix;
       };
 
+      darwinConfigurations = {
+        joyboy = mkDarwinSystem ./hosts/joyboy/configuration.nix;
+      };
+
+      myLib.default = myLib;
       homeManagerModules.default = ./modules/home-manager;
       nixosModules.default = ./modules/nixos;
+      darwinModules.default = ./modules/darwin;
+      formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.alejandra);
     };
 }

@@ -12,3 +12,9 @@ build-verbose-no-cache host="kaori":
 
 build-verbose host="kaori":
   nixos-rebuild build --flake .#{{host}} --show-trace --print-build-logs --verbose --impure
+
+switch host="kaori":
+  nixos-rebuild switch --flake .#{{host}} --impure
+
+switch-darwin host="joyboy":
+  darwin-rebuild switch --flake .#{{host}}
