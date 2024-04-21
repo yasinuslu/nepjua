@@ -1,56 +1,12 @@
 {
   pkgs,
   config,
-  lib,
-  inputs,
   ...
 }: {
   zramSwap.enable = true;
 
   # Enable networking
   networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "Europe/Istanbul";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "tr_TR.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "tr_TR.UTF-8";
-    LC_TIME = "tr_TR.UTF-8";
-  };
-
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-
-      permittedInsecurePackages = [
-        "electron-25.9.0"
-      ];
-    };
-  };
-
-  nix = {
-    # This will add each flake input as a registry
-    # To make nix3 commands consistent with your flake
-    registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
-
-    # This will additionally add your inputs to the system's legacy channels
-    # Making legacy nix commands consistent as well, awesome!
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
-
-    settings = {
-      trusted-users = ["root" "nepjua"];
-    };
-  };
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -65,11 +21,6 @@
 
   security.polkit.enable = true;
   services.gnome.gnome-remote-desktop.enable = true;
-
-  # FIXME: Move to homeManager.features.fonts
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
-  ];
 
   services.gnome.gnome-keyring.enable = true;
 
@@ -123,18 +74,11 @@
 
   # FIXME: Install All of these as home packages
   environment.systemPackages = with pkgs; [
-    vim
-    gparted
-    htop
-    git
-    _1password
-    _1password-gui
-    gnome.dconf-editor
-    cachix
-    nixd
-    busybox
-    xrdp
-    discord
+    _1password # FIXME: Move to home-manager
+    _1password-gui # FIXME: Move to home-manager
+    gnome.dconf-editor # FIXME: Move to home-manager
+    xrdp # FIXME: Move to home-manager
+    discord # FIXME: Move to home-manager
   ];
 
   # FIXME: Put in features.docker

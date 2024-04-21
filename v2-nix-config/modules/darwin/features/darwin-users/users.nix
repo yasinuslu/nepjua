@@ -7,7 +7,7 @@
   pkgs,
   ...
 }: {
-  options.myNixOS.home-users = lib.mkOption {
+  options.myNixOS.darwin-users = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
         userName = lib.mkOption {
@@ -39,6 +39,7 @@
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
+      backupFileExtension = "before-my-home-manager";
 
       extraSpecialArgs = {
         inherit inputs;
@@ -51,28 +52,36 @@
           imports = [
             user.userConfig
             ({...}: {
-              config.home.username = name;
-              config.home.homeDirectory =
-                if (myLib.isDarwinSystem pkgs.system)
-                then "/Users/${name}"
-                else "/home/${name}";
+              home.username = name;
+              home.homeDirectory = "/Users/${name}";
+
+              programs.bash.interactiveShellInit = ''
+                eval "$(/opt/homebrew/bin/brew shellenv)"
+                . /etc/profiles/per-user/${name}/etc/profile.d/*
+              '';
+
+              programs.zsh.interactiveShellInit = ''
+                eval "$(/opt/homebrew/bin/brew shellenv)"
+                . /etc/profiles/per-user/${name}/etc/profile.d/*
+              '';
+
+              programs.fish.interactiveShellInit = ''
+                eval "$(/opt/homebrew/bin/brew shellenv)"
+              '';
             })
             outputs.homeManagerModules.default
           ];
         })
-        (config.myNixOS.home-users);
+        (config.myNixOS.darwin-users);
     };
 
     users.users = builtins.mapAttrs (
       name: user:
         {
-          isNormalUser = true;
-          initialPassword = "123456";
-          description = "";
+          home = "/Users/${name}";
           shell = pkgs.fish;
-          extraGroups = ["libvirtd" "networkmanager" "wheel" "docker"];
         }
         // user.userSettings
-    ) (config.myNixOS.home-users);
+    ) (config.myNixOS.darwin-users);
   };
 }
