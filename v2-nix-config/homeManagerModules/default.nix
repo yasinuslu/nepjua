@@ -14,17 +14,29 @@
   enterModules = map (f: f.enter) extensions;
   exitModules = map (f: f.exit) extensions;
 
-  # Taking all modules in ./features and adding enables to them
-  features =
+  # Taking all modules in ./tui-features and adding enables to them
+  tuiFeatures =
     myLib.extendModules
     (name: {
       extraOptions = {
-        myHomeManager.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+        myHomeManager.tui.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
-      configExtension = config: (lib.mkIf cfg.${name}.enable config);
+      configExtension = config: {myHomeManager.tui.${name}.enable = lib.mkDefault true;} // (lib.mkIf (cfg.tui.enable && cfg.tui.${name}.enable) config);
     })
-    (myLib.filesIn ./features);
+    (myLib.filesIn ./tui-features);
+
+  # Taking all modules in ./tui-features and adding enables to them
+  guiFeatures =
+    myLib.extendModules
+    (name: {
+      extraOptions = {
+        myHomeManager.gui.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+      };
+
+      configExtension = config: {myHomeManager.gui.${name}.enable = lib.mkDefault true;} // (lib.mkIf (cfg.gui.enable && cfg.gui.${name}.enable) config);
+    })
+    (myLib.filesIn ./gui-features);
 
   # Taking all module bundles in ./bundles and adding bundle.enables to them
   bundles =
@@ -40,10 +52,35 @@
 in {
   home.stateVersion = "24.05";
 
-  imports =
-    enterModules
-    ++ []
-    ++ features
-    ++ bundles
-    ++ exitModules;
+  options = {
+    myHomeManager = {
+      tui = {
+        enable = lib.mkEnableOption "enable my tui configuration";
+      };
+
+      gui = {
+        enable = lib.mkEnableOption "enable my gui configuration";
+      };
+    };
+  };
+
+  config = {
+    imports =
+      enterModules
+      ++ []
+      ++ tuiFeatures
+      ++ guiFeatures
+      ++ bundles
+      ++ exitModules;
+
+    myHomeManager = {
+      tui = {
+        enable = lib.mkDefault true;
+      };
+
+      gui = {
+        enable = lib.mkDefault true;
+      };
+    };
+  };
 }
