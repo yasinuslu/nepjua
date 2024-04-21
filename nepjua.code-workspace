@@ -5,10 +5,6 @@
       "path": "."
     },
     {
-      "name": "tooling",
-      "path": "tooling"
-    },
-    {
       "name": "nix-config",
       "path": "nix-config"
     }
