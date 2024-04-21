@@ -2,29 +2,26 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {...}: {
-  imports = [
-    ./hardware-configuration.nix
-  ];
-
-  networking.hostName = "kaori";
+  networking.hostName = "musu";
+  networking.computerName = "Musu Mac";
 
   myNixOS = {
     bundles.general-desktop.enable = true;
 
-    linux-users = {
+    darwin-users = {
       nepjua = {
         userConfig = {...}: {
-          programs.git.userName = "Yasin Uslu";
-          programs.git.userEmail = "nepjua@gmail.com";
-
           myHomeManager = {
             bundles.tui.enable = true;
-            bundles.gui.enable = true;
+            bundles.gui.enable = false;
+          };
+
+          programs.git = {
+            userEmail = "msaiduslu@gmail.com";
+            userName = "Muhammed Said Uslu";
           };
         };
-        userSettings = {
-          extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];
-        };
+        userSettings = {};
       };
     };
   };

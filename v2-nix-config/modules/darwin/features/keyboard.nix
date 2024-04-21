@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  username,
-  lib,
-  ...
-}: let
+{lib, ...}: let
   mappingDefinitions = {
     remapCapsLockToEscape = {
       HIDKeyboardModifierMappingSrc = 30064771129;
@@ -54,12 +48,6 @@
     else nonExternalMappingToHidUtil mapping)
   customKeyboardMappingList;
 in {
-  # config.debugFields = {
-  #   mappingDefinitions = mappingDefinitions;
-  #   customKeyboardMappingList = customKeyboardMappingList;
-  #   externalMappingToHidUtil = externalMappingToHidUtil;
-  #   nonExternalMappingToHidUtil = nonExternalMappingToHidUtil;
-  # };
   system.activationScripts.postActivation.text = ''
     #!/usr/bin/env bash
     # Configuring keyboard

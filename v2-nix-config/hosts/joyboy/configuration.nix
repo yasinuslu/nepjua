@@ -8,7 +8,7 @@
   myNixOS = {
     bundles.general-desktop.enable = true;
 
-    home-users = {
+    darwin-users = {
       nepjua = {
         userConfig = {...}: {
           myHomeManager = {

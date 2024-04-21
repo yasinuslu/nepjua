@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{...}: {
   homebrew.brews = [
     "cloudflared"
   ];

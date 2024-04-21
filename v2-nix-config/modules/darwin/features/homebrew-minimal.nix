@@ -1,6 +1,4 @@
-{
-  ...
-}: {
+{...}: {
   homebrew = {
     onActivation = {
       cleanup = "zap";
