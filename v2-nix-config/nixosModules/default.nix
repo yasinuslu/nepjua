@@ -15,6 +15,10 @@
         myNixOS.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
+      extraConfig = {
+        myNixOS.${name}.enable = lib.mkDefault true;
+      };
+
       configExtension = config: (lib.mkIf cfg.${name}.enable config);
     })
     (myLib.filesIn ./features);
@@ -58,7 +62,6 @@ in {
       auto-allocate-uids = true;
       trusted-users = ["root" "nepjua"];
     };
-    programs.nix-ld.enable = true;
     nixpkgs.config.allowUnfree = true;
 
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

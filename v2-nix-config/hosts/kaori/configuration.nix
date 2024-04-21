@@ -6,9 +6,10 @@
     ./hardware-configuration.nix
   ];
 
+  networking.hostName = "kaori";
+
   myNixOS = {
     bundles.general-desktop.enable = true;
-    networking.hostName = "kaori";
 
     home-users = {
       nepjua = {
