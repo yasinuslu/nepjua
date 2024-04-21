@@ -1,4 +1,5 @@
 {inputs, ...}: let
+  lib = inputs.nixpkgs.lib;
   myLib = (import ./default.nix) {inherit inputs;};
   outputs = inputs.self.outputs;
 in rec {
@@ -20,7 +21,7 @@ in rec {
   # ========================== Buildables ========================== #
 
   mkSystem = config:
-    inputs.nixpkgs.lib.nixosSystem {
+    lib.nixosSystem {
       specialArgs = {
         inherit inputs outputs myLib;
       };
@@ -44,11 +45,14 @@ in rec {
 
   # =========================== Helpers ============================ #
 
+  isLinuxSystem = lib.strings.hasSuffix "-linux";
+  isDarwinSystem = lib.strings.hasSuffix "-darwin";
+
   filesIn = dir: (map (fname: dir + "/${fname}")
     (builtins.attrNames (builtins.readDir dir)));
 
   dirsIn = dir:
-    inputs.nixpkgs.lib.filterAttrs (name: value: value == "directory")
+    lib.filterAttrs (name: value: value == "directory")
     (builtins.readDir dir);
 
   fileNameOf = path: (builtins.head (builtins.split "\\." (baseNameOf path)));
@@ -99,5 +103,5 @@ in rec {
     modules;
 
   # ============================ Shell ============================= #
-  forAllSystems = inputs.nixpkgs.lib.genAttrs systems;
+  forAllSystems = lib.genAttrs systems;
 }

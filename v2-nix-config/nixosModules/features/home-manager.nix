@@ -52,6 +52,17 @@ in {
         builtins.mapAttrs (name: user: {...}: {
           imports = [
             (import user.userConfig)
+            ({
+              system,
+              lib,
+              ...
+            }: {
+              config.home.username = name;
+              config.home.homeDirectory =
+                if (myLib.isDarwinSystem system)
+                then "/Users/${name}"
+                else "/home/${name}";
+            })
             outputs.homeManagerModules.default
           ];
         })
