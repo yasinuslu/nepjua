@@ -5,8 +5,8 @@
 }: {
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
-    inputs.nix-colors.homeManagerModule
-    ../../src/cli/packages.nix
+    inputs.nix-colors.homeManagerModule # Migrated
+    ../../src/cli/packages.nix # Migrated
     ../../src/cli/fish
     ../../src/cli/git
     ../../src/cli/fzf.nix

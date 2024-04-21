@@ -6,9 +6,7 @@
   myLib,
   pkgs,
   ...
-}: let
-  cfg = config.myNixOS;
-in {
+}: {
   options.myNixOS.home-users = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
@@ -52,14 +50,10 @@ in {
         builtins.mapAttrs (name: user: {...}: {
           imports = [
             user.userConfig
-            ({
-              system,
-              lib,
-              ...
-            }: {
+            ({...}: {
               config.home.username = name;
               config.home.homeDirectory =
-                if (myLib.isDarwinSystem system)
+                if (myLib.isDarwinSystem pkgs.system)
                 then "/Users/${name}"
                 else "/home/${name}";
             })

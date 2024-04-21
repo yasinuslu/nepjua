@@ -5,7 +5,7 @@
 }: {
   programs.vscode = {
     enable = true;
-    pkg = pkgs.vscodium-fhs;
+    package = pkgs.vscodium-fhs;
   };
 
   home.packages = with pkgs; [
