@@ -177,4 +177,6 @@
       };
     };
   };
+
+  myHomeManager.paths = ["$HOME/.local/bin"];
 }

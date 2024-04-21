@@ -7,6 +7,12 @@
     inputs.nix-colors.homeManagerModule
   ];
 
+  programs.git = {
+    enable = true;
+    lfs.enable = true;
+    diff-so-fancy.enable = true;
+  };
+
   home.packages = with pkgs; [
     nil
     nixpkgs-fmt

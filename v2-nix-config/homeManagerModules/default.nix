@@ -6,6 +6,14 @@
 }: let
   cfg = config.myHomeManager;
 
+  extensions =
+    map
+    (f: import f {})
+    (myLib.filesIn ./extensions);
+
+  enterModules = map (f: f.enter) extensions;
+  exitModules = map (f: f.exit) extensions;
+
   # Taking all modules in ./features and adding enables to them
   features =
     myLib.extendModules
@@ -33,7 +41,9 @@ in {
   home.stateVersion = "24.05";
 
   imports =
-    []
+    enterModules
+    ++ []
     ++ features
-    ++ bundles;
+    ++ bundles
+    ++ exitModules;
 }
