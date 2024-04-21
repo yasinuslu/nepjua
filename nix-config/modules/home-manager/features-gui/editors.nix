@@ -5,10 +5,10 @@
   };
 
   home.packages = with pkgs; [
-    zed
+    zed-editor
   ];
 
   home.sessionVariables = {
-    EDITOR = "zed";
+    EDITOR = "${pkgs.vscode-fhs}/bin/code";
   };
 }
