@@ -51,7 +51,7 @@ in {
       users =
         builtins.mapAttrs (name: user: {...}: {
           imports = [
-            (import user.userConfig)
+            user.userConfig
             ({
               system,
               lib,

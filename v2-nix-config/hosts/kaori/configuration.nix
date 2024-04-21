@@ -11,7 +11,15 @@
 
     home-users = {
       nepjua = {
-        userConfig = ./nepjua.nix;
+        userConfig = {...}: {
+          programs.git.userName = "Yasin Uslu";
+          programs.git.userEmail = "nepjua@gmail.com";
+
+          myHomeManager = {
+            bundles.cli-environment.enable = true;
+            bundles.desktop-environment.enable = true;
+          };
+        };
         userSettings = {
           extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];
         };
