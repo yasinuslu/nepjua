@@ -14,8 +14,8 @@
   enterModules = map (f: f.enter) extensions;
   exitModules = map (f: f.exit) extensions;
 
-  # Taking all modules in ./tui-features and adding enables to them
-  tuiFeatures =
+  # Taking all modules in ./features-gui and adding enables to them
+  featuresTui =
     myLib.extendModules
     (name: {
       extraOptions = {
@@ -28,10 +28,10 @@
 
       configExtension = config: (lib.mkIf (cfg.tui.enable && cfg.tui.${name}.enable) config);
     })
-    (myLib.filesIn ./tui-features);
+    (myLib.filesIn ./features-tui);
 
-  # Taking all modules in ./tui-features and adding enables to them
-  guiFeatures =
+  # Taking all modules in ./features-tui and adding enables to them
+  featuresGui =
     myLib.extendModules
     (name: {
       extraOptions = {
@@ -44,7 +44,7 @@
 
       configExtension = config: (lib.mkIf (cfg.gui.enable && cfg.gui.${name}.enable) config);
     })
-    (myLib.filesIn ./gui-features);
+    (myLib.filesIn ./features-gui);
 
   # Taking all module bundles in ./bundles and adding bundle.enables to them
   bundles =
@@ -90,8 +90,8 @@ in {
     ]
     ++ enterModules
     ++ []
-    ++ tuiFeatures
-    ++ guiFeatures
+    ++ featuresTui
+    ++ featuresGui
     ++ bundles
     ++ exitModules;
 }

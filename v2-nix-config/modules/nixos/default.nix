@@ -34,24 +34,25 @@
       configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
     })
     (myLib.filesIn ./bundles);
+
   # Taking all module services in ./services and adding services.enables to them
-  # services =
-  #   myLib.extendModules
-  #   (name: {
-  #     extraOptions = {
-  #       myNixOS.services.${name}.enable = lib.mkEnableOption "enable ${name} service";
-  #     };
-  #     configExtension = config: (lib.mkIf cfg.services.${name}.enable config);
-  #   })
-  #   (myLib.filesIn ./services);
+  services =
+    myLib.extendModules
+    (name: {
+      extraOptions = {
+        myNixOS.services.${name}.enable = lib.mkEnableOption "enable ${name} service";
+      };
+      configExtension = config: (lib.mkIf cfg.services.${name}.enable config);
+    })
+    (myLib.filesIn ./services);
 in {
   imports =
     [
       inputs.home-manager.nixosModules.home-manager
     ]
     ++ features
-    ++ bundles;
-  # ++ services;
+    ++ bundles
+    ++ services;
 
   config = {
     nix.settings = {

@@ -24,7 +24,7 @@
   };
 
   outputs = {...} @ inputs: let
-    myLib = import ./myLib/default.nix {inherit inputs;};
+    myLib = import ./my-lib/default.nix {inherit inputs;};
   in
     with myLib; {
       myLib.default = myLib;
@@ -35,7 +35,7 @@
         kaori = mkSystem ./hosts/kaori/configuration.nix;
       };
 
-      homeManagerModules.default = ./homeManagerModules;
-      nixosModules.default = ./nixosModules;
+      homeManagerModules.default = ./modules/home-manager;
+      nixosModules.default = ./modules/nixos;
     };
 }
