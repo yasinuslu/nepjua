@@ -8,7 +8,6 @@
 
   myNixOS = {
     bundles.general-desktop.enable = true;
-    bundles.users.enable = true;
 
     home-users = {
       nepjua = {
