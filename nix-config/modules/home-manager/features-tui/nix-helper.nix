@@ -4,6 +4,6 @@
   ];
 
   home.sessionVariables = {
-    FLAKE = "$HOME/nepjua/nix-config";
+    FLAKE = "$HOME/code/nepjua/nix-config";
   };
 }
