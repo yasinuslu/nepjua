@@ -53,15 +53,27 @@ in {
     ++ services;
 
   config = {
+    system.stateVersion = 4;
+
     nix.settings = {
-      # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes auto-allocate-uids";
+      extra-experimental-features = "nix-command flakes auto-allocate-uids";
       accept-flake-config = true;
       auto-optimise-store = true;
       auto-allocate-uids = true;
+      extra-nix-path = "nixpkgs=flake:nixpkgs";
+      bash-prompt-prefix = "(nix:$name)\040";
+      build-users-group = "nixbld";
+      extra-platforms = "aarch64-darwin x86_64-darwin";
+      keep-outputs = true;
+      keep-derivations = true;
     };
-    nixpkgs.config.allowUnfree = true;
 
-    system.stateVersion = 4;
+    nixpkgs = {
+      config = {
+        allowUnfree = true;
+        allowUnfreePredicate = _: true;
+      };
+    };
   };
 }

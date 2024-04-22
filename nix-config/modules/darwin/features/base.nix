@@ -1,25 +1,5 @@
 {pkgs, ...}: {
-  nix.settings = {
-    keep-outputs = true;
-    keep-derivations = true;
-  };
-
-  nix.extraOptions = ''
-    extra-nix-path = nixpkgs=flake:nixpkgs
-    bash-prompt-prefix = (nix:$name)\040
-    auto-optimise-store = true
-    build-users-group = nixbld
-    experimental-features = nix-command flakes
-    extra-platforms = aarch64-darwin x86_64-darwin
-  '';
-
-  nixpkgs = {
-    overlays = [];
-    config = {
-      allowUnfree = true;
-      allowUnfreePredicate = _: true;
-    };
-  };
+  nixpkgs.overlays = [];
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget

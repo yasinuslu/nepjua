@@ -1,7 +1,8 @@
-{isLinux, ...}: {
+{
   config,
   lib,
   myLib,
+  myArgs,
   ...
 }: let
   cfg = config.myHomeManager;
@@ -49,7 +50,7 @@ in {
     ++ []
     ++ features
     ++ (
-      if isLinux
+      if myArgs.isCurrentSystemLinux
       then featuresLinux
       else []
     )

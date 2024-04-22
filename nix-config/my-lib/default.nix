@@ -4,6 +4,11 @@
   myLib = (import ./default.nix) {inherit inputs;};
   outputs = inputs.self.outputs;
 in rec {
+  defaultSystems = {
+    linux = "x86_64-linux";
+    darwin = "aarch64-darwin";
+  };
+
   systems = [
     "aarch64-linux"
     "i686-linux"
@@ -21,10 +26,15 @@ in rec {
 
   # ========================== Buildables ========================== #
 
-  mkSystem = config:
+  mkSystem = sys: config:
     lib.nixosSystem {
       specialArgs = {
         inherit inputs outputs myLib;
+        myArgs = {
+          system = sys;
+          isCurrentSystemLinux = isLinuxSystem sys;
+          isCurrentSystemDarwin = isDarwinSystem sys;
+        };
       };
       modules = [
         config
@@ -32,13 +42,19 @@ in rec {
       ];
     };
 
-  mkDarwinSystem = config:
+  mkDarwinSystem = sys: config:
     darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
+      system = sys;
 
       specialArgs = {
         inherit inputs outputs myLib;
+        myArgs = {
+          system = sys;
+          isCurrentSystemLinux = isLinuxSystem sys;
+          isCurrentSystemDarwin = isDarwinSystem sys;
+        };
       };
+
       modules = [
         config
         outputs.darwinModules.default
@@ -50,15 +66,15 @@ in rec {
       pkgs = pkgsFor sys;
       extraSpecialArgs = {
         inherit inputs myLib outputs;
+        myArgs = {
+          system = sys;
+          isCurrentSystemLinux = isLinuxSystem sys;
+          isCurrentSystemDarwin = isDarwinSystem sys;
+        };
       };
       modules = [
         config
-        (outputs.homeManagerModules.default {
-              inherit inputs;
-              inherit myLib;
-              system = sys;
-              isLinux = myLib.isLinuxSystem sys;
-            })
+        outputs.homeManagerModules.default
       ];
     };
 

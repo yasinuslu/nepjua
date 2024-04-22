@@ -28,11 +28,11 @@
   in
     with myLib; {
       nixosConfigurations = {
-        kaori = mkSystem ./hosts/kaori/configuration.nix;
+        kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
       };
 
       darwinConfigurations = {
-        joyboy = mkDarwinSystem ./hosts/joyboy/configuration.nix;
+        joyboy = mkDarwinSystem defaultSystems.darwin ./hosts/joyboy/configuration.nix;
       };
 
       devShell = forAllSystems (system: let
@@ -51,7 +51,7 @@
         });
 
       myLib.default = myLib;
-      homeManagerModules.default = import ./modules/home-manager;
+      homeManagerModules.default = ./modules/home-manager;
       nixosModules.default = ./modules/nixos;
       darwinModules.default = ./modules/darwin;
       formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.alejandra);

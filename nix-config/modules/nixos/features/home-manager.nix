@@ -56,7 +56,7 @@
               home.username = name;
               home.homeDirectory = "/home/${name}";
             })
-            (outputs.homeManagerModules.default {
+            (import outputs.homeManagerModules.default {
               inherit inputs;
               inherit myLib;
               system = pkgs.system;

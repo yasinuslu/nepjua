@@ -5,6 +5,7 @@
   outputs,
   myLib,
   pkgs,
+  myArgs,
   ...
 }: {
   options.myNixOS.users = lib.mkOption {
@@ -43,6 +44,7 @@
       extraSpecialArgs = {
         inherit inputs;
         inherit myLib;
+        inherit myArgs;
         outputs = inputs.self.outputs;
       };
 
@@ -68,12 +70,7 @@
                 eval "$(/opt/homebrew/bin/brew shellenv)"
               '';
             })
-            (outputs.homeManagerModules.default {
-              inherit inputs;
-              inherit myLib;
-              system = pkgs.system;
-              isLinux = myLib.isLinuxSystem pkgs.system;
-            })
+            outputs.homeManagerModules.default
           ];
         })
         (config.myNixOS.users);

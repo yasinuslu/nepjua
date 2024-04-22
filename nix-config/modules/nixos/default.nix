@@ -60,6 +60,7 @@ in {
       auto-optimise-store = true;
       auto-allocate-uids = true;
     };
+    
     nixpkgs.config.allowUnfree = true;
 
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
