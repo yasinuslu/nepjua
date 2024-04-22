@@ -2,6 +2,7 @@
   config,
   lib,
   myLib,
+  inputs,
   ...
 }: let
   cfg = config.myNixOS;
@@ -46,7 +47,7 @@
     (myLib.filesIn ./services);
 in {
   imports =
-    []
+    [inputs.home-manager.darwinModules.home-manager]
     ++ features
     ++ bundles
     ++ services;

@@ -1,13 +1,10 @@
-{
+{isLinux, ...}: {
   config,
   lib,
   myLib,
-  pkgs,
   ...
 }: let
   cfg = config.myHomeManager;
-
-  isLinux = myLib.isLinuxSystem "aarch64-darwin";
 
   extensions =
     map
@@ -44,18 +41,6 @@
       configExtension = config: (lib.mkIf (cfg.linux.${name}.enable) config);
     })
     (myLib.filesIn ./features-linux);
-
-  # Taking all module bundles in ./bundles and adding bundle.enables to them
-  bundles =
-    myLib.extendModules
-    (name: {
-      extraOptions = {
-        myHomeManager.bundles.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
-      };
-
-      configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
-    })
-    (myLib.filesIn ./bundles);
 in {
   home.stateVersion = "24.05";
 

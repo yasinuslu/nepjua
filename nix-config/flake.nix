@@ -51,7 +51,7 @@
         });
 
       myLib.default = myLib;
-      homeManagerModules.default = ./modules/home-manager;
+      homeManagerModules.default = import ./modules/home-manager;
       nixosModules.default = ./modules/nixos;
       darwinModules.default = ./modules/darwin;
       formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.alejandra);

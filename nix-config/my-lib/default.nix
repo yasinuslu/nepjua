@@ -53,7 +53,12 @@ in rec {
       };
       modules = [
         config
-        outputs.homeManagerModules.default
+        (outputs.homeManagerModules.default {
+              inherit inputs;
+              inherit myLib;
+              system = sys;
+              isLinux = myLib.isLinuxSystem sys;
+            })
       ];
     };
 

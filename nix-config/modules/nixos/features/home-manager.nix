@@ -56,7 +56,12 @@
               home.username = name;
               home.homeDirectory = "/home/${name}";
             })
-            outputs.homeManagerModules.default
+            (outputs.homeManagerModules.default {
+              inherit inputs;
+              inherit myLib;
+              system = pkgs.system;
+              isLinux = myLib.isLinuxSystem pkgs.system;
+            })
           ];
         })
         (config.myNixOS.users);
