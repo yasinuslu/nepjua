@@ -6,9 +6,9 @@
   networking.computerName = "Joi Boi";
 
   myNixOS = {
-    bundles.general-desktop.enable = true;
+    bundles.darwin-desktop.enable = true;
 
-    darwin-users = {
+    users = {
       nepjua = {
         userConfig = {...}: {
           myHomeManager = {

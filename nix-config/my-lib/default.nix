@@ -39,7 +39,7 @@ in rec {
       };
       modules = [
         config
-        outputs.nixosModules.default
+        outputs.darwinModules.default
       ];
     };
 

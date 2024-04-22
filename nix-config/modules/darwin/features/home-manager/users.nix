@@ -7,7 +7,7 @@
   pkgs,
   ...
 }: {
-  options.myNixOS.darwin-users = lib.mkOption {
+  options.myNixOS.users = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
         userName = lib.mkOption {
@@ -72,7 +72,7 @@
             outputs.homeManagerModules.default
           ];
         })
-        (config.myNixOS.darwin-users);
+        (config.myNixOS.users);
     };
 
     users.users = builtins.mapAttrs (
@@ -82,6 +82,6 @@
           shell = pkgs.fish;
         }
         // user.userSettings
-    ) (config.myNixOS.darwin-users);
+    ) (config.myNixOS.users);
   };
 }
