@@ -7,7 +7,7 @@
 }: let
   cfg = config.myHomeManager;
 
-  isLinux = myLib.isDarwinSystem pkgs.system;
+  isLinux = myLib.isLinuxSystem "aarch64-darwin";
 
   extensions =
     map
@@ -18,35 +18,32 @@
   exitModules = map (f: f.exit) extensions;
 
   # Taking all modules in ./features-gui and adding enables to them
-  featuresTui =
+  features =
     myLib.extendModules
     (name: {
       extraOptions = {
-        myHomeManager.tui.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+        myHomeManager.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
       extraConfig = {
-        myHomeManager.tui.${name}.enable = lib.mkDefault true;
+        myHomeManager.${name}.enable = lib.mkDefault true;
       };
 
-      configExtension = config: (lib.mkIf (cfg.tui.enable && cfg.tui.${name}.enable) config);
+      configExtension = config: (lib.mkIf (cfg.${name}.enable) config);
     })
     (myLib.filesIn ./features);
 
   # Taking all modules in ./features-tui and adding enables to them
-  featuresLinux = lib.mkIf isLinux (myLib.extendModules
+  featuresLinux =
+    myLib.extendModules
     (name: {
       extraOptions = {
         myHomeManager.linux.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
-      extraConfig = {
-        myHomeManager.linux.${name}.enable = lib.mkDefault true;
-      };
-
-      configExtension = config: (lib.mkIf (cfg.linux.enable && cfg.linux.${name}.enable) config);
+      configExtension = config: (lib.mkIf (cfg.linux.${name}.enable) config);
     })
-    (myLib.filesIn ./features-linux));
+    (myLib.filesIn ./features-linux);
 
   # Taking all module bundles in ./bundles and adding bundle.enables to them
   bundles =
@@ -63,37 +60,13 @@ in {
   home.stateVersion = "24.05";
 
   imports =
-    [
-      ({...}: {
-        options = {
-          myHomeManager = {
-            tui = {
-              enable = lib.mkEnableOption "enable my tui configuration";
-            };
-
-            linux = lib.mkIf isLinux {
-              enable = lib.mkEnableOption "enable my gui configuration";
-            };
-          };
-        };
-
-        config = {
-          myHomeManager = {
-            tui = {
-              enable = lib.mkOptionDefault false;
-            };
-
-            linux = lib.mkIf isLinux {
-              enable = lib.mkOptionDefault false;
-            };
-          };
-        };
-      })
-    ]
-    ++ enterModules
+    enterModules
     ++ []
-    ++ featuresTui
-    ++ (lib.mkIf isLinux featuresLinux)
-    ++ bundles
+    ++ features
+    ++ (
+      if isLinux
+      then featuresLinux
+      else []
+    )
     ++ exitModules;
 }

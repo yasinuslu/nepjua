@@ -16,11 +16,6 @@
         userConfig = {...}: {
           programs.git.userName = "Yasin Uslu";
           programs.git.userEmail = "nepjua@gmail.com";
-
-          myHomeManager = {
-            bundles.tui.enable = true;
-            bundles.gui.enable = true;
-          };
         };
         userSettings = {
           extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];

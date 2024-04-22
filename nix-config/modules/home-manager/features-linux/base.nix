@@ -20,6 +20,8 @@
     spotify
     warp-terminal
     discord
+    htop
+    busybox
   ];
 
   services.spotifyd = {

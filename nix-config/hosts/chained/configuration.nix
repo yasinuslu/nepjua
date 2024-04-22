@@ -6,16 +6,11 @@
   networking.computerName = "Yasin Mac";
 
   myNixOS = {
-    bundles.general-desktop.enable = true;
+    bundles.darwin-desktop.enable = true;
 
-    darwin-users = {
+    users = {
       nepjua = {
         userConfig = {...}: {
-          myHomeManager = {
-            bundles.tui.enable = true;
-            bundles.gui.enable = false;
-          };
-
           programs.git.userName = "Yasin Uslu";
           programs.git.userEmail = "nepjua@gmail.com";
         };

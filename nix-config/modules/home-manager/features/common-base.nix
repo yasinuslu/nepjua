@@ -14,10 +14,8 @@
   };
 
   home.packages = with pkgs; [
-    htop
     cachix
     nixd
-    busybox
 
     nil
     nixpkgs-fmt
