@@ -2,9 +2,12 @@
   config,
   lib,
   myLib,
+  pkgs,
   ...
 }: let
   cfg = config.myHomeManager;
+
+  isLinux = myLib.isDarwinSystem pkgs.system;
 
   extensions =
     map
@@ -28,23 +31,22 @@
 
       configExtension = config: (lib.mkIf (cfg.tui.enable && cfg.tui.${name}.enable) config);
     })
-    (myLib.filesIn ./features-tui);
+    (myLib.filesIn ./features);
 
   # Taking all modules in ./features-tui and adding enables to them
-  featuresGui =
-    myLib.extendModules
+  featuresLinux = lib.mkIf isLinux (myLib.extendModules
     (name: {
       extraOptions = {
-        myHomeManager.gui.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+        myHomeManager.linux.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
       extraConfig = {
-        myHomeManager.gui.${name}.enable = lib.mkDefault true;
+        myHomeManager.linux.${name}.enable = lib.mkDefault true;
       };
 
-      configExtension = config: (lib.mkIf (cfg.gui.enable && cfg.gui.${name}.enable) config);
+      configExtension = config: (lib.mkIf (cfg.linux.enable && cfg.linux.${name}.enable) config);
     })
-    (myLib.filesIn ./features-gui);
+    (myLib.filesIn ./features-linux));
 
   # Taking all module bundles in ./bundles and adding bundle.enables to them
   bundles =
@@ -69,7 +71,7 @@ in {
               enable = lib.mkEnableOption "enable my tui configuration";
             };
 
-            gui = {
+            linux = lib.mkIf isLinux {
               enable = lib.mkEnableOption "enable my gui configuration";
             };
           };
@@ -78,11 +80,11 @@ in {
         config = {
           myHomeManager = {
             tui = {
-              enable = lib.mkDefault true;
+              enable = lib.mkOptionDefault false;
             };
 
-            gui = {
-              enable = lib.mkDefault true;
+            linux = lib.mkIf isLinux {
+              enable = lib.mkOptionDefault false;
             };
           };
         };
@@ -91,7 +93,7 @@ in {
     ++ enterModules
     ++ []
     ++ featuresTui
-    ++ featuresGui
+    ++ (lib.mkIf isLinux featuresLinux)
     ++ bundles
     ++ exitModules;
 }

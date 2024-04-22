@@ -34,7 +34,6 @@
 
   config = {
     programs.fish.enable = true;
-    programs.java.enable = true;
 
     home-manager = {
       useGlobalPkgs = true;
@@ -55,15 +54,15 @@
               home.username = name;
               home.homeDirectory = "/Users/${name}";
 
-              programs.bash.interactiveShellInit = ''
-                eval "$(/opt/homebrew/bin/brew shellenv)"
-                . /etc/profiles/per-user/${name}/etc/profile.d/*
-              '';
+              # programs.bash.interactiveShellInit = ''
+              #   eval "$(/opt/homebrew/bin/brew shellenv)"
+              #   . /etc/profiles/per-user/${name}/etc/profile.d/*
+              # '';
 
-              programs.zsh.interactiveShellInit = ''
-                eval "$(/opt/homebrew/bin/brew shellenv)"
-                . /etc/profiles/per-user/${name}/etc/profile.d/*
-              '';
+              # programs.zsh.interactiveShellInit = ''
+              #   eval "$(/opt/homebrew/bin/brew shellenv)"
+              #   . /etc/profiles/per-user/${name}/etc/profile.d/*
+              # '';
 
               programs.fish.interactiveShellInit = ''
                 eval "$(/opt/homebrew/bin/brew shellenv)"

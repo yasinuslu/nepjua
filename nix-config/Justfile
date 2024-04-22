@@ -16,8 +16,11 @@ build-verbose host="kaori":
 switch host="kaori":
   sudo nixos-rebuild switch --flake .#{{host}} --impure
 
-switch-darwin host="joyboy":
-  darwin-rebuild switch --flake .#{{host}}
+switch-darwin *ARGS:
+  darwin-rebuild switch --flake .#joyboy {{ARGS}}
 
 update-dconf:
   dconf dump "/" | nix run nixpkgs#dconf2nix > ./modules/home-manager/features-gui/gnome/dconf.nix
+
+up:
+  nix flake update

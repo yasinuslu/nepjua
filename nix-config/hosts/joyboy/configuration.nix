@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-{...}: {
+{lib, ...}: {
   networking.hostName = "joyboy";
   networking.computerName = "Joi Boi";
 
@@ -12,8 +12,8 @@
       nepjua = {
         userConfig = {...}: {
           myHomeManager = {
-            bundles.tui.enable = true;
-            bundles.gui.enable = false;
+            bundles.tui.enable = lib.mkForce true;
+            bundles.gui.enable = lib.mkForce false;
           };
 
           programs.git.userName = "Yasin Uslu";

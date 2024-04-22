@@ -34,6 +34,8 @@ in rec {
 
   mkDarwinSystem = config:
     darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+
       specialArgs = {
         inherit inputs outputs myLib;
       };
