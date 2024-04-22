@@ -18,3 +18,6 @@ switch host="kaori":
 
 switch-darwin host="joyboy":
   darwin-rebuild switch --flake .#{{host}}
+
+update-dconf:
+  dconf dump "/" | nix run nixpkgs#dconf2nix > ./modules/home-manager/features-gui/gnome/dconf.nix

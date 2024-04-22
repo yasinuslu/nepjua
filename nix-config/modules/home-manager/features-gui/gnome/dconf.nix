@@ -5,15 +5,23 @@ with lib.hm.gvariant;
 
 {
   dconf.settings = {
+    "ca/desrt/dconf-editor" = {
+      show-warning = false;
+    };
+
     "org/gnome/Snapshot" = {
       is-maximized = false;
       window-height = 640;
       window-width = 800;
     };
 
+    "org/gnome/calendar" = {
+      active-view = "month";
+    };
+
     "org/gnome/control-center" = {
       last-panel = "sound";
-      window-state = mkTuple [ 980 640 true ];
+      window-state = mkTuple [ 858 518 true ];
     };
 
     "org/gnome/desktop/app-folders" = {
@@ -39,6 +47,15 @@ with lib.hm.gvariant;
       translate = true;
     };
 
+    "org/gnome/desktop/background" = {
+      color-shading-type = "solid";
+      picture-options = "zoom";
+      picture-uri = "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.jpg";
+      picture-uri-dark = "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-d.jpg";
+      primary-color = "#3071AE";
+      secondary-color = "#000000";
+    };
+
     "org/gnome/desktop/input-sources" = {
       sources = [ (mkTuple [ "xkb" "us" ]) ];
       xkb-options = [ "terminate:ctrl_alt_bksp" ];
@@ -58,11 +75,23 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/notifications" = {
-      application-children = [ "gnome-power-panel" "code" "discord" "microsoft-edge" "org-qbittorrent-qbittorrent" ];
+      application-children = [ "gnome-power-panel" "code" "discord" "microsoft-edge" "org-qbittorrent-qbittorrent" "org-gnome-extensions" "org-gnome-tweaks" "org-gnome-settings" ];
+    };
+
+    "org/gnome/desktop/notifications/application/1password" = {
+      application-id = "1password.desktop";
     };
 
     "org/gnome/desktop/notifications/application/code" = {
       application-id = "code.desktop";
+    };
+
+    "org/gnome/desktop/notifications/application/codium" = {
+      application-id = "codium.desktop";
+    };
+
+    "org/gnome/desktop/notifications/application/dev-warp-warp" = {
+      application-id = "dev.warp.Warp.desktop";
     };
 
     "org/gnome/desktop/notifications/application/discord" = {
@@ -77,6 +106,22 @@ with lib.hm.gvariant;
       application-id = "microsoft-edge.desktop";
     };
 
+    "org/gnome/desktop/notifications/application/org-gnome-extensions" = {
+      application-id = "org.gnome.Extensions.desktop";
+    };
+
+    "org/gnome/desktop/notifications/application/org-gnome-nautilus" = {
+      application-id = "org.gnome.Nautilus.desktop";
+    };
+
+    "org/gnome/desktop/notifications/application/org-gnome-settings" = {
+      application-id = "org.gnome.Settings.desktop";
+    };
+
+    "org/gnome/desktop/notifications/application/org-gnome-tweaks" = {
+      application-id = "org.gnome.tweaks.desktop";
+    };
+
     "org/gnome/desktop/notifications/application/org-qbittorrent-qbittorrent" = {
       application-id = "org.qbittorrent.qBittorrent.desktop";
     };
@@ -87,6 +132,14 @@ with lib.hm.gvariant;
 
     "org/gnome/desktop/peripherals/touchpad" = {
       two-finger-scrolling-enabled = true;
+    };
+
+    "org/gnome/desktop/screensaver" = {
+      color-shading-type = "solid";
+      picture-options = "zoom";
+      picture-uri = "file:///run/current-system/sw/share/backgrounds/gnome/adwaita-l.jpg";
+      primary-color = "#3071AE";
+      secondary-color = "#000000";
     };
 
     "org/gnome/desktop/session" = {
@@ -124,6 +177,7 @@ with lib.hm.gvariant;
 
     "org/gnome/nautilus/window-state" = {
       initial-size = mkTuple [ 890 550 ];
+      maximized = true;
     };
 
     "org/gnome/portal/filechooser/microsoft-edge" = {
@@ -153,6 +207,7 @@ with lib.hm.gvariant;
       enable-super = true;
       hot-edge-mode = 1;
       hot-edge-monitor = 1;
+      hot-edge-position = 2;
       super-double-press-action = 3;
       super-key-mode = 3;
       switcher-popup-monitor = 3;
@@ -213,6 +268,16 @@ with lib.hm.gvariant;
       type-format = "category";
       window-position = mkTuple [ 2780 71 ];
       window-size = mkTuple [ 1719 1289 ];
+    };
+
+    "org/virt-manager/virt-manager" = {
+      manager-window-height = 550;
+      manager-window-width = 550;
+    };
+
+    "org/virt-manager/virt-manager/vmlist-fields" = {
+      disk-usage = false;
+      network-traffic = false;
     };
 
   };
