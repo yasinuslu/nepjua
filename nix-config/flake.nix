@@ -44,6 +44,7 @@
           buildInputs = [
             pkgs.just
             pkgs.alejandra
+            pkgs.corepack
           ];
           shellHook = ''
             echo "Welcome in $name"
