@@ -17,7 +17,7 @@
           programs.git.userEmail = "yahmet@mastercontrol.com";
 
           myHomeManager = {
-            impure-node.enable = false;
+            # impure-node.enable = false;
           };
         };
         userSettings = {};

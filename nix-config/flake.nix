@@ -39,18 +39,18 @@
       devShell = forAllSystems (system: let
         pkgs = inputs.nixpkgs.legacyPackages.${system};
       in
-        pkgs.mkShell {
-          name = "default";
-          buildInputs = [
-            pkgs.just
-            pkgs.alejandra
-            pkgs.corepack
-          ];
-          shellHook = ''
-            echo "Welcome in $name"
-            export HF_HUB_ENABLE_HF_TRANSFER=1
-          '';
-        });
+        with pkgs;
+          mkShell {
+            name = "default";
+            buildInputs = [
+              just
+              alejandra
+            ];
+            shellHook = ''
+              echo "Welcome in $name"
+              export HF_HUB_ENABLE_HF_TRANSFER=1
+            '';
+          });
 
       myLib.default = myLib;
       homeManagerModules.default = ./modules/home-manager;

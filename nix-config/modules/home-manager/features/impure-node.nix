@@ -26,9 +26,11 @@ in {
       export PATH="${pnpmHome}:${nodeBinDir}:${globalNodeModules}/bin:$PATH"
       export PNPM_HOME="${pnpmHome}"
       npm config set prefix ${globalNodeModules}
-      npm i -g pnpm
+      npm uninstall -g pnpm yarn
+      npm i -g corepack
       echo "Installing other global modules using pnpm..."
-      pnpm i -g pnpm yarn serve
+      corepack install -g pnpm@8 yarn
+      pnpm i -g serve
     '';
   };
 
