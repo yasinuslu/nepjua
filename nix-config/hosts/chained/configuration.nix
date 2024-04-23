@@ -8,10 +8,10 @@
   myNixOS = {
     bundles.darwin-desktop.enable = true;
 
-    myNixOS.homebrew-extra.enable = false;
+    homebrew-extra.enable = false;
 
     users = {
-      yahmet_mcgh = {
+      yahmet = {
         userConfig = {...}: {
           programs.git.userName = "Yasin Uslu";
           programs.git.userEmail = "yahmet@mastercontrol.com";
