@@ -8,6 +8,8 @@
   myNixOS = {
     bundles.darwin-desktop.enable = true;
 
+    myNixOS.homebrew-extra.enable = false;
+
     users = {
       yahmet_mcgh = {
         userConfig = {...}: {
