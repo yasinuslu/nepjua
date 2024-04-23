@@ -3,16 +3,16 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {...}: {
   networking.hostName = "chained";
-  networking.computerName = "Yasin Mac";
+  networking.computerName = "Yasin Uslu MC";
 
   myNixOS = {
     bundles.darwin-desktop.enable = true;
 
     users = {
-      nepjua = {
+      yahmet_mcgh = {
         userConfig = {...}: {
           programs.git.userName = "Yasin Uslu";
-          programs.git.userEmail = "nepjua@gmail.com";
+          programs.git.userEmail = "yahmet@mastercontrol.com";
         };
         userSettings = {};
       };

@@ -33,6 +33,7 @@
 
       darwinConfigurations = {
         joyboy = mkDarwinSystem defaultSystems.darwin ./hosts/joyboy/configuration.nix;
+        chained = mkDarwinSystem defaultSystems.darwin ./hosts/chained/configuration.nix;
       };
 
       devShell = forAllSystems (system: let
