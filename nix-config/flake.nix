@@ -33,22 +33,26 @@
 
       darwinConfigurations = {
         joyboy = mkDarwinSystem defaultSystems.darwin ./hosts/joyboy/configuration.nix;
+        chained = mkDarwinSystem defaultSystems.darwin ./hosts/chained/configuration.nix;
       };
 
       devShell = forAllSystems (system: let
         pkgs = inputs.nixpkgs.legacyPackages.${system};
       in
-        pkgs.mkShell {
-          name = "default";
-          buildInputs = [
-            pkgs.just
-            pkgs.alejandra
-          ];
-          shellHook = ''
-            echo "Welcome in $name"
-            export HF_HUB_ENABLE_HF_TRANSFER=1
-          '';
-        });
+        with pkgs;
+          mkShell {
+            name = "default";
+            buildInputs = [
+              just
+              alejandra
+            ];
+            shellHook = ''
+              echo "Welcome in $name"
+              export HF_HUB_ENABLE_HF_TRANSFER=1
+              export PATH=$HOME/.local/bin:$PATH
+              export PATH=$HOME/.console-ninja/.bin:$PATH
+            '';
+          });
 
       myLib.default = myLib;
       homeManagerModules.default = ./modules/home-manager;
