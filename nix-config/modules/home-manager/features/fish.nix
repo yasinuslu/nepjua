@@ -154,7 +154,10 @@
         set -xg GPG_TTY (tty)
       end
 
-      printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish" }}\x9c'
+      # For fish subshells, add to ~/.config/fish/config.fish.
+      if status is-interactive
+        printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish"}}\x9c'
+      end
     '';
   };
 
