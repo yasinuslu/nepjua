@@ -10,5 +10,5 @@
     cat = "bat";
     pcat = "bat --plain";
     man = "batman";
-  }
+  };
 }
