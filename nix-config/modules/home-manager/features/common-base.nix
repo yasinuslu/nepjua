@@ -24,7 +24,6 @@
     tldr
     jq
     lsd
-    bat
     starship
     vim
     lsof

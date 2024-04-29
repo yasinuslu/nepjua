@@ -88,8 +88,6 @@
     shellAliases = {
       lsl = "command ls --color";
       ls = "lsd";
-      cat = "bat";
-      pcat = "bat --plain";
     };
 
     shellAbbrs = {
