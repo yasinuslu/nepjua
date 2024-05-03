@@ -45,6 +45,7 @@
             buildInputs = [
               just
               alejandra
+              go-task
             ];
             shellHook = ''
               echo "Welcome in $name"
