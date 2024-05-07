@@ -34,6 +34,7 @@
       darwinConfigurations = {
         joyboy = mkDarwinSystem defaultSystems.darwin ./hosts/joyboy/configuration.nix;
         sezer = mkDarwinSystem "x86_64-darwin" ./hosts/sezer/configuration.nix;
+        hesen = mkDarwinSystem "x86_64-darwin" ./hosts/hesen/configuration.nix;
         chained = mkDarwinSystem defaultSystems.darwin ./hosts/chained/configuration.nix;
       };
 
