@@ -34,7 +34,6 @@
       "notion"
       "rectangle"
       "visual-studio-code"
-      "vlc"
       # "bettermouse"
       "betterdisplay"
       "spotify"

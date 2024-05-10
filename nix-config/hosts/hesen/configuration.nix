@@ -7,6 +7,7 @@
 
   myNixOS = {
     bundles.darwin-desktop.enable = true;
+    app-vlc.enable = false;
 
     users = {
       hesenaliyev = {
