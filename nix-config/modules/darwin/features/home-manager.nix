@@ -76,6 +76,8 @@
                     eval (/usr/local/bin/brew shellenv)
                   end
                 end
+
+                __init_homebrew
               '';
             })
             outputs.homeManagerModules.default

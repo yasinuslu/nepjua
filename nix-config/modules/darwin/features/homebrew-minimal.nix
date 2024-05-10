@@ -24,6 +24,7 @@
       "git-lfs"
       "helm"
       "kompose"
+      "kustomize"
     ];
     casks = [
       "1password"
