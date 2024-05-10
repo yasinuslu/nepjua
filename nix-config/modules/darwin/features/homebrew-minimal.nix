@@ -22,6 +22,8 @@
       "tig"
       "hashicorp/tap/vault"
       "git-lfs"
+      "helm"
+      "kompose"
     ];
     casks = [
       "1password"

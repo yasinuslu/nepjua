@@ -46,6 +46,8 @@
               just
               alejandra
               go-task
+              python312
+              python312Packages.pip
             ];
             shellHook = ''
               echo "Welcome in $name"
