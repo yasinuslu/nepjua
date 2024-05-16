@@ -22,9 +22,10 @@
       "tig"
       "hashicorp/tap/vault"
       "git-lfs"
-      "helm"
-      "kompose"
-      "kustomize"
+      # "lima"
+      # "docker"
+      # "docker-compose"
+      # "colima"
     ];
     casks = [
       "1password"
