@@ -26,6 +26,7 @@
       # "docker"
       # "docker-compose"
       # "colima"
+      "gitkraken-cli"
     ];
     casks = [
       "1password"
