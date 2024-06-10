@@ -4,7 +4,7 @@
   ];
 
   homebrew.casks = [
-    "anydesk"
+    # "anydesk"
     "cloudflare-warp"
     "microsoft-office"
     "obsidian"

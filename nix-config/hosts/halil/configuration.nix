@@ -9,7 +9,7 @@
     bundles.darwin-desktop.enable = true;
 
     users = {
-      nepjua = {
+      halil = {
         userConfig = {...}: {
           programs.git.userName = "Halil Ertekin";
           programs.git.userEmail = "halil@ertekin.me";
