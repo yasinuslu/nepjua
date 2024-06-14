@@ -22,11 +22,6 @@
       "tig"
       "hashicorp/tap/vault"
       "git-lfs"
-      # "lima"
-      # "docker"
-      # "docker-compose"
-      # "colima"
-      "gitkraken-cli"
     ];
     casks = [
       "1password"
@@ -40,13 +35,14 @@
       "rectangle"
       "visual-studio-code"
       "vlc"
-      # "bettermouse"
       "betterdisplay"
       "spotify"
       "whatsapp"
       "zed"
       "warp"
       "discord"
+      "gitkraken-cli"
+      "gitkraken"
     ];
   };
 }
