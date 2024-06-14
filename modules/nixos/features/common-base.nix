@@ -41,10 +41,6 @@
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
-
-    settings = {
-      trusted-users = ["root" "nepjua"];
-    };
   };
 
   # FIXME: Move to homeManager.features.fonts

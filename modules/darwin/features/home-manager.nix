@@ -36,6 +36,14 @@
   config = {
     programs.fish.enable = true;
 
+    nix.settings.trusted-users = ["root"] ++ (builtins.attrNames config.myNixOS.users);
+    nix.settings.trusted-substituters = [
+      "https://nix-community.cachix.org/"
+      "https://cache.nixos.org/"
+      "https://devenv.cachix.org/"
+      "https://nixpkgs-update.cachix.org/"
+    ];
+
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
