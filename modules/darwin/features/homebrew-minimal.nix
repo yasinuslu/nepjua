@@ -43,6 +43,7 @@
       "discord"
       "gitkraken-cli"
       "gitkraken"
+      "logseq"
     ];
   };
 }
