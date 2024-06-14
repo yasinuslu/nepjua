@@ -44,6 +44,7 @@
       "gitkraken-cli"
       "gitkraken"
       "logseq"
+      "obsidian"
     ];
   };
 }
