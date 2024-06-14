@@ -45,8 +45,6 @@
             name = "default";
             buildInputs = [
               just
-              alejandra
-              go-task
               python312
               python312Packages.pip
             ];
