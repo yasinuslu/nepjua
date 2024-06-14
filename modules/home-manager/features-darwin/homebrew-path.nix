@@ -1,5 +1,5 @@
 {...}: {
-  programs.zsh.initExtra = ''
+  programs.zsh.initExtraFirst = ''
     __init_homebrew() {
       if [[ -e /opt/homebrew/bin/brew ]]; then
         eval $(/opt/homebrew/bin/brew shellenv)
@@ -13,7 +13,7 @@
     __init_homebrew
   '';
 
-  programs.bash.initExtra = ''
+  programs.bash.profileExtra = ''
     __init_homebrew() {
       if [[ -e /opt/homebrew/bin/brew ]]; then
         eval $(/opt/homebrew/bin/brew shellenv)
@@ -27,7 +27,7 @@
     __init_homebrew
   '';
 
-  programs.fish.shellInit = ''
+  programs.fish.loginShellInit = ''
     function __init_homebrew
       if test -e /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv)
