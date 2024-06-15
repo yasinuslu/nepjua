@@ -43,7 +43,7 @@
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {
-      trusted-users = ["root" "nepjua"];
+      trusted-users = ["root"] ++ (builtins.attrNames config.myNixOS.users);
     };
   };
 
