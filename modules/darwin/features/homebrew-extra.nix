@@ -7,7 +7,6 @@
     "anydesk"
     "cloudflare-warp"
     "microsoft-office"
-    "obsidian"
     "parsec"
     "qbittorrent"
     "slack"

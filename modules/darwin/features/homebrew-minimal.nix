@@ -45,6 +45,7 @@
       "gitkraken"
       "logseq"
       "ollama"
+      "obsidian"
     ];
   };
 }

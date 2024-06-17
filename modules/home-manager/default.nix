@@ -42,6 +42,17 @@
       configExtension = config: (lib.mkIf (cfg.linux.${name}.enable) config);
     })
     (myLib.filesIn ./features-linux);
+
+  featuresDarwin =
+    myLib.extendModules
+    (name: {
+      extraOptions = {
+        myHomeManager.linux.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+      };
+
+      configExtension = config: (lib.mkIf (cfg.linux.${name}.enable) config);
+    })
+    (myLib.filesIn ./features-darwin);
 in {
   home.stateVersion = "24.05";
 
@@ -52,6 +63,11 @@ in {
     ++ (
       if myArgs.isCurrentSystemLinux
       then featuresLinux
+      else []
+    )
+    ++ (
+      if myArgs.isCurrentSystemDarwin
+      then featuresDarwin
       else []
     )
     ++ exitModules;
