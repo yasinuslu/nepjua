@@ -1,10 +1,11 @@
 {...}: {
-  homebrew.brews = [];
+  homebrew.brews = [
+    "watchman"
+    "cocoapods"
+  ];
 
   homebrew.casks = [
-    "karabiner-elements"
     "ngrok"
     "react-native-debugger"
-    "fastlane"
   ];
 }
