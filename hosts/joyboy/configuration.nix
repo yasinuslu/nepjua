@@ -7,12 +7,12 @@
 
   myNixOS = {
     bundles.darwin-desktop.enable = true;
-
     users = {
       nepjua = {
         userConfig = {...}: {
           programs.git.userName = "Yasin Uslu";
           programs.git.userEmail = "nepjua@gmail.com";
+          myHomeManager.darwin.colima.enable = false;
         };
         userSettings = {};
       };

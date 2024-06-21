@@ -39,6 +39,10 @@
         myHomeManager.linux.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
+      extraConfig = {
+        myHomeManager.linux.${name}.enable = lib.mkDefault true;
+      };
+
       configExtension = config: (lib.mkIf (cfg.linux.${name}.enable) config);
     })
     (myLib.filesIn ./features-linux);
@@ -47,10 +51,14 @@
     myLib.extendModules
     (name: {
       extraOptions = {
-        myHomeManager.linux.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+        myHomeManager.darwin.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
-      configExtension = config: (lib.mkIf (cfg.linux.${name}.enable) config);
+      extraConfig = {
+        myHomeManager.darwin.${name}.enable = lib.mkDefault true;
+      };
+
+      configExtension = config: (lib.mkIf (cfg.darwin.${name}.enable) config);
     })
     (myLib.filesIn ./features-darwin);
 in {
