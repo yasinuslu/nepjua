@@ -5,7 +5,6 @@
 
   homebrew.casks = [
     "anydesk"
-    "cloudflare-warp"
     "microsoft-office"
     "parsec"
     "qbittorrent"

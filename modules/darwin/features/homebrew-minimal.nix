@@ -46,6 +46,7 @@
       "logseq"
       "ollama"
       "obsidian"
+      "cloudflare-warp"
     ];
   };
 }
