@@ -39,6 +39,6 @@ in {
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = globalNodeModules;
     PNPM_HOME = pnpmHome;
-    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+    # PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 }
