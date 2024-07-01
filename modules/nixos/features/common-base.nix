@@ -42,9 +42,4 @@
     # Making legacy nix commands consistent as well, awesome!
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
   };
-
-  # FIXME: Move to homeManager.features.fonts
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
-  ];
 }

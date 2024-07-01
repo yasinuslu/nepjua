@@ -16,13 +16,6 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
-  fonts = {
-    fontDir.enable = true;
-    fonts = with pkgs; [
-      (nerdfonts.override {fonts = ["JetBrainsMono" "FiraCode"];})
-    ];
-  };
-
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
