@@ -7,6 +7,8 @@
     };
     taps = [
       "hashicorp/tap"
+      "gromgit/fuse"
+      "metalbear-co/mirrord"
     ];
     enable = true;
     brews = [
@@ -22,6 +24,8 @@
       "tig"
       "hashicorp/tap/vault"
       "git-lfs"
+      "gromgit/fuse/sshfs-mac"
+      "metalbear-co/mirrord/mirrord"
     ];
     casks = [
       "1password"
@@ -47,6 +51,7 @@
       "ollama"
       "obsidian"
       "cloudflare-warp"
+      "macfuse"
     ];
   };
 }
