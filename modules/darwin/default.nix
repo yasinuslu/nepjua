@@ -5,18 +5,18 @@
   inputs,
   ...
 }: let
-  cfg = config.myNixOS;
+  cfg = config.myDarwin;
 
   # Taking all modules in ./features and adding enables to them
   features =
     myLib.extendModules
     (name: {
       extraOptions = {
-        myNixOS.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+        myDarwin.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
       };
 
       extraConfig = {
-        myNixOS.${name}.enable = lib.mkDefault true;
+        myDarwin.${name}.enable = lib.mkDefault true;
       };
 
       configExtension = config: (lib.mkIf cfg.${name}.enable config);
@@ -28,7 +28,7 @@
     myLib.extendModules
     (name: {
       extraOptions = {
-        myNixOS.bundles.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
+        myDarwin.bundles.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
       };
 
       configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
@@ -40,7 +40,7 @@
     myLib.extendModules
     (name: {
       extraOptions = {
-        myNixOS.services.${name}.enable = lib.mkEnableOption "enable ${name} service";
+        myDarwin.services.${name}.enable = lib.mkEnableOption "enable ${name} service";
       };
       configExtension = config: (lib.mkIf cfg.services.${name}.enable config);
     })

@@ -5,7 +5,7 @@
   networking.hostName = "musu";
   networking.computerName = "Musu Mac";
 
-  myNixOS = {
+  myDarwin = {
     bundles.general-desktop.enable = true;
 
     darwin-users = {

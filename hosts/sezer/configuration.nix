@@ -5,7 +5,7 @@
   networking.hostName = "Sezer-MBP";
   networking.computerName = "Sezer-MBP";
 
-  myNixOS = {
+  myDarwin = {
     bundles.darwin-desktop.enable = true;
 
     users = {

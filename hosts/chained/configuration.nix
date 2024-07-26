@@ -5,7 +5,7 @@
   networking.hostName = "chained";
   networking.computerName = "Yasin Uslu MC";
 
-  myNixOS = {
+  myDarwin = {
     bundles.darwin-desktop.enable = true;
 
     homebrew-extra.enable = false;

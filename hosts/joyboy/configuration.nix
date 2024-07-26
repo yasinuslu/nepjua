@@ -5,8 +5,9 @@
   networking.hostName = "joyboy";
   networking.computerName = "Joi Boi";
 
-  myNixOS = {
+  myDarwin = {
     bundles.darwin-desktop.enable = true;
+
     users = {
       nepjua = {
         userConfig = {...}: {

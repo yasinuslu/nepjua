@@ -17,6 +17,7 @@
           programs.git.userName = "Yasin Uslu";
           programs.git.userEmail = "nepjua@gmail.com";
         };
+
         userSettings = {
           extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];
         };

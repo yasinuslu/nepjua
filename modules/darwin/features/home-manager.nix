@@ -8,7 +8,7 @@
   myArgs,
   ...
 }: {
-  options.myNixOS.users = lib.mkOption {
+  options.myDarwin.users = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
         userName = lib.mkOption {
@@ -36,7 +36,7 @@
   config = {
     programs.fish.enable = true;
 
-    nix.settings.trusted-users = ["root"] ++ (builtins.attrNames config.myNixOS.users);
+    nix.settings.trusted-users = ["root"] ++ (builtins.attrNames config.myDarwin.users);
     nix.settings.trusted-substituters = [
       "https://nix-community.cachix.org/"
       "https://cache.nixos.org/"
@@ -67,7 +67,7 @@
             outputs.homeManagerModules.default
           ];
         })
-        (config.myNixOS.users);
+        (config.myDarwin.users);
     };
 
     users.users = builtins.mapAttrs (
@@ -77,6 +77,6 @@
           shell = pkgs.fish;
         }
         // user.userSettings
-    ) (config.myNixOS.users);
+    ) (config.myDarwin.users);
   };
 }
