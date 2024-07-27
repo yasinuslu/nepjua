@@ -54,10 +54,10 @@
       epiphany # web browser
       geary # email reader
       totem # video player
+      evince # document viewer
     ])
     ++ (with pkgs.gnome; [
       gnome-music
-      evince # document viewer
       gnome-characters
       tali # poker game
       iagno # go game
@@ -75,15 +75,10 @@
   environment.systemPackages = with pkgs; [
     _1password # FIXME: Move to home-manager
     _1password-gui # FIXME: Move to home-manager
-    gnome.dconf-editor # FIXME: Move to home-manager
+    dconf-editor # FIXME: Move to home-manager
     xrdp # FIXME: Move to home-manager
     discord # FIXME: Move to home-manager
   ];
-
-  # FIXME: Put in features.docker
-  virtualisation.docker.enable = true;
-  virtualisation.docker.enableNvidia = true;
-  virtualisation.docker.enableOnBoot = true;
 
   # Enable automatic login for the user.
   services.getty.autologinUser = "nepjua";

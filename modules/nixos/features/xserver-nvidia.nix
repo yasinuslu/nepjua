@@ -21,11 +21,11 @@
   services.xserver.videoDrivers = ["nvidia"];
 
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
+  services.libinput.enable = true;
 
-  hardware.opengl.enable = true;
-  # hardware.opengl.driSupport = true;
-  hardware.opengl.driSupport32Bit = true;
+  hardware.graphics.enable = true;
+  hardware.graphics.driSupport = true;
+  hardware.graphics.enable32Bit = true;
 
   hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.powerManagement.enable = true;
