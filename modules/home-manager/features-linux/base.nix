@@ -22,6 +22,7 @@
     discord
     htop
     busybox
+    discord
   ];
 
   services.spotifyd = {
