@@ -49,16 +49,16 @@
     (with pkgs; [
       gnome-photos
       gnome-tour
-    ])
-    ++ (with pkgs.gnome; [
-      cheese # webcam tool
-      gnome-music
+      cheese
       gnome-terminal
       epiphany # web browser
       geary # email reader
+      totem # video player
+    ])
+    ++ (with pkgs.gnome; [
+      gnome-music
       evince # document viewer
       gnome-characters
-      totem # video player
       tali # poker game
       iagno # go game
       hitori # sudoku game
