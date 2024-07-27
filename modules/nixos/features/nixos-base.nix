@@ -65,21 +65,6 @@
       atomix # puzzle game
     ]);
 
-  # FIXME: This should be in features.qemuGuest
-  services.qemuGuest.enable = false;
-  services.spice-autorandr.enable = false;
-  services.spice-vdagentd.enable = false;
-  services.spice-webdavd.enable = false;
-
-  # FIXME: Install All of these as home packages
-  environment.systemPackages = with pkgs; [
-    _1password # FIXME: Move to home-manager
-    _1password-gui # FIXME: Move to home-manager
-    dconf-editor # FIXME: Move to home-manager
-    xrdp # FIXME: Move to home-manager
-    discord # FIXME: Move to home-manager
-  ];
-
   # Enable automatic login for the user.
   services.getty.autologinUser = "nepjua";
 
