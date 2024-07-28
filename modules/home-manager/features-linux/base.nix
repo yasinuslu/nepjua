@@ -23,6 +23,9 @@
     htop
     busybox
     discord
+    lens
+    logseq
+    cloudflare-warp
   ];
 
   services.spotifyd = {
