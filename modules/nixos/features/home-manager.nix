@@ -78,7 +78,6 @@
           initialPassword = "123456";
           description = "";
           shell = pkgs.fish;
-          extraGroups = ["libvirtd" "networkmanager" "wheel" "docker"];
         }
         // user.userSettings
     ) (config.myNixOS.users);
