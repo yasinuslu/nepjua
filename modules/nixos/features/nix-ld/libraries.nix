@@ -1,6 +1,6 @@
 {pkgs, ...}: let
   libwebp6-compat = pkgs.callPackage ./libwebp6-compat.nix {inherit pkgs;};
-  libpcre-compat = pkgs.callPackage ./libpcre-compat.nix {inherit pkgs;};
+  libpcre3-deb = pkgs.callPackage ./libpcre3-deb.nix {inherit pkgs;};
 in {
   programs.nix-ld.libraries = with pkgs; [
     alsa-lib.out
@@ -87,6 +87,6 @@ in {
     libffi_3_3.out
     json-glib.out
     gnutls.out
-    libpcre-compat # libpcre.so.3
+    libpcre3-deb
   ];
 }
