@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: {
-  environment.systemPackages = with inputs.nix-alien.packages.${pkgs.system}; [
+  home.packages = with inputs.nix-alien.packages.${pkgs.system}; [
     nix-alien
   ];
 
