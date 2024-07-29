@@ -1,5 +1,6 @@
 {pkgs, ...}: let
   libwebp6-compat = pkgs.callPackage ./libwebp6-compat.nix {inherit pkgs;};
+  libpcre-compat = pkgs.callPackage ./libpcre-compat.nix {inherit pkgs;};
 in {
   programs.nix-ld.libraries = with pkgs; [
     alsa-lib.out
@@ -74,5 +75,18 @@ in {
     libwebp.out # libwebp.so.7
     libwebp6-compat.out # libwebp.so.6
     harfbuzzFull.out
+    enchant.out
+    libsecret.out
+    libtasn1.out
+    hyphen.out
+    flite.lib
+    libpsl.out
+    nghttp2.lib
+    libgudev.out
+    libevdev.out
+    libffi_3_3.out
+    json-glib.out
+    gnutls.out
+    libpcre-compat # libpcre.so.3
   ];
 }
