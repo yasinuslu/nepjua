@@ -87,6 +87,6 @@ in {
     libffi_3_3.out
     json-glib.out
     gnutls.out
-    libpcre3-deb
+    libpcre3-deb.out
   ];
 }
