@@ -15,6 +15,7 @@
     fuse3
     gdk-pixbuf
     glib.out
+    glib.debug
     gtk3
     icu
     libappindicator-gtk3
