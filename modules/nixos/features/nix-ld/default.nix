@@ -1,7 +1,7 @@
 {...}: {
   imports = [
+    ./nix-ld.nix
     ./nix-alien.nix
     ./libraries.nix
-    ./nix-ld.nix
   ];
 }

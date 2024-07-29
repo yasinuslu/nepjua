@@ -1,4 +1,6 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  libwebp6 = pkgs.callPackage ./libwebp6.nix {inherit pkgs;};
+in {
   programs.nix-ld.libraries = with pkgs; [
     alsa-lib.out
     at-spi2-atk.out
@@ -55,5 +57,21 @@
     xorg.libXtst.out
     xorg_sys_opengl.out
     zlib.out
+    zulip.out
+    harfbuzz.out
+    icu66.out
+    sqlite.out
+    libxslt.out
+    libepoxy.out
+    lcms.out
+    woff2.lib
+    libevent.out
+    libopus.out
+    libgcrypt.out
+    libgpg-error.out
+    libjpeg8.out
+    libpng.out
+    libwebp.out # libwebp.so.7
+    libwebp6.out # libwebp.so.6
   ];
 }
