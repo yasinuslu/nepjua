@@ -1,5 +1,5 @@
 {pkgs, ...}: let
-  libwebp6 = pkgs.callPackages ./libwebp6.nix {inherit pkgs;};
+  libwebp6-compat = pkgs.callPackage ./libwebp6-compat.nix {inherit pkgs;};
 in {
   programs.nix-ld.libraries = with pkgs; [
     alsa-lib.out
@@ -72,6 +72,7 @@ in {
     libjpeg8.out
     libpng.out
     libwebp.out # libwebp.so.7
-    libwebp6.out # libwebp.so.6
+    libwebp6-compat.out # libwebp.so.6
+    harfbuzzFull.out
   ];
 }

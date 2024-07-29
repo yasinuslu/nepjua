@@ -1,8 +1,10 @@
-{pkgs, ...}:
+{pkgs}:
 pkgs.stdenv.mkDerivation {
-  name = "libwebp6";
+  name = "libwebp6-compat";
 
   buildInputs = [pkgs.libwebp];
+
+  unpackPhase = "true";
 
   installPhase = ''
     mkdir -p $out/lib
@@ -10,7 +12,8 @@ pkgs.stdenv.mkDerivation {
   '';
 
   meta = with pkgs.lib; {
-    description = "libwebp6 symlink for compatibility";
-    license = licenses.lgpl21Plus;
+    description = "Compatibility layer for libwebp.so.6";
+    license = licenses.mit;
+    platforms = platforms.all;
   };
 }
