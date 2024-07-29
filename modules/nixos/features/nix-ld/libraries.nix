@@ -1,5 +1,5 @@
 {pkgs, ...}: let
-  libwebp6 = pkgs.callPackage ./libwebp6.nix {inherit pkgs;};
+  libwebp6 = pkgs.callPackages ./libwebp6.nix {inherit pkgs;};
 in {
   programs.nix-ld.libraries = with pkgs; [
     alsa-lib.out
