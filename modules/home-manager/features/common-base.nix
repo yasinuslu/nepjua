@@ -32,10 +32,13 @@
     btop
     dos2unix
     alejandra
+    openssl
+    rclone
   ];
 
   home.sessionVariables = {
     DIRENV_LOG_FORMAT = "";
+    NIXPKGS_ALLOW_UNFREE = "1";
   };
 
   programs = {

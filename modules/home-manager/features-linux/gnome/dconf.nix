@@ -1,9 +1,6 @@
 # Generated via dconf2nix: https://github.com/gvolpe/dconf2nix
-{ lib, ... }:
-
-with lib.hm.gvariant;
-
-{
+{lib, ...}:
+with lib.hm.gvariant; {
   dconf.settings = {
     "ca/desrt/dconf-editor" = {
       show-warning = false;
@@ -21,28 +18,28 @@ with lib.hm.gvariant;
 
     "org/gnome/control-center" = {
       last-panel = "sound";
-      window-state = mkTuple [ 858 518 true ];
+      window-state = mkTuple [858 518 true];
     };
 
     "org/gnome/desktop/app-folders" = {
-      folder-children = [ "Utilities" "YaST" "Pardus" ];
+      folder-children = ["Utilities" "YaST" "Pardus"];
     };
 
     "org/gnome/desktop/app-folders/folders/Pardus" = {
-      categories = [ "X-Pardus-Apps" ];
+      categories = ["X-Pardus-Apps"];
       name = "X-Pardus-Apps.directory";
       translate = true;
     };
 
     "org/gnome/desktop/app-folders/folders/Utilities" = {
-      apps = [ "gnome-abrt.desktop" "gnome-system-log.desktop" "nm-connection-editor.desktop" "org.gnome.baobab.desktop" "org.gnome.Connections.desktop" "org.gnome.DejaDup.desktop" "org.gnome.Dictionary.desktop" "org.gnome.DiskUtility.desktop" "org.gnome.Evince.desktop" "org.gnome.FileRoller.desktop" "org.gnome.fonts.desktop" "org.gnome.Loupe.desktop" "org.gnome.seahorse.Application.desktop" "org.gnome.tweaks.desktop" "org.gnome.Usage.desktop" "vinagre.desktop" ];
-      categories = [ "X-GNOME-Utilities" ];
+      apps = ["gnome-abrt.desktop" "gnome-system-log.desktop" "nm-connection-editor.desktop" "org.gnome.baobab.desktop" "org.gnome.Connections.desktop" "org.gnome.DejaDup.desktop" "org.gnome.Dictionary.desktop" "org.gnome.DiskUtility.desktop" "org.gnome.Evince.desktop" "org.gnome.FileRoller.desktop" "org.gnome.fonts.desktop" "org.gnome.Loupe.desktop" "org.gnome.seahorse.Application.desktop" "org.gnome.tweaks.desktop" "org.gnome.Usage.desktop" "vinagre.desktop"];
+      categories = ["X-GNOME-Utilities"];
       name = "X-GNOME-Utilities.directory";
       translate = true;
     };
 
     "org/gnome/desktop/app-folders/folders/YaST" = {
-      categories = [ "X-SuSE-YaST" ];
+      categories = ["X-SuSE-YaST"];
       name = "suse-yast.directory";
       translate = true;
     };
@@ -57,8 +54,8 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/input-sources" = {
-      sources = [ (mkTuple [ "xkb" "us" ]) ];
-      xkb-options = [ "terminate:ctrl_alt_bksp" ];
+      sources = [(mkTuple ["xkb" "us"])];
+      xkb-options = ["terminate:ctrl_alt_bksp"];
     };
 
     "org/gnome/desktop/interface" = {
@@ -75,7 +72,7 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/notifications" = {
-      application-children = [ "gnome-power-panel" "code" "discord" "microsoft-edge" "org-qbittorrent-qbittorrent" "org-gnome-extensions" "org-gnome-tweaks" "org-gnome-settings" ];
+      application-children = ["gnome-power-panel" "code" "discord" "google-chrome" "org-qbittorrent-qbittorrent" "org-gnome-extensions" "org-gnome-tweaks" "org-gnome-settings"];
     };
 
     "org/gnome/desktop/notifications/application/1password" = {
@@ -102,8 +99,8 @@ with lib.hm.gvariant;
       application-id = "gnome-power-panel.desktop";
     };
 
-    "org/gnome/desktop/notifications/application/microsoft-edge" = {
-      application-id = "microsoft-edge.desktop";
+    "org/gnome/desktop/notifications/application/google-chrome" = {
+      application-id = "google-chrome.desktop";
     };
 
     "org/gnome/desktop/notifications/application/org-gnome-extensions" = {
@@ -147,12 +144,12 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/desktop/wm/keybindings" = {
-      switch-applications = [ "<Super>Tab" ];
-      switch-applications-backward = [ "<Shift><Super>Tab" ];
-      switch-group = [ "<Alt>grave" ];
-      switch-group-backward = [ "<Shift><Alt>grave" ];
-      switch-windows = [ "<Alt>Tab" ];
-      switch-windows-backward = [ "<Shift><Alt>Tab" ];
+      switch-applications = ["<Super>Tab"];
+      switch-applications-backward = ["<Shift><Super>Tab"];
+      switch-group = ["<Alt>grave"];
+      switch-group-backward = ["<Shift><Alt>grave"];
+      switch-windows = ["<Alt>Tab"];
+      switch-windows-backward = ["<Shift><Alt>Tab"];
     };
 
     "org/gnome/evolution-data-server" = {
@@ -176,11 +173,11 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/nautilus/window-state" = {
-      initial-size = mkTuple [ 890 550 ];
+      initial-size = mkTuple [890 550];
       maximized = true;
     };
 
-    "org/gnome/portal/filechooser/microsoft-edge" = {
+    "org/gnome/portal/filechooser/google-chrome" = {
       last-folder-path = "/home/nepjua/Downloads";
     };
 
@@ -190,11 +187,11 @@ with lib.hm.gvariant;
     };
 
     "org/gnome/shell" = {
-      command-history = [ "r" ];
+      command-history = ["r"];
       disable-user-extensions = false;
-      disabled-extensions = [ "extensions-sync@elhan.io" "apps-menu@gnome-shell-extensions.gcampax.github.com" "auto-move-windows@gnome-shell-extensions.gcampax.github.com" "launch-new-instance@gnome-shell-extensions.gcampax.github.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com" ];
-      enabled-extensions = [ "user-theme@gnome-shell-extensions.gcampax.github.com" "advanced-alt-tab@G-dH.github.com" "quick-settings-tweaks@qwreey" "appindicatorsupport@rgcjonas.gmail.com" ];
-      favorite-apps = [ "org.gnome.Geary.desktop" "org.gnome.Calendar.desktop" "org.gnome.Music.desktop" "org.gnome.Photos.desktop" "org.gnome.Nautilus.desktop" ];
+      disabled-extensions = ["extensions-sync@elhan.io" "apps-menu@gnome-shell-extensions.gcampax.github.com" "auto-move-windows@gnome-shell-extensions.gcampax.github.com" "launch-new-instance@gnome-shell-extensions.gcampax.github.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com"];
+      enabled-extensions = ["user-theme@gnome-shell-extensions.gcampax.github.com" "advanced-alt-tab@G-dH.github.com" "quick-settings-tweaks@qwreey" "appindicatorsupport@rgcjonas.gmail.com"];
+      favorite-apps = ["org.gnome.Geary.desktop" "org.gnome.Calendar.desktop" "org.gnome.Music.desktop" "org.gnome.Photos.desktop" "org.gnome.Nautilus.desktop"];
       welcome-dialog-last-shown-version = "43.2";
     };
 
@@ -252,7 +249,7 @@ with lib.hm.gvariant;
       sort-order = "ascending";
       type-format = "category";
       view-type = "list";
-      window-size = mkTuple [ 955 372 ];
+      window-size = mkTuple [955 372];
     };
 
     "org/gtk/settings/file-chooser" = {
@@ -266,8 +263,8 @@ with lib.hm.gvariant;
       sort-directories-first = false;
       sort-order = "ascending";
       type-format = "category";
-      window-position = mkTuple [ 2780 71 ];
-      window-size = mkTuple [ 1719 1289 ];
+      window-position = mkTuple [2780 71];
+      window-size = mkTuple [1719 1289];
     };
 
     "org/virt-manager/virt-manager" = {
@@ -279,6 +276,5 @@ with lib.hm.gvariant;
       disk-usage = false;
       network-traffic = false;
     };
-
   };
 }

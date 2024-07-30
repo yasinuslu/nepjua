@@ -1,13 +1,13 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     google-chrome
-    microsoft-edge
+    # microsoft-edge
   ];
 
   xdg.mimeApps.defaultApplications = {
-    "text/html" = ["microsoft-edge.desktop"];
-    "text/xml" = ["microsoft-edge.desktop"];
-    "x-scheme-handler/http" = ["microsoft-edge.desktop"];
-    "x-scheme-handler/https" = ["microsoft-edge.desktop"];
+    "text/html" = ["google-chrome.desktop"];
+    "text/xml" = ["google-chrome.desktop"];
+    "x-scheme-handler/http" = ["google-chrome.desktop"];
+    "x-scheme-handler/https" = ["google-chrome.desktop"];
   };
 }
