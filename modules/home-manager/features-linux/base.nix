@@ -9,6 +9,7 @@
   # environment.
   home.packages = with pkgs; [
     busybox
+    iputils
     vlc
     copyq
     parsec-bin
