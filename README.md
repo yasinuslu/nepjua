@@ -61,6 +61,9 @@ sudo nixos-rebuild switch --flake .#hetzner --impure
 
   ![Directory Structure](./assets/images/directory-structure.png)
 
+
+## FAQ
+
 ### How do I avoid github rate limiting?
 
 First login:
@@ -80,4 +83,12 @@ Or even better
 ```sh
 alias nix="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token)\" nix"
 alias niv="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token)\" niv"
+```
+
+## Personal Notes
+
+### Google Drive Mount
+
+```sh
+rclone mount gdrive: ~/rclone/gdrive --daemon --vfs-cache-mode full
 ```
