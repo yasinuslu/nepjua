@@ -28,6 +28,8 @@
     lens
     logseq
     cloudflare-warp
+    gitkraken
+    github-copilot-cli
   ];
 
   services.spotifyd = {
