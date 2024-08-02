@@ -61,7 +61,6 @@ sudo nixos-rebuild switch --flake .#hetzner --impure
 
   ![Directory Structure](./assets/images/directory-structure.png)
 
-
 ## FAQ
 
 ### How do I avoid github rate limiting?
@@ -75,14 +74,14 @@ gh auth login
 Then set `NIX_CONFIG` environment variable
 
 ```sh
-export NIX_CONFIG="extra-access-tokens = github.com=$(gh auth token)"
+export NIX_CONFIG="extra-access-tokens = github.com=$(gh auth token -u yasinuslu)"
 ```
 
 Or even better
 
 ```sh
-alias nix="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token)\" nix"
-alias niv="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token)\" niv"
+alias nixt="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token -u yasinuslu)\" nix"
+alias niv="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token -u yasinuslu)\" niv"
 ```
 
 ## Personal Notes

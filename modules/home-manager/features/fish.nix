@@ -141,10 +141,10 @@
   programs.fish.shellInitLast = ''
     if type -q code-insiders
       set -xg EDITOR "code-insiders --wait"
+      set -xg CODE_EDITOR "code-insiders"
     else if type -q code
       set -xg EDITOR "code --wait"
-    else if type -q subl
-      set -xg EDITOR "subl --wait"
+      set -xg CODE_EDITOR "code"
     end
 
     if type -q gpg

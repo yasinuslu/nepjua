@@ -41,12 +41,13 @@
         system: let
           pkgs = inputs.nixpkgs.legacyPackages.${system};
           myShell = import ./my-shell/default.nix {
-            inherit system;
-            inherit pkgs;
-            inherit inputs;
+            inherit system pkgs inputs myLib;
           };
         in
-          myShell.shell
+          myShell.mkShell {
+            # This is just to be able to trigger a rebuild when I want to
+            version = "0.0.2";
+          }
       );
 
       myLib.default = myLib;
