@@ -22,6 +22,10 @@
         userSettings = {
           extraGroups = ["networkmanager" "wheel" "adbusers" "docker" "lxd" "kvm" "libvirtd"];
         };
+
+        myHomeManager = {
+          docker.enable = false;
+        };
       };
     };
   };

@@ -30,6 +30,7 @@
     cloudflare-warp
     gitkraken
     github-copilot-cli
+    coder
   ];
 
   services.spotifyd = {
