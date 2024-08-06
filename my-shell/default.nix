@@ -5,7 +5,6 @@
       buildInputs = with pkgs; [
         python312
         python312Packages.pip
-        busybox
         just
         kubectl
         git
