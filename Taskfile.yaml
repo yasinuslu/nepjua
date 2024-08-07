@@ -1,0 +1,16 @@
+version: "3"
+
+tasks:
+  switch:
+    aliases:
+      - s
+    vars:
+      HOST: "chained"
+    cmds:
+      - |
+        {{ if .OS == "darwin" }}
+          nix run nix-darwin -- switch --flake .#{{ .HOST }} {{.CLI_ARGS}}
+        {{ else }}
+          sudo nixos-rebuild switch --flake .#{{ .HOST }} {{.CLI_ARGS}}
+        {{/if}}
+    silent: true

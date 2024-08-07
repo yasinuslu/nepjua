@@ -7,8 +7,8 @@
         python312Packages.pip
         just
         kubectl
-        git
-        git-lfs
+        # git
+        # git-lfs
         k3d
         kubernetes-helm
         nodejs_20
