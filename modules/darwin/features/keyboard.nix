@@ -21,7 +21,7 @@
     {
       external = false;
       mappingList = [
-        mappingDefinitions.remapCapsLockToEscape
+        # mappingDefinitions.remapCapsLockToEscape
         mappingDefinitions.remapTilde
       ];
     }
@@ -29,7 +29,7 @@
       external = true;
       name = "G815 RGB MECHANICAL GAMING KEYBOARD";
       mappingList = [
-        mappingDefinitions.remapCapsLockToEscape
+        # mappingDefinitions.remapCapsLockToEscape
         mappingDefinitions.remapTilde
         mappingDefinitions.swapLeftCommandAndLeftAlt1
         mappingDefinitions.swapLeftCommandAndLeftAlt2

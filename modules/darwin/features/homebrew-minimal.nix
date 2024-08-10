@@ -35,7 +35,7 @@
       "rectangle"
       "visual-studio-code"
       "vlc"
-      "betterdisplay"
+      # "betterdisplay"
       "spotify"
       "whatsapp"
       "zed"
