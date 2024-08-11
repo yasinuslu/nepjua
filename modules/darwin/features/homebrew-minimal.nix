@@ -47,6 +47,7 @@
       "ollama"
       "obsidian"
       "cloudflare-warp"
+      "graphql-playground"
     ];
   };
 }
