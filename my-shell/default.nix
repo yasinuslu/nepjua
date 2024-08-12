@@ -5,7 +5,7 @@
       buildInputs = with pkgs; [
         python312
         python312Packages.pip
-        busybox
+        coreutils-full
         just
         kubectl
         git
@@ -22,8 +22,6 @@
         transcrypt
         awscli2
         argocd
-        docker
-        docker-compose
         yq-go
         jq
         go-task
