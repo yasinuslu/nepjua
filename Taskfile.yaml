@@ -5,12 +5,12 @@ tasks:
     aliases:
       - s
     vars:
-      HOST: "chained"
+      HOST: "{{ .Env.hostname }}"
     cmds:
       - |
-        {{ if .OS == "darwin" }}
+        {{ if eq OS "darwin" }}
           nix run nix-darwin -- switch --flake .#{{ .HOST }} {{.CLI_ARGS}}
         {{ else }}
           sudo nixos-rebuild switch --flake .#{{ .HOST }} {{.CLI_ARGS}}
-        {{/if}}
+        {{end}}
     silent: true
