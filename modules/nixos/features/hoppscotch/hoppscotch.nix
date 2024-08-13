@@ -2,15 +2,29 @@
   appimageTools,
   fetchurl,
 }: let
-  pname = "irccloud";
-  version = "0.16.0";
+  pname = "hoppscotch";
+  version = "24.7.1-0";
 
   src = fetchurl {
-    url = "https://github.com/irccloud/irccloud-desktop/releases/download/v${version}/IRCCloud-${version}-linux-x86_64.AppImage";
-    sha256 = "sha256-/hMPvYdnVB1XjKgU2v47HnVvW4+uC3rhRjbucqin4iI=";
+    url = "https://github.com/hoppscotch/releases/releases/download/v${version}/Hoppscotch_linux_x64.AppImage";
+    sha256 = "sha256-78q148HLRV7Pdx1B+62XktyLG24tZASyrCGUyVIAe9E=";
+  };
+
+  appimageContents = appimageTools.extract {
+    inherit pname version src;
+    postExtract = ''
+      substituteInPlace $out/hoppscotch.desktop --replace 'Exec=AppRun' 'Exec=${pname}'
+    '';
   };
 in
   appimageTools.wrapType2 {
     inherit pname version src;
-    extraPkgs = pkgs: [pkgs.at-spi2-core];
+
+    extraPkgs = pkgs: [];
+
+    extraInstallCommands = ''
+      install -m 444 -D ${appimageContents}/hoppscotch.desktop $out/usr/share/applications/hoppscotch.desktop
+      install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/256x256@2/apps/hoppscotch.png \
+        $out/usr/share/icons/hicolor/256x256@2/apps/hoppscotch.png
+    '';
   }
