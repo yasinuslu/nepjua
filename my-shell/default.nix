@@ -5,10 +5,11 @@
       buildInputs = with pkgs; [
         python312
         python312Packages.pip
+        coreutils-full
         just
         kubectl
-        # git
-        # git-lfs
+        git
+        git-lfs
         k3d
         kubernetes-helm
         nodejs_20
@@ -21,8 +22,6 @@
         transcrypt
         awscli2
         argocd
-        docker
-        docker-compose
         yq-go
         jq
         go-task

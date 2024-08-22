@@ -17,6 +17,8 @@
         userConfig = {...}: {
           programs.git.userName = "Yasin Uslu";
           programs.git.userEmail = "nepjua@gmail.com";
+
+          myHomeManager.docker.enable = false;
         };
 
         userSettings = {

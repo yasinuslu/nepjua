@@ -35,7 +35,7 @@
       "rectangle"
       "visual-studio-code"
       "vlc"
-      "betterdisplay"
+      # "betterdisplay"
       "spotify"
       "whatsapp"
       "zed"
@@ -47,6 +47,7 @@
       "ollama"
       "obsidian"
       "cloudflare-warp"
+      "graphql-playground"
     ];
   };
 }

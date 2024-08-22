@@ -8,7 +8,7 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    busybox
+    coreutils-full
     iputils
     vlc
     copyq
@@ -23,13 +23,13 @@
     warp-terminal
     discord
     htop
-    busybox
     discord
     lens
     logseq
     cloudflare-warp
     gitkraken
     github-copilot-cli
+    coder
   ];
 
   services.spotifyd = {
