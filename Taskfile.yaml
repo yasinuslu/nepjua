@@ -8,9 +8,10 @@ tasks:
       HOST: "chained"
     cmds:
       - |
-        {{ if .OS == "darwin" }}
+        echo "Switching to {{ .HOST }} in {{ OS }}"
+        {{ if eq OS "darwin" }}
           nix run nix-darwin -- switch --flake .#{{ .HOST }} {{.CLI_ARGS}}
         {{ else }}
           sudo nixos-rebuild switch --flake .#{{ .HOST }} {{.CLI_ARGS}}
-        {{/if}}
+        {{end}}
     silent: true
