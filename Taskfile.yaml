@@ -14,3 +14,9 @@ tasks:
           sudo nixos-rebuild switch --flake .#{{ .HOST }} {{.CLI_ARGS}}
         {{end}}
     silent: true
+
+  gc:
+    cmds:
+      - sudo nix-collect-garbage --delete-older-than 7d
+      - sudo nix optimise-store
+    silent: true
