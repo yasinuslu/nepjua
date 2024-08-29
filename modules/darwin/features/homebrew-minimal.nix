@@ -2,8 +2,8 @@
   homebrew = {
     onActivation = {
       cleanup = "zap";
-      autoUpdate = false;
-      upgrade = false;
+      autoUpdate = true;
+      upgrade = true;
     };
     taps = [
       "hashicorp/tap"
@@ -47,7 +47,7 @@
       "ollama"
       "obsidian"
       "cloudflare-warp"
-      "graphql-playground"
+      "hoppscotch"
     ];
   };
 }
