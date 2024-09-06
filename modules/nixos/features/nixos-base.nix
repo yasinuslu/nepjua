@@ -45,25 +45,22 @@
   };
 
   # FIXME: Move this to homeManager.features.gnome and features.gnome
-  environment.gnome.excludePackages =
-    (with pkgs; [
-      gnome-photos
-      gnome-tour
-      cheese
-      gnome-terminal
-      epiphany # web browser
-      geary # email reader
-      totem # video player
-      evince # document viewer
-    ])
-    ++ (with pkgs.gnome; [
-      gnome-music
-      gnome-characters
-      tali # poker game
-      iagno # go game
-      hitori # sudoku game
-      atomix # puzzle game
-    ]);
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-photos
+    gnome-tour
+    cheese
+    gnome-terminal
+    epiphany # web browser
+    geary # email reader
+    totem # video player
+    evince # document viewer
+    gnome-music
+    gnome-characters
+    tali # poker game
+    iagno # go game
+    hitori # sudoku game
+    atomix # puzzle game
+  ];
 
   # Enable automatic login for the user.
   services.getty.autologinUser = "nepjua";
