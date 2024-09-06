@@ -8,40 +8,72 @@ in {
     at-spi2-core.out
     atk
     cairo.out
-    glamoroustoolkit.out
     cups.lib
     curl
     dbus.lib
+    enchant.out
     expat
+    flite.lib
     fontconfig
     freetype
     fuse3
     gdk-pixbuf
-    glib.out
+    glamoroustoolkit.out
     glib.debug
+    glib.out
+    gnutls.out
     gtk3
+    harfbuzz.out
+    harfbuzzFull.out
+    hyphen.out
     icu
+    icu66.out
+    json-glib.out
+    lcms.out
     libappindicator-gtk3
-    libgcc.lib
     libdrm
+    libepoxy.out
+    libevdev.out
+    libevent.out
+    libffi_3_3.out
+    libgcc.lib
+    libgcrypt.lib
+    libgcrypt.out
     libGL
     libglvnd
+    libgpg-error.out
+    libgudev.out
+    libjpeg8.out
     libnotify
+    libopus.out
+    libpcre3-deb.out
+    libpng.out
+    libpsl.out
     libpulseaudio
+    libsecret.out
+    libtasn1.out
     libunwind
     libusb1
     libuuid
+    libwebp.out # libwebp.so.7
+    libwebp6-compat.out # libwebp.so.6
     libxkbcommon.out
     libxml2
+    libxslt.out
     mesa.out
+    nghttp2.lib
     nspr.out
     nss_latest.out
     openssl
     pango.out
     pipewire
+    sqlite.out
     stdenv.cc.cc
+    steamPackages.steam-fhsenv-without-steam.out
     systemd
     vulkan-loader
+    woff2.lib
+    xorg_sys_opengl.out
     xorg.libX11.out
     xorg.libxcb.out
     xorg.libXcomposite.out
@@ -56,37 +88,7 @@ in {
     xorg.libXScrnSaver.out
     xorg.libxshmfence.out
     xorg.libXtst.out
-    xorg_sys_opengl.out
     zlib.out
     zulip.out
-    harfbuzz.out
-    icu66.out
-    sqlite.out
-    libxslt.out
-    libepoxy.out
-    lcms.out
-    woff2.lib
-    libevent.out
-    libopus.out
-    libgcrypt.out
-    libgpg-error.out
-    libjpeg8.out
-    libpng.out
-    libwebp.out # libwebp.so.7
-    libwebp6-compat.out # libwebp.so.6
-    harfbuzzFull.out
-    enchant.out
-    libsecret.out
-    libtasn1.out
-    hyphen.out
-    flite.lib
-    libpsl.out
-    nghttp2.lib
-    libgudev.out
-    libevdev.out
-    libffi_3_3.out
-    json-glib.out
-    gnutls.out
-    libpcre3-deb.out
   ];
 }
