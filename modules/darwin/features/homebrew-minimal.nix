@@ -7,6 +7,7 @@
     };
     taps = [
       "hashicorp/tap"
+      "zen-browser/browser"
     ];
     enable = true;
     brews = [
@@ -36,6 +37,7 @@
       "visual-studio-code"
       "vlc"
       # "betterdisplay"
+      "zen-browser"
       "spotify"
       "whatsapp"
       "zed"
