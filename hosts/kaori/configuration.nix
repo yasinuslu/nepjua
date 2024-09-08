@@ -9,12 +9,12 @@
   networking.hostName = "kaori";
   networking.firewall.enable = false;
 
-  networking.interfaces.eno1 = {
-    useDHCP = true;
-    mtu = 1500;
-    wakeOnLan.enable = true;
-    # linkSpeed = "1000";  # This sets the link speed to 1Gbps
-  };
+  # networking.interfaces.eno1 = {
+  #   useDHCP = true;
+  #   mtu = 1500;
+  #   wakeOnLan.enable = true;
+  #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
+  # };
 
   myNixOS = {
     bundles.general-desktop.enable = true;
