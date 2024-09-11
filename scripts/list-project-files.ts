@@ -1,15 +1,13 @@
-#!/usr/bin/env bun
-
 import { FileBlob, Glob } from "bun";
 import createDebug from "debug";
 import yaml from "js-yaml";
 
-const debug = createDebug("w3yz:generate-yaml");
+const debug = createDebug("nepjua:generate-yaml");
 
-const projectName = "w3yz";
+const projectName = "nepjua";
 
 async function generateYAML(app: string, appPath: string) {
-  const glob = new Glob(`${appPath}/**/*.{js,jsx,ts,tsx,json,yaml,yml,md}`);
+  const glob = new Glob(`${appPath}/**/*.{nix,js,jsx,ts,tsx,json,yaml,yml,md}`);
   const ignoreGlobs = [
     new Glob("**/*.d.ts"),
     new Glob("**/old-components/**"),
@@ -23,9 +21,10 @@ async function generateYAML(app: string, appPath: string) {
     new Glob("**/__generated__/**"),
     new Glob("**/generated/**"),
     new Glob("**/*.gen.*"),
+    new Glob("**/.direnv/**"),
   ];
 
-  const allowedBigFileGlobs = [new Glob("**/dev-w3yz_platform.json")];
+  const allowedBigFileGlobs = [new Glob("**")];
 
   const blobMap = new Map<string, FileBlob>();
 
@@ -74,26 +73,7 @@ try {
   await Bun.$`rm -rf __generated__`;
   await Bun.$`mkdir -p __generated__`;
 
-  // await generateYAML("workflows", "./.github/workflows");
-  await generateYAML("w3yz-app-api", "./apps/api");
-  await generateYAML("w3yz-app-dashboard", "./apps/dashboard");
-  // await generateYAML("w3yz-app-landing", "./apps/landing");
-  // await generateYAML(
-  //   "w3yz-app-saleor-app-iyzico-payment",
-  //   "./apps/saleor-app-iyzico-payment"
-  // );
-  // await generateYAML("w3yz-app-storefront", "./apps/storefront");
-  // await generateYAML("w3yz-app-tinacms", "./apps/tinacms");
-  await generateYAML("w3yz-ops", "./ops");
-  // await generateYAML("w3yz-cms", "./packages/cms");
-  // await generateYAML("w3yz-ecom", "./packages/ecom");
-  // await generateYAML(
-  //   "w3yz-eslint-config-eslint",
-  //   "./packages/eslint-config-eslint"
-  // );
-  // await generateYAML("w3yz-saleor-app-sdk", "./packages/saleor-app-sdk");
-  // await generateYAML("w3yz-sdk", "./packages/sdk");
-  // await generateYAML("w3yz-tools", "./packages/tools");
+  await generateYAML("nix-config", ".");
 } catch (error) {
   console.error(error);
   process.exit(1);

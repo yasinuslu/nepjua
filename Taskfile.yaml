@@ -18,3 +18,11 @@ tasks:
     cmds:
       - sudo nix-collect-garbage --delete-older-than 7d
       - sudo nix store optimise
+
+  run-*:
+    aliases:
+      - r
+    vars:
+      SCRIPT_NAME: "{{index .MATCH 0}}"
+    cmds:
+      - bun run {{.ROOT_DIR}}/scripts/{{.SCRIPT_NAME}}.ts {{.CLI_ARGS}}

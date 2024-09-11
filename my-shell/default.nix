@@ -1,6 +1,4 @@
-{pkgs, ...}: let
-  taskListProjectFiles = pkgs.writeScriptBin "t-list-project-files" (builtins.readFile ../scripts/t-list-project-files.ts);
-in {
+{pkgs, ...}: {
   mkShell = {version}:
     pkgs.mkShell {
       name = "default";
@@ -42,7 +40,6 @@ in {
         git-filter-repo
         kubefwd
         kubevirt
-        taskListProjectFiles
       ];
       shellHook = ''
         echo "Welcome in $name"
