@@ -21,9 +21,8 @@
     zoom-us
     spotify
     warp-terminal
-    discord
     htop
-    discord
+    vesktop
     lens
     logseq
     cloudflare-warp
