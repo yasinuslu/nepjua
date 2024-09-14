@@ -17,7 +17,6 @@
     bottles
     qbittorrent
     slack
-    # obsidian
     zoom-us
     spotify
     warp-terminal
