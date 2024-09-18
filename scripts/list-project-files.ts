@@ -1,6 +1,8 @@
-import { FileBlob, Glob } from "bun";
+import { Glob } from "bun";
 import createDebug from "debug";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
+
+import type { FileBlob } from "bun";
 
 const debug = createDebug("nepjua:generate-yaml");
 
@@ -34,18 +36,19 @@ async function generateYAML(app: string, appPath: string) {
     }
 
     const file = Bun.file(path);
-    if (!allowedBigFileGlobs.some((g) => g.match(path))) {
-      if (file.size > 30 * 1024) {
-        console.warn(`File ${path} is too large, skipping`);
-        continue;
-      }
+    if (
+      !allowedBigFileGlobs.some((g) => g.match(path)) &&
+      file.size > 30 * 1024
+    ) {
+      console.warn(`File ${path} is too large, skipping`);
+      continue;
     }
 
     blobMap.set(path, file);
   }
 
   const fileContents = await Promise.all(
-    Array.from(blobMap.entries()).map(async ([path, blob]) => {
+    [...blobMap.entries()].map(async ([path, blob]) => {
       const text = await blob.text();
       const first1K = text.slice(0, 1024);
       return [path, first1K] as const;
@@ -76,5 +79,5 @@ try {
   await generateYAML("nix-config", ".");
 } catch (error) {
   console.error(error);
-  process.exit(1);
+  throw error;
 }
