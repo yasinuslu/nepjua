@@ -50,6 +50,7 @@
       "obsidian"
       "cloudflare-warp"
       "hoppscotch"
+      "insomnia"
     ];
   };
 }
