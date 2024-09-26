@@ -1,6 +1,18 @@
 version: "3"
 
 tasks:
+  build:
+    aliases:
+      - b
+    vars:
+      HOST: "{{ .Env.hostname }}"
+    cmds:
+      - |
+        {{ if eq OS "darwin" }}
+          nix run nix-darwin -- build --flake .#{{ .HOST }} {{.CLI_ARGS}}
+        {{ else }}
+          sudo nixos-rebuild build --flake .#{{ .HOST }} {{.CLI_ARGS}}
+        {{end}}
   switch:
     aliases:
       - s
