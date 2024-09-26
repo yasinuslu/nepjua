@@ -25,6 +25,7 @@
     lens
     logseq
     cloudflare-warp
+    cloudflared
     gitkraken
     github-copilot-cli
     coder
