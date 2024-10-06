@@ -27,6 +27,9 @@
     config = {
       allowUnfree = true;
 
+      cores = lib.mkDefault 8;
+      max-jobs = lib.mkDefault 1;
+
       permittedInsecurePackages = [
         "electron-27.3.11"
       ];

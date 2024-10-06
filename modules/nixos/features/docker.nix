@@ -1,5 +1,5 @@
 {...}: {
   virtualisation.docker.enable = true;
-  virtualisation.docker.enableNvidia = true;
+  hardware.nvidia-container-toolkit.enable = true;
   virtualisation.docker.enableOnBoot = true;
 }
