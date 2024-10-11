@@ -14,6 +14,7 @@
           programs.git.userName = "Yasin Uslu";
           programs.git.userEmail = "nepjua@gmail.com";
           myHomeManager.darwin.colima.enable = false;
+          myHomeManager.deno.enable = false;
         };
         userSettings = {};
       };
