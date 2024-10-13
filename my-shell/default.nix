@@ -24,7 +24,6 @@
         argocd
         yq-go
         jq
-        go-task
         expect
         watchexec
         rclone
