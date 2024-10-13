@@ -5,9 +5,6 @@
 }: {
   zramSwap.enable = true;
 
-  # Enable networking
-  networking.networkmanager.enable = true;
-
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
