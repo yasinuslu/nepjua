@@ -24,6 +24,7 @@
         argocd
         yq-go
         jq
+        just
         expect
         watchexec
         rclone
