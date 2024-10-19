@@ -1,29 +1,64 @@
-set shell := ["fish", "-c"]
+# Set the default shell to bash for more features
+set shell := ["bash", "-uc"]
 
+# Determine the OS and set the appropriate rebuild command
+os := `uname`
+rebuild_cmd := if os == "Darwin" { "darwin-rebuild" } else { "sudo nixos-rebuild" }
+host := `hostname`
+
+# Default recipe to show available commands
+default:
+  @just --list
+
+# Clean up and optimize the Nix store
+gc:
+  sudo nix-collect-garbage --delete-older-than 7d
+  sudo nix store optimise
+
+# Open a Nix REPL with trace
 repl:
   nix repl --show-trace
 
-# Open a nix shell with the nixpkgs
+# Open a Nix REPL with nixpkgs
 repl-nixpkgs:
   nix repl -f flake:nixpkgs
 
-build-verbose-no-cache host="kaori":
-  nixos-rebuild build --flake .#{{host}} --option eval-cache false --show-trace --print-build-logs --verbose --impure
+# Build with verbose output and no cache
+build-verbose-no-cache:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  echo "Building with verbose output and no cache using {{rebuild_cmd}}..."
+  {{rebuild_cmd}} build --flake .#{{host}} --option eval-cache false --show-trace --print-build-logs --verbose --impure
 
-build-verbose host="kaori":
-  nixos-rebuild build --flake .#{{host}} --show-trace --print-build-logs --verbose --impure
+# Build with verbose output
+build-verbose:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  echo "Building with verbose output using {{rebuild_cmd}}..."
+  {{rebuild_cmd}} build --flake .#{{host}} --show-trace --print-build-logs --verbose --impure
 
-switch host="kaori":
-  sudo nixos-rebuild switch --flake .#{{host}} --impure
+# Switch configuration using the detected rebuild command
+# Switch configuration using the detected rebuild command with retries
+switch:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  echo "Switching configuration on {{os}} using {{rebuild_cmd}}..."
+  for i in {1..3}; do
+      if {{rebuild_cmd}} switch --flake .#{{host}} --impure; then
+          echo "Switch successful on attempt $i"
+          exit 0
+      else
+          echo "Switch failed on attempt $i, retrying in 5 seconds..."
+          sleep 5
+      fi
+  done
+  echo "Switch failed after 3 attempts"
+  exit 1
 
-darwin-switch host="joyboy":
-  darwin-rebuild switch --flake .#{{host}}
-
-darwin-debug host="joyboy":
-  darwin-rebuild build --flake .#{{host}} --show-trace --option eval-cache false
-
+# Update dconf settings
 update-dconf:
   dconf dump "/" | nix run nixpkgs#dconf2nix > ./modules/home-manager/features-gui/gnome/dconf.nix
 
+# Update flake
 up:
   nix flake update
