@@ -15,7 +15,7 @@ gc:
   sudo nix-collect-garbage --delete-older-than 7d
   sudo nix store optimise
 
-gc-full: @gc
+gc-full: gc
   sudo nix-store --clear-failed
   
 
