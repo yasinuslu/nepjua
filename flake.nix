@@ -4,6 +4,7 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    masterNixpkgs.url = "github:NixOS/nixpkgs/master";
 
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -40,8 +41,9 @@
       devShell = forAllSystems (
         system: let
           pkgs = inputs.nixpkgs.legacyPackages.${system};
+          masterNixpkgs = inputs.masterNixpkgs.legacyPackages.${system};
           myShell = import ./my-shell/default.nix {
-            inherit system pkgs inputs myLib;
+            inherit system pkgs inputs myLib masterNixpkgs;
           };
         in
           myShell.mkShell {
