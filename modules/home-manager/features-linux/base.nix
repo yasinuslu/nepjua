@@ -24,6 +24,7 @@
     vesktop
     lens
     logseq
+    electron_27
     cloudflare-warp
     cloudflared
     gitkraken
