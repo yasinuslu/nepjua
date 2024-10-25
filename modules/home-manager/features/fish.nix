@@ -139,7 +139,10 @@
   };
 
   programs.fish.shellInitLast = ''
-    if type -q code-insiders
+    if type -q cursor
+      set -xg EDITOR "cursor --wait"
+      set -xg CODE_EDITOR "cursor"
+    else if type -q code-insiders
       set -xg EDITOR "code-insiders --wait"
       set -xg CODE_EDITOR "code-insiders"
     else if type -q code

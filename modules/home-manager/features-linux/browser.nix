@@ -1,6 +1,9 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     google-chrome
+    chromium
+    firefox
+    browsers
     # microsoft-edge
   ];
 
