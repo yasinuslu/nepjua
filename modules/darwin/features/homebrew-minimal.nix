@@ -34,7 +34,6 @@
       "microsoft-edge"
       "notion"
       "rectangle"
-      "visual-studio-code"
       "cursor"
       "vlc"
       "spotify"
