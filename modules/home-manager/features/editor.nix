@@ -1,14 +1,18 @@
-{pkgs, ...}: {
+{...}: {
   home.sessionVariables = {
     EDITOR = "code --wait";
     CODE_EDITOR = "code --wait";
   };
 
-  home.packages = [
-    pkgs.writeScriptBin
-    "code"
-    ''
-      cursor "$@"
-    ''
-  ];
+  programs.zsh.initExtraFirst = ''
+    alias code="cursor"
+  '';
+
+  programs.bash.profileExtra = ''
+    alias code="cursor"
+  '';
+
+  programs.fish.loginShellInit = ''
+    alias code="cursor"
+  '';
 }
