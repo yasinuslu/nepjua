@@ -7,7 +7,6 @@
     };
     taps = [
       "hashicorp/tap"
-      # "zen-browser/browser"
     ];
     enable = true;
     brews = [
@@ -49,6 +48,7 @@
       "cloudflare-warp"
       "hoppscotch"
       "insomnia"
+      "zen-browser"
     ];
   };
 }
