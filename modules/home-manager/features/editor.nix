@@ -1,7 +1,7 @@
 {...}: {
   home.sessionVariables = {
     EDITOR = "code --wait";
-    CODE_EDITOR = "code --wait";
+    CODE_EDITOR = "code";
   };
 
   programs.zsh.initExtraFirst = ''
