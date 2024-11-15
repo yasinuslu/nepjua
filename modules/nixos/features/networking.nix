@@ -1,10 +1,12 @@
 {...}: {
-  # Use either NetworkManager or Networkd
-  networking.networkmanager.enable = false;
-  networking.useNetworkd = true;
+  # Use NetworkManager
+  networking.networkmanager.enable = true;
+
+  # Use Networkd
+  # networking.useNetworkd = true;
+  # networking.useDHCP = true;
 
   # Common network settings
-  networking.useDHCP = true;
   networking.nameservers = [
     "1.1.1.1"
     "1.0.0.1"

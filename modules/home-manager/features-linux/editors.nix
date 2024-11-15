@@ -10,6 +10,6 @@
   ];
 
   home.sessionVariables = {
-    EDITOR = "${pkgs.vscode-fhs}/bin/code";
+    EDITOR = "${pkgs.vscode}/bin/code";
   };
 }
