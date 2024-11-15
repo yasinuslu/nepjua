@@ -59,6 +59,22 @@ switch:
   echo "Switch failed after 3 attempts"
   exit 1
 
+boot:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  echo "Setting configuration on {{os}} using {{rebuild_cmd}} for next boot..."
+  for i in {1..3}; do
+      if {{rebuild_cmd}} boot --flake .#{{host}} --impure; then
+          echo "Build successful on attempt $i"
+          exit 0
+      else
+          echo "Build failed on attempt $i, retrying in 5 seconds..."
+          sleep 5
+      fi
+  done
+  echo "Build failed after 3 attempts"
+  exit 1
+
 # Update dconf settings
 update-dconf:
   dconf dump "/" | nix run nixpkgs#dconf2nix > ./modules/home-manager/features-gui/gnome/dconf.nix

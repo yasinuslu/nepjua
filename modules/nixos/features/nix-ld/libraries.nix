@@ -69,7 +69,7 @@ in {
     pipewire
     sqlite.out
     stdenv.cc.cc
-    steamPackages.steam-fhsenv-without-steam.out
+    steam-fhsenv-without-steam.out
     systemd
     vulkan-loader
     woff2.lib
