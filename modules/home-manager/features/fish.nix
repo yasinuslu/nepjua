@@ -139,14 +139,6 @@
   };
 
   programs.fish.shellInitLast = ''
-    if type -q code-insiders
-      set -xg EDITOR "code-insiders --wait"
-      set -xg CODE_EDITOR "code-insiders"
-    else if type -q code
-      set -xg EDITOR "code --wait"
-      set -xg CODE_EDITOR "code"
-    end
-
     if type -q gpg
       set -xg GPG_TTY (tty)
     end

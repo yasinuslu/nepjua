@@ -7,7 +7,6 @@
     };
     taps = [
       "hashicorp/tap"
-      # "zen-browser/browser"
     ];
     enable = true;
     brews = [
@@ -34,10 +33,8 @@
       "microsoft-edge"
       "notion"
       "rectangle"
-      "visual-studio-code"
+      "cursor"
       "vlc"
-      # "betterdisplay"
-      # "zen-browser"
       "spotify"
       "whatsapp"
       "zed"
@@ -51,6 +48,7 @@
       "cloudflare-warp"
       "hoppscotch"
       "insomnia"
+      "zen-browser"
     ];
   };
 }
