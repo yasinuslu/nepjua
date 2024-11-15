@@ -43,7 +43,6 @@
       "gitkraken-cli"
       "gitkraken"
       "logseq"
-      "ollama"
       "obsidian"
       "cloudflare-warp"
       "hoppscotch"
