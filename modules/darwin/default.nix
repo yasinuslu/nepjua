@@ -59,7 +59,6 @@ in {
       experimental-features = "nix-command flakes auto-allocate-uids";
       extra-experimental-features = "nix-command flakes auto-allocate-uids";
       accept-flake-config = true;
-      auto-optimise-store = true;
       auto-allocate-uids = true;
       extra-nix-path = "nixpkgs=flake:nixpkgs";
       bash-prompt-prefix = "(nix:$name)\040";
@@ -67,6 +66,12 @@ in {
       extra-platforms = "aarch64-darwin x86_64-darwin";
       keep-outputs = true;
       keep-derivations = true;
+    };
+
+    # Add optimise configuration
+    nix.optimise = {
+      automatic = true;
+      dates = ["03:45"]; # Runs daily at 3:45 AM
     };
 
     nixpkgs = {

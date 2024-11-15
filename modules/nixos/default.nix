@@ -57,10 +57,14 @@ in {
       # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes auto-allocate-uids";
       accept-flake-config = true;
-      auto-optimise-store = true;
       auto-allocate-uids = true;
     };
-    
+
+    nix.optimise = {
+      automatic = true;
+      dates = ["03:45"]; # Runs daily at 3:45 AM
+    };
+
     nixpkgs.config.allowUnfree = true;
 
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
