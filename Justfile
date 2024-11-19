@@ -91,7 +91,7 @@ sub-sync:
   #!/usr/bin/env bash
   git submodule foreach --quiet 'git add . && \
     if ! git diff --cached --quiet; then \
-      git commit -m "Update submodule" && git push; \
+      git commit -m "Auto commit by Justfile" && git push; \
     fi'
 
   git add git/*
