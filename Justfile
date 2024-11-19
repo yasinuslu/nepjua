@@ -86,6 +86,16 @@ up:
 sub-fetch:
   git submodule update --init --recursive
 
-# Commit submodules
-sub-commit:
-  git submodule foreach git add . && git commit -m "Update submodule" && git push
+# Commit all submodules using heredoc syntax and handle no changes
+sub-sync:
+  #!/usr/bin/env bash
+  git submodule foreach --quiet 'git add . && \
+    if ! git diff --cached --quiet; then \
+      git commit -m "Update submodule" && git push; \
+    fi'
+
+  git add git/*
+  if ! git diff --cached --quiet; then
+    git commit -m "Update submodules"
+    git push
+  fi
