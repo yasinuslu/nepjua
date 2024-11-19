@@ -82,6 +82,10 @@ update-dconf:
 up:
   nix flake update
 
-# Update submodules
-update-submodules:
+# Fetch submodules
+sub-fetch:
   git submodule update --init --recursive
+
+# Commit submodules
+sub-commit:
+  git submodule foreach git add . && git commit -m "Update submodule" && git push
