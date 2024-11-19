@@ -17,7 +17,6 @@ gc:
 
 gc-full: gc
   sudo nix-store --clear-failed
-  
 
 # Open a Nix REPL with trace
 repl:
@@ -82,3 +81,7 @@ update-dconf:
 # Update flake
 up:
   nix flake update
+
+# Update submodules
+update-submodules:
+  git submodule update --init --recursive
