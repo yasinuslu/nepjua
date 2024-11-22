@@ -69,10 +69,7 @@ in {
     };
 
     # Add optimise configuration
-    nix.optimise = {
-      automatic = true;
-      dates = ["03:45"]; # Runs daily at 3:45 AM
-    };
+    nix.optimise.automatic = true;
 
     nixpkgs = {
       config = {
