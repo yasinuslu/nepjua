@@ -4,7 +4,7 @@
     chromium
     firefox
     browsers
-    # microsoft-edge
+    microsoft-edge
   ];
 
   xdg.mimeApps.defaultApplications = {
