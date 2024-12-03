@@ -34,6 +34,7 @@
       "notion"
       "rectangle"
       "cursor"
+      "visual-studio-code"
       "vlc"
       "spotify"
       "whatsapp"

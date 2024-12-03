@@ -53,6 +53,8 @@
         export PATH=$HOME/.console-ninja/.bin:$PATH
         export PATH=$HOME/.bun/bin:$PATH
         export NIX_CONFIG="extra-access-tokens = github.com=$(gh auth token -u yasinuslu)"
+
+        alias code="cursor"
       '';
     };
 }
