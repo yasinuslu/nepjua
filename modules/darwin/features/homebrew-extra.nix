@@ -23,5 +23,6 @@
     "mullvadvpn"
     "mtmr"
     "macfuse"
+    "lens"
   ];
 }

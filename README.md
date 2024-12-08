@@ -1,93 +1,107 @@
-# Nepjua Nix Config
+# Nepjua Nix Configuration
 
-## Getting Started
+A comprehensive Nix-based system configuration framework for managing multiple
+machines across different platforms (NixOS, macOS, and WSL).
 
-1. [Install Nix](https://zero-to-nix.com/start/install)
+## Features
 
-## MacOS Configuration
+- 🖥️ **Multi-Platform Support**
+  - NixOS (Linux) configuration
+  - nix-darwin (macOS) configuration
+  - NixOS-WSL support
+  - Hetzner Cloud deployment
 
-### Applying Configuration
+- 🧩 **Modular Design**
+  - Reusable configuration modules
+  - Platform-specific features
+  - User environment management
+  - Service configurations
 
-Execute this every time you make a change to the configuration
+- 🛠️ **Development Tools**
+  - Modern shell environments (Fish, Nushell, Zsh)
+  - Development utilities
+  - Container tools (Docker, Kubernetes)
+  - Terminal enhancements
 
-Default config is raiden, yours might change
+- ⚙️ **System Management**
+  - Declarative system configuration
+  - Reproducible environments
+  - Easy system updates
+  - Configuration rollbacks
 
-```sh
+## Quick Start
+
+1. Install Nix:
+   ```bash
+   curl -L https://nixos.org/nix/install | sh
+   ```
+
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/yasinuslu/nepjua.git
+   cd nepjua
+   ```
+
+3. Apply configuration based on your system:
+
+### macOS Configuration
+
+```bash
 nix run nix-darwin -- switch --flake .#$hostname
 ```
 
-## Linux Configuration
+Replace `$hostname` with one of: `joyboy`, `sezer`, `chained`
 
 ### NixOS Configuration
 
-Install the system
-
-```sh
+```bash
 sudo nixos-rebuild switch --flake .#kaori
 ```
 
 ### NixOS-WSL Configuration
 
-Install the system
-
-```sh
+```bash
 sudo nixos-rebuild switch --flake .#tristan --impure
 ```
 
-### Hetzner Cloud Configuration
-
-Add this cloud-config:
+## Repository Structure
 
 ```
-#cloud-config
-
-runcmd:
-  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=hetznercloud NIX_CHANNEL=nixos-unstable bash 2>&1 | tee /tmp/infect.log
+.
+├── flake.nix           # Main entry point
+├── hosts/              # Host-specific configurations
+├── modules/            # Modular configuration components
+│   ├── darwin/         # macOS-specific modules
+│   ├── nixos/          # NixOS-specific modules
+│   └── home-manager/   # User environment modules
+├── my-lib/             # Custom Nix functions
+└── docs/               # Documentation
 ```
 
-Once the server is up, run:
+## Documentation
 
-```sh
-nix-shell -p git
-git clone https://github.com/yasinuslu/nix-config
-cd nix-config
-sudo nixos-rebuild switch --flake .#hetzner --impure
-```
+Comprehensive documentation is available in the [docs](./docs) directory:
 
-## References
+- [Getting Started Guide](./docs/getting-started/README.md)
+- [Available Features](./docs/features/README.md)
+- [Module System](./docs/modules/README.md)
+- [Troubleshooting Guide](./docs/troubleshooting/README.md)
 
-- Some configurations and ideas are taken from [vimjoyer/nixconf](https://github.com/vimjoyer/nixconf)
-- The structure is heavily inspired by [this amazing youtube video](https://www.youtube.com/watch?v=vYc6IzKvAJQ) from @vimjoyer
+## Common Tasks
 
-  ![Directory Structure](./assets/images/directory-structure.png)
+### GitHub Rate Limiting
 
-## FAQ
+Set up authentication:
 
-### How do I avoid github rate limiting?
-
-First login:
-
-```sh
+```bash
 gh auth login
-```
-
-Then set `NIX_CONFIG` environment variable
-
-```sh
 export NIX_CONFIG="extra-access-tokens = github.com=$(gh auth token -u yasinuslu)"
 ```
 
-Or even better
+## Credits
 
-```sh
-alias nixt="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token -u yasinuslu)\" nix"
-alias niv="NIX_CONFIG=\"extra-access-tokens = github.com=$(gh auth token -u yasinuslu)\" niv"
-```
-
-## Personal Notes
-
-### Google Drive Mount
-
-```sh
-rclone mount gdrive: ~/rclone/gdrive --daemon --vfs-cache-mode full
-```
+- Configuration inspiration from
+  [vimjoyer/nixconf](https://github.com/vimjoyer/nixconf)
+- Structure based on
+  [this excellent guide](https://www.youtube.com/watch?v=vYc6IzKvAJQ) by
+  @vimjoyer
