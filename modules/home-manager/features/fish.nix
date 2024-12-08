@@ -144,5 +144,11 @@
     end
   '';
 
+  programs.fish.interactiveShellInit = ''
+    if command -v just >/dev/null
+      just --completions fish | source
+    end
+  '';
+
   myHomeManager.paths = ["$HOME/.local/bin"];
 }
