@@ -102,6 +102,7 @@
     md = "microk8s.docker";
     sk = "skaffold";
     df = "df -x'squashfs'";
+    j = "just";
   };
 
   programs.fish.functions = {
