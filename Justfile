@@ -13,10 +13,8 @@ default:
 # Clean up and optimize the Nix store
 gc:
   sudo nix-collect-garbage --delete-older-than 7d
+  sudo nix store gc
   sudo nix store optimise
-
-gc-full: gc
-  sudo nix-store --clear-failed
 
 # Open a Nix REPL with trace
 repl:

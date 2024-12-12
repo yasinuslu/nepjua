@@ -4,7 +4,7 @@
 
   services.xserver.displayManager.gdm.enable = true;
   # Enable Wayland support
-  services.xserver.displayManager.gdm.wayland = true;
+  services.xserver.displayManager.gdm.wayland = false;
 
   services.xserver.desktopManager.gnome.enable = true;
 
@@ -17,7 +17,7 @@
   };
 
   # Enable X11 apps on Wayland
-  programs.xwayland.enable = true;
+  programs.xwayland.enable = false;
 
   xdg = {
     portal = {
