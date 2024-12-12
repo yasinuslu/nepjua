@@ -16,9 +16,6 @@
   };
 
   security.polkit.enable = true;
-  services.gnome.gnome-remote-desktop.enable = true;
-
-  services.gnome.gnome-keyring.enable = true;
 
   # FIXME: Move this to features.sshServer
   services.openssh = {
@@ -40,24 +37,6 @@
   programs._1password = {
     enable = true;
   };
-
-  # FIXME: Move this to homeManager.features.gnome and features.gnome
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-photos
-    gnome-tour
-    cheese
-    gnome-terminal
-    epiphany # web browser
-    geary # email reader
-    totem # video player
-    evince # document viewer
-    gnome-music
-    gnome-characters
-    tali # poker game
-    iagno # go game
-    hitori # sudoku game
-    atomix # puzzle game
-  ];
 
   # Enable automatic login for the user.
   services.getty.autologinUser = "nepjua";

@@ -10,12 +10,14 @@ Nix Configuration.
 NixOS-specific system configurations:
 
 - **Features**:
+
   - Base system configuration
   - Service management
   - Hardware configuration
   - Network setup
 
 - **Bundles**:
+
   - Pre-configured feature sets
   - System role definitions
 
@@ -28,6 +30,7 @@ NixOS-specific system configurations:
 macOS-specific system configurations:
 
 - **Features**:
+
   - `homebrew-minimal.nix`: Basic Homebrew setup
   - `homebrew-extra.nix`: Additional Homebrew packages
   - `keyboard.nix`: Keyboard customization
@@ -44,12 +47,14 @@ macOS-specific system configurations:
 User environment configurations:
 
 - **Cross-Platform Features** (`features/`):
+
   - Shell configurations (fish, zsh, nushell)
   - Development tools (git, deno, kubernetes)
   - Terminal utilities (tmux, fzf, bat)
   - Editor configurations
 
 - **Linux-Specific Features** (`features-linux/`):
+
   - Linux-specific user configurations
 
 - **Darwin-Specific Features** (`features-darwin/`):
@@ -88,7 +93,7 @@ In your host configuration:
 {
   myDarwin = {
     bundles.darwin-desktop.enable = true;
-    
+
     users.nepjua = {
       userConfig = {...}: {
         programs.git.userName = "Yasin Uslu";
@@ -124,16 +129,19 @@ with lib;
 ## Best Practices
 
 1. **Modularity**:
+
    - Keep modules focused and single-purpose
    - Use options to make modules configurable
    - Separate platform-specific code
 
 2. **Dependencies**:
+
    - Clearly define module dependencies
    - Use `mkIf` for conditional configuration
    - Handle dependencies gracefully
 
 3. **Documentation**:
+
    - Document module options
    - Include usage examples
    - Explain non-obvious configurations
