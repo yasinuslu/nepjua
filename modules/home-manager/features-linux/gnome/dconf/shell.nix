@@ -22,6 +22,7 @@ with lib.hm.gvariant;
       hot-edge-width = 53;
       switcher-popup-activate-on-hide = true;
       switcher-popup-hover-select = true;
+      switcher-popup-monitor = 3;
       switcher-popup-pointer = true;
       switcher-popup-scroll-in = 0;
       switcher-popup-shift-hotkeys = false;
