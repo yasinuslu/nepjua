@@ -9,5 +9,6 @@
     ./shell.nix
     ./power.nix
     ./keybindings.nix
+    ./background.nix
   ];
 }

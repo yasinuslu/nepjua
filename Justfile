@@ -131,6 +131,7 @@ update-dconf:
     process_dconf "org/gnome/desktop/wm/keybindings" "keybindings.nix"
     process_dconf "org/gnome/settings-daemon/plugins/media-keys" "media-keys.nix"
     process_dconf "org/gnome/shell/keybindings" "shell-keybindings.nix"
+    process_dconf "org/gnome/desktop/background" "background.nix"
     
     # Generate default.nix only with successfully generated files
     if [ ${#generated_files[@]} -gt 0 ]; then
