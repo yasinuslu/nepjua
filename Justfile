@@ -80,6 +80,9 @@ update-dconf:
     TARGET_DIR="./modules/home-manager/features-linux/gnome/dconf"
     mkdir -p "$TARGET_DIR"
     
+    # Array to store successfully generated files
+    declare -a generated_files
+    
     # Function to process dconf dumps
     process_dconf() {
         local path="$1"
@@ -99,6 +102,7 @@ update-dconf:
                 sed -i "s/\"\" = {/\"$escaped_path\" = {/" "$temp_converted"
                 mv "$temp_converted" "$TARGET_DIR/$output_file"
                 echo "Generated $output_file"
+                generated_files+=("$output_file")
             else
                 echo "Failed to convert $output_file"
                 return 1
@@ -118,10 +122,24 @@ update-dconf:
     process_dconf "org/gnome/desktop/media-handling" "media.nix"
     process_dconf "org/gnome/desktop/privacy" "privacy.nix"
     
-    # Create default.nix
-    echo '{ lib, ... }: { imports = [ ./interface.nix ./input.nix ./wm.nix ./mutter.nix ./shell.nix ./power.nix ./media.nix ./privacy.nix ]; }' > "$TARGET_DIR/default.nix"
-    
-    echo "Successfully updated dconf settings in $TARGET_DIR/"
+    # Generate default.nix only with successfully generated files
+    if [ ${#generated_files[@]} -gt 0 ]; then
+        {
+            echo '{ lib, ... }:'
+            echo ''
+            echo '{'
+            echo '  imports = ['
+            for file in "${generated_files[@]}"; do
+                echo "    ./$file"
+            done
+            echo '  ];'
+            echo '}'
+        } > "$TARGET_DIR/default.nix"
+        
+        echo "Successfully updated dconf settings in $TARGET_DIR/"
+    else
+        echo "No dconf settings were generated"
+    fi
 
 # Update flake
 up:
