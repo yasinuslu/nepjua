@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ./dconf.nix
+    ./dconf
     ./theme.nix
   ];
 

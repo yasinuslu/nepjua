@@ -38,7 +38,6 @@ build-verbose:
   echo "Building with verbose output using {{rebuild_cmd}}..."
   {{rebuild_cmd}} build --flake .#{{host}} --show-trace --print-build-logs --verbose --impure
 
-# Switch configuration using the detected rebuild command
 # Switch configuration using the detected rebuild command with retries
 switch:
   #!/usr/bin/env bash
@@ -74,7 +73,55 @@ boot:
 
 # Update dconf settings
 update-dconf:
-  dconf dump "/" | nix run nixpkgs#dconf2nix > ./modules/home-manager/features-gui/gnome/dconf.nix
+    #!/usr/bin/env bash
+    set -euo pipefail
+    
+    # Base directory for dconf settings
+    TARGET_DIR="./modules/home-manager/features-linux/gnome/dconf"
+    mkdir -p "$TARGET_DIR"
+    
+    # Function to process dconf dumps
+    process_dconf() {
+        local path="$1"
+        local output_file="$2"
+        local temp_file temp_converted
+        temp_file=$(mktemp)
+        temp_converted=$(mktemp)
+        trap 'rm -f "$temp_file" "$temp_converted"' RETURN
+        
+        echo "Processing /$path/ -> $output_file"
+        dconf dump "/$path/" > "$temp_file"
+        
+        if [ -s "$temp_file" ]; then
+            if nix run nixpkgs#dconf2nix -- < "$temp_file" > "$temp_converted"; then
+                # Fix the path structure in the generated file
+                escaped_path=$(echo "$path" | sed 's/\//\\\//g')
+                sed -i "s/\"\" = {/\"$escaped_path\" = {/" "$temp_converted"
+                mv "$temp_converted" "$TARGET_DIR/$output_file"
+                echo "Generated $output_file"
+            else
+                echo "Failed to convert $output_file"
+                return 1
+            fi
+        else
+            echo "No settings found for /$path/"
+        fi
+    }
+    
+    # Process each dconf path
+    process_dconf "org/gnome/desktop/interface" "interface.nix"
+    process_dconf "org/gnome/desktop/input-sources" "input.nix"
+    process_dconf "org/gnome/desktop/wm" "wm.nix"
+    process_dconf "org/gnome/mutter" "mutter.nix"
+    process_dconf "org/gnome/shell" "shell.nix"
+    process_dconf "org/gnome/settings-daemon/plugins/power" "power.nix"
+    process_dconf "org/gnome/desktop/media-handling" "media.nix"
+    process_dconf "org/gnome/desktop/privacy" "privacy.nix"
+    
+    # Create default.nix
+    echo '{ lib, ... }: { imports = [ ./interface.nix ./input.nix ./wm.nix ./mutter.nix ./shell.nix ./power.nix ./media.nix ./privacy.nix ]; }' > "$TARGET_DIR/default.nix"
+    
+    echo "Successfully updated dconf settings in $TARGET_DIR/"
 
 # Update flake
 up:
