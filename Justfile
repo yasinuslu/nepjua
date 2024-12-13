@@ -93,7 +93,14 @@ update-dconf:
         trap 'rm -f "$temp_file" "$temp_converted"' RETURN
         
         echo "Processing /$path/ -> $output_file"
-        dconf dump "/$path/" > "$temp_file"
+        
+        # Special handling for shell settings
+        if [[ "$path" == "org/gnome/shell" ]]; then
+            # Only extract simple key-value pairs and arrays
+            dconf dump "/$path/" | grep -v "app-picker-layout" > "$temp_file"
+        else
+            dconf dump "/$path/" > "$temp_file"
+        fi
         
         if [ -s "$temp_file" ]; then
             if nix run nixpkgs#dconf2nix -- < "$temp_file" > "$temp_converted"; then
@@ -121,6 +128,9 @@ update-dconf:
     process_dconf "org/gnome/settings-daemon/plugins/power" "power.nix"
     process_dconf "org/gnome/desktop/media-handling" "media.nix"
     process_dconf "org/gnome/desktop/privacy" "privacy.nix"
+    process_dconf "org/gnome/desktop/wm/keybindings" "keybindings.nix"
+    process_dconf "org/gnome/settings-daemon/plugins/media-keys" "media-keys.nix"
+    process_dconf "org/gnome/shell/keybindings" "shell-keybindings.nix"
     
     # Generate default.nix only with successfully generated files
     if [ ${#generated_files[@]} -gt 0 ]; then

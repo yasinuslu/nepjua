@@ -8,5 +8,6 @@
     ./mutter.nix
     ./shell.nix
     ./power.nix
+    ./keybindings.nix
   ];
 }
