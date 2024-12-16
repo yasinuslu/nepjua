@@ -12,6 +12,9 @@ default:
 
 # Clean up and optimize the Nix store
 gc:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  sudo nix-env -p /nix/var/nix/profiles/system --delete-generations +3
   sudo nix-collect-garbage --delete-older-than 7d
   sudo nix store gc
   sudo nix store optimise
