@@ -7,30 +7,35 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
-    coreutils-full
-    iputils
-    vlc
-    copyq
-    parsec-bin
-    obs-studio
-    bottles
-    qbittorrent
-    slack
-    zoom-us
-    spotify
-    warp-terminal
-    htop
-    vesktop
-    lens
-    logseq
-    electron_27
-    cloudflare-warp
-    cloudflared
-    gitkraken
-    github-copilot-cli
-    coder
-  ];
+  home.packages = with pkgs;
+    [
+      coreutils-full
+      iputils
+      vlc
+      copyq
+      parsec-bin
+      obs-studio
+      bottles
+      qbittorrent
+      zoom-us
+      spotify
+      warp-terminal
+      htop
+      vesktop
+      lens
+      logseq
+      electron_27
+      cloudflare-warp
+      cloudflared
+      gitkraken
+      github-copilot-cli
+      coder
+    ]
+    ++ (
+      if pkgs.stdenv.system == "x86_64-linux"
+      then [slack]
+      else []
+    );
 
   services.spotifyd = {
     enable = true;
