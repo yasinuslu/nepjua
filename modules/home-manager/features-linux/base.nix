@@ -17,23 +17,16 @@
       obs-studio
       bottles
       qbittorrent
-      zoom-us
-      spotify
       warp-terminal
       htop
       vesktop
-      lens
-      logseq
       electron_27
       cloudflare-warp
       cloudflared
-      gitkraken
-      github-copilot-cli
-      coder
     ]
     ++ (
       if pkgs.stdenv.system == "x86_64-linux"
-      then [slack]
+      then [slack zoom-us spotify lens logseq gitkraken]
       else []
     );
 
