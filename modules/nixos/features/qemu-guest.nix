@@ -24,15 +24,15 @@
       enable = true;
       videoDrivers = ["virtio"];
 
-      # Input configuration
-      libinput = {
-        enable = true;
-      };
-
       xkb = {
         layout = "us";
         variant = "";
       };
+    };
+
+    # Input configuration
+    libinput = {
+      enable = true;
     };
   };
 

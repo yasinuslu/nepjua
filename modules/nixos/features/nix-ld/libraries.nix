@@ -69,7 +69,6 @@ in {
       pipewire
       sqlite.out
       stdenv.cc.cc
-      steam-fhsenv-without-steam.out
       systemd
       vulkan-loader
       woff2.lib
@@ -93,7 +92,7 @@ in {
     ]
     ++ (
       if pkgs.stdenv.system == "x86_64-linux"
-      then [glamoroustoolkit.out]
+      then [glamoroustoolkit.out steam-fhsenv-without-steam.out]
       else []
     );
 }
