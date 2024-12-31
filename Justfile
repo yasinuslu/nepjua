@@ -4,6 +4,7 @@ set shell := ["bash", "-uc"]
 # Determine the OS and set the appropriate rebuild command
 os := `uname`
 rebuild_cmd := if os == "Darwin" { "darwin-rebuild" } else { "sudo nixos-rebuild" }
+rebuild_args := "--impure"
 host := `hostname`
 
 # Default recipe to show available commands
@@ -32,14 +33,20 @@ build-verbose-no-cache:
   #!/usr/bin/env bash
   set -euo pipefail
   echo "Building with verbose output and no cache using {{rebuild_cmd}}..."
-  {{rebuild_cmd}} build --flake .#{{host}} --option eval-cache false --show-trace --print-build-logs --verbose --impure
+  {{rebuild_cmd}} build --flake .#{{host}} --option eval-cache false --show-trace --print-build-logs --verbose {{rebuild_args}}
 
 # Build with verbose output
 build-verbose:
   #!/usr/bin/env bash
   set -euo pipefail
   echo "Building with verbose output using {{rebuild_cmd}}..."
-  {{rebuild_cmd}} build --flake .#{{host}} --show-trace --print-build-logs --verbose --impure
+  {{rebuild_cmd}} build --flake .#{{host}} --show-trace --print-build-logs --verbose {{rebuild_args}}
+
+build:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  echo "Building for '{{host}}' on '{{os}}' using '{{rebuild_cmd}}'..."
+  {{rebuild_cmd}} build --flake .#{{host}} {{rebuild_args}}
 
 # Switch configuration using the detected rebuild command with retries
 switch:
