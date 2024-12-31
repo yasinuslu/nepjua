@@ -8,6 +8,11 @@
   myArgs,
   ...
 }: {
+  options.myNixOS.mainUser = lib.mkOption {
+    type = lib.types.str;
+    default = "nepjua";
+  };
+
   options.myNixOS.users = lib.mkOption {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
