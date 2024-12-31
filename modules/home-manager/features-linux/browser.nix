@@ -4,11 +4,10 @@
       chromium
       firefox
       browsers
-      microsoft-edge
     ]
     ++ (
       if pkgs.stdenv.system == "x86_64-linux"
-      then [google-chrome]
+      then [google-chrome microsoft-edge]
       else []
     );
 
