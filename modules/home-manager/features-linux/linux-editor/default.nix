@@ -1,6 +1,10 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    code-cursor
+    (
+      if pkgs.stdenv.system == "x86_64"
+      then code-cursor
+      else []
+    )
     vscode
     zed-editor
   ];
