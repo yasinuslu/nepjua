@@ -1,6 +1,6 @@
 {...}: {
   myNixOS = {
-    qemu-guest.enable = false;
+    qemu-guest.enable = true;
     gaming.enable = false;
 
     docker.enable = true;
@@ -9,7 +9,7 @@
     # There seems to be an issue with the virtualbox
     virtualbox.enable = false;
 
-    xserver-nvidia.enable = true;
-    xserver-virtio.enable = false;
+    xserver-nvidia.enable = false;
+    xserver-virtio.enable = true;
   };
 }

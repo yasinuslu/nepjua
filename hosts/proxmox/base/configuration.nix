@@ -18,7 +18,8 @@
 
   myNixOS = {
     mainUser = "proxmox";
-    bundles.general-desktop.enable = true;
+    bundles.proxmox-guest.enable = true;
+    bundles.general-desktop.enable = false;
 
     users = {
       nepjua = {
