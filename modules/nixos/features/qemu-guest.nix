@@ -9,14 +9,19 @@
       enable = true;
       videoDrivers = ["virtio"];
 
+      # Input configuration
+      libinput = {
+        enable = true;
+        # You might want to add specific touchpad/mouse settings here
+        # touchpad.tapping = true;
+        # mouse.accelProfile = "flat";
+      };
+
       xkb = {
         layout = "us";
         variant = "";
       };
     };
-
-    # Input device support
-    libinput.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
@@ -24,17 +29,16 @@
   ];
 
   # Hardware support
-  hardware = {
-    qemuGuest.enable = true;
-
-    # Explicitly disable NVIDIA features
-    nvidia = {
-      modesetting.enable = false;
-      powerManagement.enable = false;
-      open = false;
-    };
+  hardware.nvidia = {
+    modesetting.enable = false;
+    powerManagement.enable = false;
+    open = false;
   };
 
-  # Enable SPICE agent for better integration
-  virtualisation.spiceAgent.enable = true;
+  # SPICE agent for better integration
+  virtualisation = {
+    spiceAgent.enable = true;
+    vmware.guest.enable = false; # Explicitly disable VMware guest
+    virtualbox.guest.enable = false; # Explicitly disable VBox guest
+  };
 }
