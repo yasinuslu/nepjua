@@ -3,6 +3,7 @@
   pkgs,
   ...
 }: {
+  hardware.nvidia-container-toolkit.enable = true;
   # nixpkgs.overlays = [inputs.nixgl.overlay];
 
   environment.systemPackages = with pkgs; [

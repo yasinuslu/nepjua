@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: {
+{config, ...}: {
   zramSwap.enable = true;
 
   # Enable sound with pipewire.
