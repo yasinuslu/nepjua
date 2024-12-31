@@ -17,6 +17,7 @@
   # };
 
   myNixOS = {
+    mainUser = "nepjua";
     bundles.general-desktop.enable = true;
 
     users = {

@@ -17,13 +17,14 @@
   # };
 
   myNixOS = {
+    mainUser = "proxmox";
     bundles.general-desktop.enable = true;
 
     users = {
       nepjua = {
         userConfig = {...}: {
-          programs.git.userName = "Yasin Uslu";
-          programs.git.userEmail = "nepjua@gmail.com";
+          programs.git.userName = "Proxmox";
+          programs.git.userEmail = "proxmox@localhost";
 
           myHomeManager.docker.enable = false;
         };
