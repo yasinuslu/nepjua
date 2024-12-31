@@ -2,7 +2,6 @@
   # QEMU/SPICE guest services
   services = {
     qemuGuest.enable = true;
-    spice-vdagent.enable = true;
 
     # X11 configuration
     xserver = {
@@ -12,9 +11,6 @@
       # Input configuration
       libinput = {
         enable = true;
-        # You might want to add specific touchpad/mouse settings here
-        # touchpad.tapping = true;
-        # mouse.accelProfile = "flat";
       };
 
       xkb = {
@@ -38,7 +34,7 @@
   # SPICE agent for better integration
   virtualisation = {
     spiceAgent.enable = true;
-    vmware.guest.enable = false; # Explicitly disable VMware guest
-    virtualbox.guest.enable = false; # Explicitly disable VBox guest
+    vmware.guest.enable = false;
+    virtualbox.guest.enable = false;
   };
 }
