@@ -22,7 +22,7 @@
     bundles.general-desktop.enable = false;
 
     users = {
-      nepjua = {
+      proxmox = {
         userConfig = {...}: {
           programs.git.userName = "Proxmox";
           programs.git.userEmail = "proxmox@localhost";
