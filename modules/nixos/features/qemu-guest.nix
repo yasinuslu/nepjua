@@ -15,7 +15,7 @@
   services = {
     # QEMU/SPICE guest services
     qemuGuest.enable = true;
-    spice-vdagent.enable = true;
+    spice-vdagentd.enable = true;
     spice-autorandr.enable = true;
     spice-webdavd.enable = true;
 
