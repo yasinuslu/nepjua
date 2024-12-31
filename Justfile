@@ -45,7 +45,7 @@ build-verbose:
 switch:
   #!/usr/bin/env bash
   set -euo pipefail
-  echo "Switching configuration on {{os}} using {{rebuild_cmd}}..."
+  echo "Switching configuration for '{{host}}' on '{{os}}' using '{{rebuild_cmd}}'..."
   for i in {1..3}; do
       if {{rebuild_cmd}} switch --flake .#{{host}} --impure; then
           echo "Switch successful on attempt $i"
