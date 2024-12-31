@@ -1,11 +1,16 @@
 {pkgs, ...}: {
-  home.packages = with pkgs; [
-    google-chrome
-    chromium
-    firefox
-    browsers
-    microsoft-edge
-  ];
+  home.packages = with pkgs;
+    [
+      chromium
+      firefox
+      browsers
+      microsoft-edge
+    ]
+    ++ (
+      if pkgs.stdenv.system == "x86_64-linux"
+      then [google-chrome]
+      else []
+    );
 
   xdg.mimeApps.defaultApplications = {
     "text/html" = ["google-chrome.desktop"];
