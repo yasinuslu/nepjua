@@ -1,11 +1,16 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    (
-      if stdenv.system == "x86_64"
-      then code-cursor
+{
+  pkgs,
+  stdenv,
+  ...
+}: {
+  home.packages = with pkgs;
+    [
+      vscode
+      zed-editor
+    ]
+    ++ (
+      if stdenv.system == "x86_64-linux"
+      then [code-cursor]
       else []
-    )
-    vscode
-    zed-editor
-  ];
+    );
 }
