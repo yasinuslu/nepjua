@@ -7,6 +7,5 @@
     podman.enable = false;
 
     xserver-nvidia.enable = true;
-    xserver-virtio.enable = false;
   };
 }
