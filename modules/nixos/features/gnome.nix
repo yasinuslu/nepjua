@@ -38,18 +38,6 @@
     gnome-shell
     gnome-extension-manager
     gnome-terminal
-
-    # Default applications
-    epiphany # Web browser
-    geary # Email client
-    totem # Video player
-    evince # Document viewer
-
-    # GNOME games
-    tali # Poker game
-    iagno # Go game
-    hitori # Sudoku game
-    atomix # Puzzle game
   ];
 
   # Enable inter-process communication
