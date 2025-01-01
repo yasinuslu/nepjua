@@ -15,9 +15,6 @@
     bundles.general-desktop.enable = false;
     nix-ld.enable = false;
 
-    # Enable SPICE guest features
-    spice.guest.enable = true;
-
     users = {
       proxmox = {
         userConfig = {...}: {
