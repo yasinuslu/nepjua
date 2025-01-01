@@ -9,18 +9,14 @@
   networking.hostName = "proxmox-base";
   networking.firewall.enable = false;
 
-  # networking.interfaces.eno1 = {
-  #   useDHCP = true;
-  #   mtu = 1500;
-  #   wakeOnLan.enable = true;
-  #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
-  # };
-
   myNixOS = {
     mainUser = "proxmox";
     bundles.proxmox-guest.enable = true;
     bundles.general-desktop.enable = false;
     nix-ld.enable = false;
+
+    # Enable SPICE guest features
+    spice.guest.enable = true;
 
     users = {
       proxmox = {
@@ -32,7 +28,7 @@
         };
 
         userSettings = {
-          extraGroups = ["networkmanager" "wheel" "adbusers" "docker" "lxd" "kvm" "libvirtd"];
+          extraGroups = ["networkmanager" "wheel" "adbusers" "docker" "lxd" "kvm" "libvirtd" "spice"];
         };
       };
     };

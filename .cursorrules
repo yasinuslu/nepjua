@@ -18,6 +18,57 @@ refer to:
 - Main overview: [README.md](./README.md)
 - Comprehensive documentation: [docs/](./docs/)
 
+## Module System Structure
+
+### Features
+
+Features are simple, focused modules that provide specific functionality:
+
+- Located in `modules/nixos/features/`
+- Each feature is a single `.nix` file
+- Features should be atomic and focused on one responsibility
+- No explicit enable option needed (handled by the module system)
+- Features are enabled by default unless disabled
+
+Example feature structure:
+
+```nix
+{pkgs, ...}: {
+  # Direct configuration without enable options
+  services.someService.enable = true;
+  environment.systemPackages = with pkgs; [
+    some-package
+  ];
+}
+```
+
+### Bundles
+
+Bundles combine multiple features for specific use-cases:
+
+- Located in `modules/nixos/bundles/`
+- Each bundle is a single `.nix` file
+- Bundles need explicit enabling via `myNixOS.bundles.<name>.enable`
+- Used to group related features together
+
+### Services
+
+Service modules handle service-specific configurations:
+
+- Located in `modules/nixos/services/`
+- Each service is a single `.nix` file
+- Services need explicit enabling via `myNixOS.services.<name>.enable`
+- Focus on service configuration and dependencies
+
+### Module System Rules
+
+1. Keep modules simple and focused
+2. Don't create nested feature directories
+3. Don't add manual enable options in features
+4. Split related but separate functionality into distinct files
+5. Use bundles to group related features
+6. Follow the existing module structure and naming conventions
+
 ## Technical Domains
 
 ### Core Technologies

@@ -13,17 +13,17 @@
   };
 
   services = {
-    # QEMU/SPICE guest services
+    # Enable QEMU guest agent
     qemuGuest.enable = true;
-    spice-vdagentd.enable = true;
-    spice-autorandr.enable = true;
-    spice-webdavd.enable = true;
 
     # X11 configuration
     xserver = {
       videoDrivers = ["virtio"];
     };
   };
+
+  # System-wide QEMU guest optimizations
+  boot.kernelModules = ["virtio" "virtio_net" "virtio_pci" "virtio_balloon"];
 
   environment.systemPackages = with pkgs; [
     mesa-demos # Useful for testing GL support
