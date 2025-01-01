@@ -1,21 +1,13 @@
 {pkgs, ...}: {
   # Guest-specific SPICE services
-  services = {
-    spice-vdagentd = {
-      enable = true;
-      extraArgs = ["-d"]; # Enable debug logging
-    };
+  services.spice-vdagentd.enable = true;
 
-    spice-autorandr.enable = true;
-    spice-webdavd.enable = true;
-
-    # X11 configuration for SPICE guest
-    xserver = {
-      # Note: virtio driver is handled by qemu-guest.nix
-      displayManager.sessionCommands = ''
-        ${pkgs.spice-vdagent}/bin/spice-vdagent
-      '';
-    };
+  # X11 configuration for SPICE guest
+  services.xserver = {
+    # Note: virtio driver is handled by qemu-guest.nix
+    displayManager.sessionCommands = ''
+      ${pkgs.spice-vdagent}/bin/spice-vdagent
+    '';
   };
 
   # Required packages for SPICE guest functionality
