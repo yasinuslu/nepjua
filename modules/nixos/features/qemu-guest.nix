@@ -21,18 +21,7 @@
 
     # X11 configuration
     xserver = {
-      enable = true;
       videoDrivers = ["virtio"];
-
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
-
-    # Input configuration
-    libinput = {
-      enable = true;
     };
   };
 
