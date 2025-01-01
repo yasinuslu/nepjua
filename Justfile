@@ -15,10 +15,15 @@ default:
 gc:
   #!/usr/bin/env bash
   set -euo pipefail
+  
+  echo -e "\n🔍 Starting garbage collection at $(date)\n"
+  
   sudo nix-env -p /nix/var/nix/profiles/system --delete-generations +3
   sudo nix-collect-garbage --delete-older-than 7d
   sudo nix store gc
   sudo nix store optimise
+  
+  echo -e "\n✅ Garbage collection completed at $(date)\n"
 
 # Open a Nix REPL with trace
 repl:
@@ -32,59 +37,92 @@ repl-nixpkgs:
 build-verbose-no-cache:
   #!/usr/bin/env bash
   set -euo pipefail
-  echo "Building with verbose output and no cache using {{rebuild_cmd}}..."
-  {{rebuild_cmd}} build --flake .#{{host}} --option eval-cache false --show-trace --print-build-logs --verbose {{rebuild_args}}
+  
+  echo -e "\n🔨 Building with verbose output and no cache using \033[1;34m{{rebuild_cmd}}\033[0m at $(date)...\n"
+  
+  {{rebuild_cmd}} build \
+    --flake .#{{host}} \
+    --option eval-cache false \
+    --show-trace \
+    --print-build-logs \
+    --verbose {{rebuild_args}}
+  
+  echo -e "\n✅ Build completed at $(date)\n"
 
 # Build with verbose output
 build-verbose:
   #!/usr/bin/env bash
   set -euo pipefail
-  echo "Building with verbose output using {{rebuild_cmd}}..."
-  {{rebuild_cmd}} build --flake .#{{host}} --show-trace --print-build-logs --verbose {{rebuild_args}}
+  
+  echo -e "\n🔨 Building with verbose output using \033[1;34m{{rebuild_cmd}}\033[0m at $(date)...\n"
+  
+  {{rebuild_cmd}} build \
+    --flake .#{{host}} \
+    --show-trace \
+    --print-build-logs \
+    --verbose {{rebuild_args}}
+  
+  echo -e "\n✅ Build completed at $(date)\n"
 
 build:
   #!/usr/bin/env bash
   set -euo pipefail
-  echo "Building for '{{host}}' on '{{os}}' using '{{rebuild_cmd}}'..."
-  {{rebuild_cmd}} build --flake .#{{host}} {{rebuild_args}}
+  
+  echo -e "\n🔨 Building for '{{host}}' on '{{os}}' using \033[1;34m{{rebuild_cmd}}\033[0m...\n"
+  
+  echo -e "🔨 Host: \033[1;32m{{host}}\033[0m"
+  echo -e "🔹 OS: \033[1;32m{{os}}\033[0m"
+  echo -e "🔹 Command: \033[1;32m{{rebuild_cmd}}\033[0m\n"
+  
+  {{rebuild_cmd}} build \
+    --flake .#{{host}} \
+    {{rebuild_args}}
 
 # Switch configuration using the detected rebuild command with retries
 switch:
   #!/usr/bin/env bash
   set -euo pipefail
-  echo "Switching configuration for '{{host}}' on '{{os}}' using '{{rebuild_cmd}}'..."
+  
+  echo -e "\n🔄 Switching configuration for '{{host}}' on '{{os}}' using \033[1;34m{{rebuild_cmd}}\033[0m at $(date)...\n"
+  
   for i in {1..3}; do
       if {{rebuild_cmd}} switch --flake .#{{host}} --impure; then
-          echo "Switch successful on attempt $i"
+          echo -e "✅ Switch successful on attempt $i at $(date)\n"
           exit 0
       else
-          echo "Switch failed on attempt $i, retrying in 5 seconds..."
+          echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
           sleep 5
       fi
   done
-  echo "Switch failed after 3 attempts"
+  
+  echo -e "❌ Switch failed after 3 attempts at $(date)\n"
   exit 1
 
 boot:
   #!/usr/bin/env bash
   set -euo pipefail
-  echo "Setting configuration on {{os}} using {{rebuild_cmd}} for next boot..."
+  
+  echo -e "\n🔄 Setting configuration on {{os}} using \033[1;34m{{rebuild_cmd}}\033[0m for next boot...\n"
+  
   for i in {1..3}; do
       if {{rebuild_cmd}} boot --flake .#{{host}} --impure; then
-          echo "Build successful on attempt $i"
+          echo -e "✅ Build successful on attempt $i\n"
           exit 0
       else
-          echo "Build failed on attempt $i, retrying in 5 seconds..."
+          echo -e "❌ Build failed on attempt $i, retrying in 5 seconds...\n"
           sleep 5
       fi
   done
-  echo "Build failed after 3 attempts"
+  
+  echo -e "❌ Build failed after 3 attempts\n"
   exit 1
 
 # Update dconf settings
 update-dconf:
     #!/usr/bin/env bash
     set -euo pipefail
+    
+    echo -e "\n🔄 Updating dconf settings at $(date)...\n"
     
     # Base directory for dconf settings
     TARGET_DIR="./modules/home-manager/features-linux/gnome/dconf"
@@ -102,11 +140,10 @@ update-dconf:
         temp_converted=$(mktemp)
         trap 'rm -f "$temp_file" "$temp_converted"' RETURN
         
-        echo "Processing /$path/ -> $output_file"
+        echo -e "🔍 Processing /$path/ -> $output_file\n"
         
         # Special handling for shell settings
         if [[ "$path" == "org/gnome/shell" ]]; then
-            # Only extract simple key-value pairs and arrays
             dconf dump "/$path/" | grep -v "app-picker-layout" > "$temp_file"
         else
             dconf dump "/$path/" > "$temp_file"
@@ -114,18 +151,17 @@ update-dconf:
         
         if [ -s "$temp_file" ]; then
             if nix run nixpkgs#dconf2nix -- < "$temp_file" > "$temp_converted"; then
-                # Fix the path structure in the generated file
                 escaped_path=$(echo "$path" | sed 's/\//\\\//g')
                 sed -i "s/\"\" = {/\"$escaped_path\" = {/" "$temp_converted"
                 mv "$temp_converted" "$TARGET_DIR/$output_file"
-                echo "Generated $output_file"
+                echo -e "✅ Generated $output_file at $(date)\n"
                 generated_files+=("$output_file")
             else
-                echo "Failed to convert $output_file"
+                echo -e "❌ Failed to convert $output_file at $(date)\n"
                 return 1
             fi
         else
-            echo "No settings found for /$path/"
+            echo -e "⚠️ No settings found for /$path/ at $(date)\n"
         fi
     }
     
@@ -157,9 +193,9 @@ update-dconf:
             echo '}'
         } > "$TARGET_DIR/default.nix"
         
-        echo "Successfully updated dconf settings in $TARGET_DIR/"
+        echo -e "✅ Successfully updated dconf settings in $TARGET_DIR/ at $(date)\n"
     else
-        echo "No dconf settings were generated"
+        echo -e "⚠️ No dconf settings were generated at $(date)\n"
     fi
 
 # Update flake
