@@ -1,6 +1,8 @@
 {pkgs, ...}: {
   # Guest-specific SPICE services
   services.spice-vdagentd.enable = true;
+  services.spice-autorandr.enable = true;
+  services.spice-webdavd.enable = true;
 
   # X11 configuration for SPICE guest
   services.xserver = {
