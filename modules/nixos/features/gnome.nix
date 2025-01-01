@@ -36,7 +36,7 @@
 
     # GNOME core apps
     gnome-shell
-    gnome-extension-manager
+    # gnome-extension-manager
     gnome-terminal
   ];
 
