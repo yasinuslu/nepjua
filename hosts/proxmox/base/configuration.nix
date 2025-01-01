@@ -14,6 +14,7 @@
     bundles.proxmox-guest.enable = true;
     bundles.general-desktop.enable = false;
     nix-ld.enable = false;
+    rustdesk-server.enable = false;
 
     users = {
       proxmox = {
