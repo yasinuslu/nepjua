@@ -4,7 +4,7 @@
     enable = true;
     # Enable binfmt support for AppImages
     binfmt = true;
-    # Add extra packages for better compatibility
+    # Configure extra packages for compatibility
     package = pkgs.appimage-run.override {
       extraPkgs = pkgs:
         with pkgs; [
@@ -19,32 +19,49 @@
           glib
           libsoup_2_4
           webkitgtk_4_1
+          json-glib
 
           # System libraries
           zlib
           glibc
           libGL
+
+          # SELinux and security
+          libselinux
+          libsepol
+
+          # Additional dependencies
+          xorg.libX11
+          xorg.libXrandr
+          xorg.libXi
+          xorg.libXcursor
+          xorg.libXdamage
+          xorg.libXrender
+          xorg.libXfixes
+          xorg.libXcomposite
+          xorg.libXext
+
+          # Audio/Video
+          libpulseaudio
+          libvorbis
+          ffmpeg
+
+          # For Flutter apps
+          libglvnd
+          vulkan-loader
+
+          # For better integration
+          shared-mime-info
+          hicolor-icon-theme
         ];
     };
   };
 
-  # Required system packages for AppImage support
-  environment.systemPackages = with pkgs; [
-    # Core dependencies
-    fuse
-    appimage-run
-
-    # Additional utilities
-    file # for file type detection
-    patchelf # for binary patching
-  ];
-
-  # Enable FUSE support (required for AppImage)
-  boot.kernelModules = ["fuse"];
-
   # Configure system for AppImage execution
   boot.supportedFilesystems.fuse = true;
 
-  # Allow users to mount FUSE filesystems
-  security.wrappers.fusermount.source = "${pkgs.fuse}/bin/fusermount";
+  # Required system packages
+  environment.systemPackages = with pkgs; [
+    fuse
+  ];
 }
