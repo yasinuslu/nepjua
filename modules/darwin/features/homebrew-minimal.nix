@@ -43,6 +43,7 @@
       "notion"
       "obsidian"
       "rectangle"
+      "rustdesk"
       "spotify"
       "visual-studio-code"
       "vlc"
