@@ -5,7 +5,7 @@
   # Add required packages
   environment.systemPackages = with pkgs; [
     flatpak
-    gnome.gnome-software # Provides GUI for Flatpak management
+    gnome-software # Now at top-level
     gnome-software-plugin-flatpak
   ];
 
