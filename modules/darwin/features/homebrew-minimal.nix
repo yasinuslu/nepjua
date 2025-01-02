@@ -27,7 +27,7 @@
       "1password-cli"
       "1password"
       "alt-tab"
-      "background-music"
+      # "background-music"
       "cloudflare-warp"
       "cursor"
       "dbeaver-community"
