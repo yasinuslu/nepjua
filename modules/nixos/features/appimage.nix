@@ -17,8 +17,8 @@
 
           # Common runtime dependencies
           glib
-          libsoup
-          webkitgtk
+          libsoup_2_4
+          webkitgtk_4_1
 
           # System libraries
           zlib

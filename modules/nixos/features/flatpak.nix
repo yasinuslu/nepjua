@@ -29,8 +29,17 @@
     };
   };
 
-  # Add Flathub repository after installation
-  system.activationScripts.flatpak-init = ''
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  '';
+  # Add Flathub repository using a systemd service
+  systemd.services.flatpak-init = {
+    description = "Add Flathub repository to Flatpak";
+    wantedBy = ["multi-user.target"];
+    path = [pkgs.flatpak];
+    script = ''
+      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
 }
