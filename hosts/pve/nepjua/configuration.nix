@@ -6,11 +6,11 @@
     ./hardware-configuration.nix
   ];
 
-  networking.hostName = "proxmox-base";
+  networking.hostName = "pve-nepjua";
   networking.firewall.enable = false;
 
   myNixOS = {
-    mainUser = "proxmox";
+    mainUser = "nepjua";
 
     gaming.enable = false;
     podman.enable = false;
@@ -18,10 +18,10 @@
     systemd-boot.enable = false;
 
     users = {
-      proxmox = {
+      nepjua = {
         userConfig = {...}: {
-          programs.git.userName = "Proxmox";
-          programs.git.userEmail = "proxmox@localhost";
+          programs.git.userName = "Yasin Uslu";
+          programs.git.userEmail = "nepjua@gmail.com";
 
           myHomeManager.docker.enable = false;
         };
