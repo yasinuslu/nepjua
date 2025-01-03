@@ -222,6 +222,138 @@ zpool status tank
 zfs list -r tank
 ```
 
+### Remove /reserved Mount Point
+
+After creating the ZFS pool using the reserved partition, you need to remove its entry from `/etc/fstab` to prevent boot issues:
+
+```bash
+# Remove the /reserved mount point from fstab
+sed -i '/\/reserved/d' /etc/fstab
+
+# Verify fstab contents
+cat /etc/fstab
+```
+
+### Enable IOMMU Support
+
+For better VM performance and PCI passthrough capabilities, enable IOMMU support:
+
+```bash
+# Add IOMMU parameters to GRUB
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="[^"]*"/GRUB_CMDLINE_LINUX_DEFAULT="consoleblank=0 amd_iommu=on iommu=pt iommu.strict=1 kvm.ignore_msrs=1"/' /etc/default/grub
+
+# Update GRUB configuration
+update-grub
+
+# Reboot to apply changes
+reboot
+```
+
+### VM Configuration
+
+For NixOS development workstations with GNOME Shell, start with these basic settings:
+
+```bash
+# Create VM with basic configuration
+qm set <vmid> \
+  -memory 50000 \
+  -cores 10 \
+  -sockets 1 \
+  -vga "virtio,memory=512"
+```
+
+Basic configuration includes:
+
+1. 50GB RAM (`memory: 50000`)
+2. 10 cores on single socket for better performance
+3. Virtio GPU with 512MB video memory for GNOME Shell
+
+### VM Performance Optimization
+
+After basic setup, apply these performance optimizations:
+
+```bash
+# Stop the VM before applying changes
+qm stop <vmid>
+
+# Apply optimizations
+qm set <vmid> \
+  -cpu "host,flags=+pdpe1gb;+aes,hidden=1" \
+  -numa 0 \
+  -balloon 40000 \
+  -net0 "virtio=XX:XX:XX:XX:XX:XX,bridge=vmbr0,firewall=1,queues=8" \
+  -scsi0 "local-zfs:vm-<vmid>-disk-0,iothread=1,aio=native,discard=on"
+
+# Start the VM
+qm start <vmid>
+```
+
+These optimizations include:
+
+1. CPU passthrough with host model and essential flags
+2. Memory ballooning for dynamic memory management (40GB target)
+   - Allows dynamic memory allocation between 40-50GB
+   - VM starts with 50GB (`memory: 50000`)
+   - Can shrink down to 40GB when memory pressure is high
+   - Helps with memory overcommitment and efficient host memory utilization
+3. Network optimization with multi-queue support
+4. I/O optimization with native AIO and discard
+5. NUMA configuration for optimal memory access
+
+### Network Performance Tuning
+
+For better network performance, especially for real-time applications and remote desktop connections, apply these network optimizations to the Proxmox host:
+
+```bash
+# Create network tuning configuration
+cat > /etc/sysctl.d/98-network-tune.conf << EOF
+# Buffer Sizes
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.core.rmem_default = 1048576
+net.core.wmem_default = 1048576
+net.core.netdev_max_backlog = 16384
+net.core.somaxconn = 8192
+
+# TCP Memory
+net.ipv4.tcp_rmem = 4096 1048576 16777216
+net.ipv4.tcp_wmem = 4096 1048576 16777216
+
+# Connection Handling
+net.ipv4.tcp_max_syn_backlog = 8192
+net.ipv4.tcp_max_tw_buckets = 2000000
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_fin_timeout = 10
+
+# Performance Optimization
+net.ipv4.tcp_slow_start_after_idle = 0
+net.ipv4.tcp_mtu_probing = 1
+EOF
+
+# Apply settings
+sysctl -p /etc/sysctl.d/98-network-tune.conf
+```
+
+These settings optimize:
+
+1. Network buffer sizes for better streaming performance
+2. Connection handling for more concurrent connections
+3. TCP behavior for better throughput and latency
+4. MTU probing for optimal packet sizes
+
+The configuration is particularly beneficial for:
+
+- Remote desktop connections (like RustDesk)
+- Container image downloads
+- Development tools with network requirements
+- Real-time applications
+
+After reboot, verify IOMMU is enabled:
+
+```bash
+dmesg | grep -i 'iommu'
+```
+
 ## 5. Configure Proxmox Storage
 
 ### Via Web UI
