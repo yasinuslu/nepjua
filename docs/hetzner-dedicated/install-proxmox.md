@@ -295,6 +295,68 @@ tailscale up --auth-key=${TAILSCALE_AUTH_KEY} --advertise-routes=${VM_SUBNET}
 tailscale status
 ```
 
+## 7. DHCP Server Setup
+
+### Install and Configure DHCP Server
+
+```bash
+# Install ISC DHCP server
+apt install -y isc-dhcp-server
+
+# Stop the service for configuration
+systemctl stop isc-dhcp-server
+
+# Configure DHCP server interface
+cat > /etc/default/isc-dhcp-server << EOF
+INTERFACESv4="vmbr0"
+INTERFACESv6=""
+EOF
+
+# Configure DHCP server
+cat > /etc/dhcp/dhcpd.conf << EOF
+# Global configuration
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+
+# VM Network
+subnet 192.168.0.0 netmask 255.255.255.0 {
+    range 192.168.0.100 192.168.0.200;
+    option routers 192.168.0.1;
+    option domain-name-servers 1.1.1.1, 8.8.8.8;
+}
+EOF
+
+# Test configuration syntax
+dhcpd -t -cf /etc/dhcp/dhcpd.conf
+
+# Start and enable DHCP server
+systemctl start isc-dhcp-server
+systemctl enable isc-dhcp-server
+
+# Verify DHCP server status
+systemctl status isc-dhcp-server
+```
+
+### Verify DHCP Configuration
+
+```bash
+# Check if DHCP server is listening
+ss -tunlp | grep dhcpd
+
+# Check DHCP server logs
+journalctl -u isc-dhcp-server -n 50
+
+# View current DHCP leases
+cat /var/lib/dhcp/dhcpd.leases
+```
+
+The DHCP server is configured to:
+
+- Assign IPs in range 192.168.0.100 - 192.168.0.200
+- Set VM gateway to 192.168.0.1 (our bridge)
+- Use Cloudflare and Google DNS servers
+
 ## Recovery Procedures
 
 ### System Drive Failure (nvme0n1)

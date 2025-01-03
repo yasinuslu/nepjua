@@ -23,6 +23,8 @@
       electron_27
       cloudflare-warp
       cloudflared
+      rustdesk
+      lens
     ]
     ++ (
       if pkgs.stdenv.system == "x86_64-linux"
