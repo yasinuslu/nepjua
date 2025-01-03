@@ -7,8 +7,10 @@
 
   myNixOS = {
     mainUser = "proxmox";
-    bundles.proxmox-guest.enable = true;
-    bundles.general-desktop.enable = false;
+
+    gaming.enable = false;
+    podman.enable = false;
+    xserver-nvidia.enable = false;
 
     users = {
       proxmox = {
