@@ -23,7 +23,6 @@
       electron_27
       cloudflare-warp
       cloudflared
-      rustdesk
       lens
     ]
     ++ (

@@ -21,6 +21,11 @@
     # Store the PID for systemd
     echo $RUSTDESK_PID > $XDG_RUNTIME_DIR/rustdesk.pid
   '';
+
+  # Create a wrapper script for manual execution
+  rustdeskBin = pkgs.writeShellScriptBin "rustdesk" ''
+    exec ${pkgs.appimage-run}/bin/appimage-run ${appimage} "$@"
+  '';
 in {
   # Create a wrapped AppImage with proper environment
   environment.systemPackages = [
@@ -33,14 +38,8 @@ in {
       categories = ["Network" "RemoteAccess"];
     })
     startScript
+    rustdeskBin # Add the wrapper script to system packages
   ];
-
-  # Create a symlink to the AppImage in PATH
-  system.activationScripts.rustdesk = ''
-    mkdir -p /usr/local/bin
-    ln -sf ${appimage} /usr/local/bin/rustdesk
-    chmod +x /usr/local/bin/rustdesk
-  '';
 
   # Configure systemd user service
   systemd.user.services.rustdesk = {
