@@ -1,4 +1,8 @@
 {...}: {
+  imports = [
+    ./hardware-configuration.nix
+  ];
+
   myNixOS = {
     gaming.enable = false;
     podman.enable = false;
