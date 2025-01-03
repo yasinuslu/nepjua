@@ -14,6 +14,11 @@
           gdk-pixbuf
           pango
           cairo
+          atk
+          at-spi2-core
+          at-spi2-atk
+          dbus
+          librsvg
 
           # Common runtime dependencies
           glib
@@ -40,19 +45,44 @@
           xorg.libXfixes
           xorg.libXcomposite
           xorg.libXext
+          xorg.libXtst
+          xorg.libXScrnSaver
+          xorg.libxkbfile
+          xorg.libxshmfence
 
           # Audio/Video
           libpulseaudio
           libvorbis
           ffmpeg
+          alsa-lib
+          pipewire
 
           # For Flutter apps
           libglvnd
           vulkan-loader
+          mesa
+          mesa.drivers
 
           # For better integration
           shared-mime-info
           hicolor-icon-theme
+          gsettings-desktop-schemas
+          adwaita-icon-theme
+
+          # Wayland support
+          wayland
+          libxkbcommon
+
+          # Additional runtime libraries
+          libdrm
+          libnotify
+          libappindicator
+          libdbusmenu
+          nss
+          nspr
+          expat
+          cups
+          libunwind
         ];
     };
   };
@@ -63,5 +93,15 @@
   # Required system packages
   environment.systemPackages = with pkgs; [
     fuse
+    xdg-utils # For better desktop integration
   ];
+
+  # Enable D-Bus and other required services
+  services.dbus.enable = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+  };
 }
