@@ -13,10 +13,8 @@ DRIVE1 /dev/nvme0n1
 DRIVE2 /dev/nvme1n1
 
 SWRAID 0
-
-BOOTLOADER grub
-
 HOSTNAME pve
+USE_KERNEL_MODE_SETTING yes
 
 # System on first drive
 PART /boot/efi   esp    512M
@@ -24,12 +22,6 @@ PART /boot       ext4     2G
 PART swap       swap     4G
 PART /          ext4    80G
 PART /reserved  -       all
-
-# Keep SSH keys from rescue system
-SSHKEYS_FROM_RESCUE yes
-
-# Root password
-CRYPTPASSWORD your-root-password-here
 
 IMAGE /root/.oldroot/nfs/images/Debian-1207-bookworm-amd64-base.tar.gz
 ```
@@ -48,6 +40,9 @@ IMAGE /root/.oldroot/nfs/images/Debian-1207-bookworm-amd64-base.tar.gz
 ### Network Detection
 
 ```bash
+# VM Subnet
+VM_SUBNET="192.168.0.0/24"
+
 # Get primary network interface name
 PRIMARY_NIC=$(ip -o link show | awk -F': ' '$2 ~ /^(en|eth)/ && $2 !~ /br/ {print $2; exit}')
 
@@ -88,10 +83,14 @@ cat > /etc/network/interfaces << EOF
 auto lo
 iface lo inet loopback
 
+# Primary Network Interface
 auto ${PRIMARY_NIC}
 iface ${PRIMARY_NIC} inet static
         address ${CURRENT_IP}/${CURRENT_MASK}
         gateway ${CURRENT_GW}
+        # Hetzner requires these for proper networking
+        up route add -net 172.31.1.1/32 gw ${CURRENT_GW}
+        up route add -net 169.254.0.0/16 gw ${CURRENT_GW}
 
 iface ${PRIMARY_NIC} inet6 static
         address ${CURRENT_IPV6}
@@ -108,7 +107,51 @@ iface vmbr0 inet static
         post-up   iptables -t nat -A POSTROUTING -s '192.168.0.0/24' -o ${PRIMARY_NIC} -j MASQUERADE
         post-down iptables -t nat -D POSTROUTING -s '192.168.0.0/24' -o ${PRIMARY_NIC} -j MASQUERADE
 EOF
+
+# Install tcpdump for network debugging (optional)
+apt install -y tcpdump
+
+# Restart networking
+systemctl restart networking
+
+# Verify configuration
+ip addr show vmbr0
+ip route | grep 192.168.0
+iptables -t nat -L POSTROUTING -v -n
 ```
+
+### Verify Network Setup
+
+```bash
+# Check bridge interface configuration
+ip addr show vmbr0
+# Expected output should show:
+#  - IP address: 192.168.0.1/24
+#  - Interface state: UP
+#  - Scope: global
+
+# Verify routing
+ip route | grep 192.168.0
+# Expected output:
+# 192.168.0.0/24 dev vmbr0 proto kernel scope link src 192.168.0.1
+
+# Check NAT rules
+iptables -t nat -L POSTROUTING -v -n
+# Should show two rules:
+#  1. ts-postrouting (Tailscale)
+#  2. MASQUERADE for 192.168.0.0/24 via primary interface
+
+# Test connectivity from host
+ping -c 3 8.8.8.8
+# Should show successful pings with low latency
+```
+
+The network is correctly configured when:
+
+- Bridge has correct IP (192.168.0.1/24)
+- Routing table shows proper VM subnet routing
+- NAT masquerade rule is present
+- Host can reach internet
 
 ## 3. Proxmox Installation
 
@@ -125,16 +168,25 @@ apt install -y proxmox-ve postfix open-iscsi
 
 # Disable enterprise repository
 rm -rf /etc/apt/sources.list.d/pve-enterprise.list
-
-# Update grub
-update-grub
 ```
 
 Reboot the system:
 
 ```bash
+# Update grub just in case
+update-grub
+
+# Reboot
 reboot
 ```
+
+Verify that you are now using pve kernel:
+
+```bash
+uname -r
+```
+
+Verify you can access the web interface at https://pve:8006
 
 ## 4. ZFS Setup
 
@@ -142,11 +194,15 @@ reboot
 
 ```bash
 # Install ZFS tools
-apt update
+apt update -y
 apt install -y linux-headers-amd64 zfs-dkms zfsutils-linux
 
 # Load ZFS module
 modprobe zfs
+
+# Wipe the partition
+umount /dev/nvme0n1p5
+wipefs -a /dev/nvme0n1p5
 
 # Create pool with mirror (force different sizes)
 zpool create -f -o ashift=12 tank mirror /dev/nvme0n1p5 /dev/nvme1n1
@@ -166,7 +222,52 @@ zpool status tank
 zfs list -r tank
 ```
 
-## 5. Configure Tailscale
+## 5. Configure Proxmox Storage
+
+### Via Web UI
+
+1. Access Web UI at https://your-ip:8006
+2. Go to Datacenter → Storage
+3. Add ZFS storage:
+   - ID: local-zfs
+   - Pool: tank
+   - Content:
+     - Images (for VMs)
+     - Containers
+     - Backups
+
+### Via CLI
+
+```bash
+# Add ZFS storage for VM images
+pvesm add zfspool local-zfs -pool tank
+pvesm set local-zfs -content images,rootdir
+
+# Add storage for ISO images
+pvesm add dir local-iso -path /tank/iso
+pvesm set local-iso -content iso
+
+# Add storage for container templates
+pvesm add dir local-ct -path /tank/ct
+pvesm set local-ct -content vztmpl
+
+# Add storage for backups
+pvesm add dir local-backup -path /tank/backup
+pvesm set local-backup -content backup
+
+# Add storage for snippets (cloud-init)
+pvesm add dir local-snippets -path /tank/snippets
+pvesm set local-snippets -content snippets
+
+# Modify local storage to only allow disk image imports
+pvesm set local --content images
+pvesm set local --disable 1
+
+# Verify storage configuration
+pvesm status
+```
+
+## 6. Configure Tailscale
 
 ### Install tailscale
 
@@ -178,7 +279,7 @@ curl -fsSL https://tailscale.com/install.sh | sh
 
 ```bash
 # Set your authentication key
-TAILSCALE_AUTH_KEY="your-auth-key"
+TAILSCALE_AUTH_KEY="auth-key"
 
 # Enable IP forwarding
 cat <<EOF > /etc/sysctl.d/99-tailscale.conf
@@ -188,23 +289,11 @@ EOF
 sysctl -p /etc/sysctl.d/99-tailscale.conf
 
 # Start Tailscale with subnet routing
-tailscale up --auth-key=${TAILSCALE_AUTH_KEY} --advertise-routes=192.168.0.0/24
+tailscale up --auth-key=${TAILSCALE_AUTH_KEY} --advertise-routes=${VM_SUBNET}
 
 # Verify routes
 tailscale status
 ```
-
-## 6. Configure Proxmox Storage
-
-1. Access Web UI at https://your-ip:8006
-2. Go to Datacenter → Storage
-3. Add ZFS storage:
-   - ID: local-zfs
-   - Pool: tank
-   - Content:
-     - Images (for VMs)
-     - Containers
-     - Backups
 
 ## Recovery Procedures
 
