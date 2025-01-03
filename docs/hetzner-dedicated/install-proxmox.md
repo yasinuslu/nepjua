@@ -422,3 +422,20 @@ arc_summary
 - Monitor ZFS pool health
 - Access web interface at: https://pve:8006
 - Default login: root (with system password)
+
+### Labeling VM Partitions
+
+For better partition management in VMs, you can label partitions using:
+
+```bash
+# For ext4 partitions
+sudo e2label /dev/sda1 nixos
+
+# For swap partitions - need to disable swap first
+sudo swapoff /dev/sda2
+sudo swaplabel -L swap /dev/sda2
+sudo swapon /dev/sda2
+
+# Verify labels
+sudo lsblk -o NAME,LABEL,FSTYPE,SIZE,MOUNTPOINT
+```
