@@ -1,11 +1,12 @@
-{...}: {
-  imports = [
+{
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.myNixOS.bundles.proxmox-guest;
+in {
+  imports = lib.mkIf cfg.enable [
     ./hardware-configuration.nix
+    ./proxmox-guest.nix
   ];
-
-  myNixOS = {
-    gaming.enable = false;
-    podman.enable = false;
-    xserver-nvidia.enable = false;
-  };
 }

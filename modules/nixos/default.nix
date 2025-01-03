@@ -31,6 +31,10 @@
         myNixOS.bundles.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
       };
 
+      extraConfig = {
+        myNixOS.bundles.${name}.enable = lib.mkDefault false;
+      };
+
       configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
     })
     (myLib.filesIn ./bundles);
