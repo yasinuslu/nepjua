@@ -30,7 +30,7 @@
     with myLib; {
       nixosConfigurations = {
         kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
-        proxmox-base = mkSystem "aarch64-linux" ./hosts/proxmox/base/configuration.nix;
+        proxmox-base = mkSystem "x86_64-linux" ./hosts/proxmox/base/configuration.nix;
       };
 
       darwinConfigurations = {
