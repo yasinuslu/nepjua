@@ -13,24 +13,22 @@
   networking.networkmanager.enable = lib.mkForce false;
   networking.useNetworkd = true;
 
-  # Static IP configuration
-  networking = {
-    useDHCP = lib.mkForce false;
-    interfaces.ens18 = {
-      useDHCP = false;
-      ipv4.addresses = [
-        {
-          address = "192.168.0.10";
-          prefixLength = 24;
-        }
-      ];
+  # Use systemd-networkd with matching
+  systemd.network = {
+    enable = true;
+    networks."10-virtio" = {
+      matchConfig.Type = "ether";
+      matchConfig.Driver = "virtio_net";
+      networkConfig = {
+        Address = "192.168.0.10/24";
+        Gateway = "192.168.0.1";
+        DNS = "1.1.1.1 8.8.8.8";
+      };
     };
-    defaultGateway = {
-      interface = "ens18";
-      address = "192.168.0.1";
-    };
-    nameservers = ["1.1.1.1" "8.8.8.8"];
   };
+
+  # Disable DHCP globally
+  networking.useDHCP = lib.mkForce false;
 
   myNixOS = {
     mainUser = "nepjua";
