@@ -9,6 +9,10 @@
   networking.hostName = "pve-sezer";
   networking.firewall.enable = false;
 
+  # Explicitly disable NetworkManager and enable systemd-networkd
+  networking.networkmanager.enable = lib.mkForce false;
+  networking.useNetworkd = true;
+
   # Static IP configuration
   networking = {
     useDHCP = lib.mkForce false;
