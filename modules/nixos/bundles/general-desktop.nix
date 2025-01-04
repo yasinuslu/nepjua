@@ -5,4 +5,9 @@
     gaming.enable = false;
     podman.enable = false;
   };
+
+  # NetworkManager configuration
+  networking.networkmanager.enable = true;
+  systemd.services.NetworkManager-wait-online.enable = false;
+  networking.networkmanager.wifi.powersave = false;
 }

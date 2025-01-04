@@ -450,12 +450,20 @@ cat > /etc/dhcp/dhcpd.conf << EOF
 default-lease-time 600;
 max-lease-time 7200;
 authoritative;
+ddns-update-style none;
+
+# Ensure unique IP assignments
+one-lease-per-client true;
+deny duplicates;
 
 # VM Network
 subnet 192.168.0.0 netmask 255.255.255.0 {
     range 192.168.0.100 192.168.0.200;
     option routers 192.168.0.1;
     option domain-name-servers 1.1.1.1, 8.8.8.8;
+    
+    # Use hardware addresses for unique identification
+    use-host-decl-names on;
 }
 EOF
 
