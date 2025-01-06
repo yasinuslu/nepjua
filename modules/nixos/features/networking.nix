@@ -9,16 +9,16 @@
 
   # Network performance optimizations
   boot.kernel.sysctl = {
-    # Increased buffer sizes for better performance
-    "net.core.rmem_max" = 16777216; # 16MB
-    "net.core.wmem_max" = 16777216;
-    "net.core.rmem_default" = 1048576; # 1MB
-    "net.core.wmem_default" = 1048576;
-    "net.core.netdev_max_backlog" = 16384; # Increased backlog
+    # More conservative buffer sizes for stability
+    "net.core.rmem_max" = 8388608; # 8MB instead of 16MB
+    "net.core.wmem_max" = 8388608;
+    "net.core.rmem_default" = 524288; # 512KB instead of 1MB
+    "net.core.wmem_default" = 524288;
+    "net.core.netdev_max_backlog" = 8192; # More conservative backlog
 
-    # TCP optimizations with larger buffers
-    "net.ipv4.tcp_rmem" = "4096 1048576 16777216"; # Increased TCP buffers
-    "net.ipv4.tcp_wmem" = "4096 1048576 16777216";
+    # TCP optimizations focused on stability
+    "net.ipv4.tcp_rmem" = "4096 524288 8388608"; # More conservative TCP buffers
+    "net.ipv4.tcp_wmem" = "4096 524288 8388608";
     "net.ipv4.tcp_max_syn_backlog" = 4096;
     "net.ipv4.tcp_max_tw_buckets" = 1440000;
     "net.ipv4.tcp_tw_reuse" = 1;
