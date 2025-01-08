@@ -52,7 +52,7 @@ async function generateYAML(app: string, appPath: string) {
       const text = await blob.text();
       const first1K = text.slice(0, 1024);
       return [path, first1K] as const;
-    }),
+    })
   );
 
   const content = Object.fromEntries(fileContents);
@@ -64,7 +64,7 @@ async function generateYAML(app: string, appPath: string) {
   });
 
   const outputFile = Bun.fileURLToPath(
-    import.meta.resolve(`../__generated__/${app}.yaml`),
+    import.meta.resolve(`../__generated__/${app}.yaml`)
   );
 
   debug("Writing to file: ", outputFile);
