@@ -22,12 +22,18 @@
 
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
+
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {...} @ inputs: let
-    myLib = import ./my-lib/default.nix {inherit inputs;};
-  in
-    with myLib; {
+  outputs =
+    { ... }@inputs:
+    let
+      myLib = import ./my-lib/default.nix { inherit inputs; };
+    in
+    with myLib;
+    {
       nixosConfigurations = {
         kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
         pve-sezer = mkSystem "x86_64-linux" ./hosts/pve/sezer/configuration.nix;
@@ -42,24 +48,35 @@
         chained = mkDarwinSystem defaultSystems.darwin ./hosts/chained/configuration.nix;
       };
 
-      devShell = forAllSystems (
-        system: let
-          pkgs = inputs.nixpkgs.legacyPackages.${system};
-          masterNixpkgs = inputs.masterNixpkgs.legacyPackages.${system};
+      devShell = eachSystem (
+        pkgs:
+        let
+          masterNixpkgs = inputs.masterNixpkgs.legacyPackages.${pkgs.system};
           myShell = import ./my-shell/default.nix {
-            inherit system pkgs inputs myLib masterNixpkgs;
+            inherit
+              system
+              pkgs
+              inputs
+              myLib
+              masterNixpkgs
+              ;
           };
         in
-          myShell.mkShell {
-            # This is just to be able to trigger a rebuild when I want to
-            version = "0.0.2";
-          }
+        myShell.mkShell {
+          # This is just to be able to trigger a rebuild when I want to
+          version = "0.0.2";
+        }
       );
 
       myLib.default = myLib;
       homeManagerModules.default = ./modules/home-manager;
       nixosModules.default = ./modules/nixos;
       darwinModules.default = ./modules/darwin;
-      formatter = forAllSystems (system: inputs.nixpkgs.legacyPackages.${system}.alejandra);
+      # for `nix fmt`
+      formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+      # for `nix flake check`
+      checks = eachSystem (pkgs: {
+        formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      });
     };
 }

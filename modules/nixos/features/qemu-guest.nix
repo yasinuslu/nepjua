@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # First, specifically disable VMware and VirtualBox guests
   virtualisation = {
     vmware.guest.enable = false;
@@ -18,12 +19,17 @@
 
     # X11 configuration
     xserver = {
-      videoDrivers = ["virtio"];
+      videoDrivers = [ "virtio" ];
     };
   };
 
   # System-wide QEMU guest optimizations
-  boot.kernelModules = ["virtio" "virtio_net" "virtio_pci" "virtio_balloon"];
+  boot.kernelModules = [
+    "virtio"
+    "virtio_net"
+    "virtio_pci"
+    "virtio_balloon"
+  ];
 
   environment.systemPackages = with pkgs; [
     mesa-demos # Useful for testing GL support
