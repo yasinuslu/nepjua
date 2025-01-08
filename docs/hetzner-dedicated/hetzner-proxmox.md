@@ -224,7 +224,8 @@ zfs list -r tank
 
 ### Remove /reserved Mount Point
 
-After creating the ZFS pool using the reserved partition, you need to remove its entry from `/etc/fstab` to prevent boot issues:
+After creating the ZFS pool using the reserved partition, you need to remove its
+entry from `/etc/fstab` to prevent boot issues:
 
 ```bash
 # Remove the /reserved mount point from fstab
@@ -236,7 +237,8 @@ cat /etc/fstab
 
 ### Enable IOMMU Support
 
-For better VM performance and PCI passthrough capabilities, enable IOMMU support:
+For better VM performance and PCI passthrough capabilities, enable IOMMU
+support:
 
 ```bash
 # Add IOMMU parameters to GRUB
@@ -251,7 +253,8 @@ reboot
 
 ### VM Configuration
 
-For NixOS development workstations with GNOME Shell, start with these basic settings:
+For NixOS development workstations with GNOME Shell, start with these basic
+settings:
 
 ```bash
 # Create VM with basic configuration
@@ -302,7 +305,8 @@ These optimizations include:
 
 ### Network Performance Tuning
 
-For better network performance, especially for real-time applications and remote desktop connections, apply these network optimizations to the Proxmox host:
+For better network performance, especially for real-time applications and remote
+desktop connections, apply these network optimizations to the Proxmox host:
 
 ```bash
 # Create network tuning configuration
@@ -461,7 +465,7 @@ subnet 192.168.0.0 netmask 255.255.255.0 {
     range 192.168.0.100 192.168.0.200;
     option routers 192.168.0.1;
     option domain-name-servers 1.1.1.1, 8.8.8.8;
-    
+
     # Use hardware addresses for unique identification
     use-host-decl-names on;
 }

@@ -1,8 +1,18 @@
 # treefmt.nix
-{ pkgs, ... }:
+{ ... }:
 {
   # Used to find the project root
   projectRootFile = "flake.nix";
-  # Enable the terraform formatter
-  programs.nixfmt-rfc-style.enable = true;
+  programs.nixfmt.enable = true;
+  programs.deno.enable = true;
+  programs.fish_indent.enable = true;
+  programs.shfmt.enable = true;
+  programs.just.enable = true;
+  programs.nufmt.enable = true;
+
+  settings.formatter.deno.includes = [
+    "*.cjs"
+    "*.mjs"
+    "*.mts"
+  ];
 }
