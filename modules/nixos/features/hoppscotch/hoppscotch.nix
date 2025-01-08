@@ -1,7 +1,8 @@
 {
   appimageTools,
   fetchurl,
-}: let
+}:
+let
   pname = "hoppscotch";
   version = "24.7.1-0";
 
@@ -17,14 +18,14 @@
     '';
   };
 in
-  appimageTools.wrapType2 {
-    inherit pname version src;
+appimageTools.wrapType2 {
+  inherit pname version src;
 
-    extraPkgs = pkgs: [];
+  extraPkgs = pkgs: [ ];
 
-    extraInstallCommands = ''
-      install -m 444 -D ${appimageContents}/hoppscotch.desktop $out/usr/share/applications/hoppscotch.desktop
-      install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/256x256@2/apps/hoppscotch.png \
-        $out/usr/share/icons/hicolor/256x256@2/apps/hoppscotch.png
-    '';
-  }
+  extraInstallCommands = ''
+    install -m 444 -D ${appimageContents}/hoppscotch.desktop $out/usr/share/applications/hoppscotch.desktop
+    install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/256x256@2/apps/hoppscotch.png \
+      $out/usr/share/icons/hicolor/256x256@2/apps/hoppscotch.png
+  '';
+}

@@ -1,4 +1,5 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   mappingDefinitions = {
     remapCapsLockToEscape = {
       HIDKeyboardModifierMappingSrc = 30064771129;
@@ -42,12 +43,12 @@
   nonExternalMappingToHidUtil = mapping: ''
     hidutil property --set '{"UserKeyMapping": ${builtins.toJSON mapping.mappingList}}' > /dev/null;
   '';
-  hidUtilCommand = lib.concatMapStringsSep "\n" (mapping:
-    if mapping.external
-    then externalMappingToHidUtil mapping
-    else nonExternalMappingToHidUtil mapping)
-  customKeyboardMappingList;
-in {
+  hidUtilCommand = lib.concatMapStringsSep "\n" (
+    mapping:
+    if mapping.external then externalMappingToHidUtil mapping else nonExternalMappingToHidUtil mapping
+  ) customKeyboardMappingList;
+in
+{
   system.activationScripts.postActivation.text = ''
     #!/usr/bin/env bash
     # Configuring keyboard

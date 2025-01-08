@@ -1,8 +1,11 @@
-{pkgs, ...}: let
-  libwebp6-compat = pkgs.callPackage ./libwebp6-compat.nix {inherit pkgs;};
-  libpcre3-deb = pkgs.callPackage ./libpcre3-deb.nix {inherit pkgs;};
-in {
-  programs.nix-ld.libraries = with pkgs;
+{ pkgs, ... }:
+let
+  libwebp6-compat = pkgs.callPackage ./libwebp6-compat.nix { inherit pkgs; };
+  libpcre3-deb = pkgs.callPackage ./libpcre3-deb.nix { inherit pkgs; };
+in
+{
+  programs.nix-ld.libraries =
+    with pkgs;
     [
       alsa-lib.out
       at-spi2-atk.out
@@ -91,8 +94,12 @@ in {
       zulip.out
     ]
     ++ (
-      if pkgs.stdenv.system == "x86_64-linux"
-      then [glamoroustoolkit.out steam-fhsenv-without-steam.out]
-      else []
+      if pkgs.stdenv.system == "x86_64-linux" then
+        [
+          glamoroustoolkit.out
+          steam-fhsenv-without-steam.out
+        ]
+      else
+        [ ]
     );
 }

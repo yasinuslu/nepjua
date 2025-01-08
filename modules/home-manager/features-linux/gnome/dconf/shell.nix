@@ -8,9 +8,27 @@ with lib.hm.gvariant;
     "org/gnome/shell" = {
       command-history = [ "r" ];
       disable-user-extensions = false;
-      disabled-extensions = [ "extensions-sync@elhan.io" "apps-menu@gnome-shell-extensions.gcampax.github.com" "auto-move-windows@gnome-shell-extensions.gcampax.github.com" "launch-new-instance@gnome-shell-extensions.gcampax.github.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com" ];
-      enabled-extensions = [ "user-theme@gnome-shell-extensions.gcampax.github.com" "quick-settings-tweaks@qwreey" "appindicatorsupport@rgcjonas.gmail.com" "advanced-alt-tab@G-dH.github.com" ];
-      favorite-apps = [ "google-chrome.desktop" "cursor.desktop" "lens-desktop.desktop" "org.gnome.Nautilus.desktop" "teams-for-linux.desktop" "jetbrains-datagrip-7d91d95e-427e-480c-843c-ba6f16b51474.desktop" ];
+      disabled-extensions = [
+        "extensions-sync@elhan.io"
+        "apps-menu@gnome-shell-extensions.gcampax.github.com"
+        "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
+        "launch-new-instance@gnome-shell-extensions.gcampax.github.com"
+        "native-window-placement@gnome-shell-extensions.gcampax.github.com"
+      ];
+      enabled-extensions = [
+        "user-theme@gnome-shell-extensions.gcampax.github.com"
+        "quick-settings-tweaks@qwreey"
+        "appindicatorsupport@rgcjonas.gmail.com"
+        "advanced-alt-tab@G-dH.github.com"
+      ];
+      favorite-apps = [
+        "google-chrome.desktop"
+        "cursor.desktop"
+        "lens-desktop.desktop"
+        "org.gnome.Nautilus.desktop"
+        "teams-for-linux.desktop"
+        "jetbrains-datagrip-7d91d95e-427e-480c-843c-ba6f16b51474.desktop"
+      ];
       last-selected-power-profile = "performance";
       welcome-dialog-last-shown-version = "43.2";
     };
@@ -45,7 +63,7 @@ with lib.hm.gvariant;
     };
 
     "world-clocks" = {
-      locations = [];
+      locations = [ ];
     };
 
   };

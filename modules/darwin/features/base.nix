@@ -1,5 +1,6 @@
-{pkgs, ...}: {
-  nixpkgs.overlays = [];
+{ pkgs, ... }:
+{
+  nixpkgs.overlays = [ ];
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -11,7 +12,11 @@
     openssh
   ];
 
-  environment.shells = [pkgs.bashInteractive pkgs.zsh pkgs.fish];
+  environment.shells = [
+    pkgs.bashInteractive
+    pkgs.zsh
+    pkgs.fish
+  ];
   programs.bash.enable = true;
   programs.zsh.enable = true;
   programs.fish.enable = true;

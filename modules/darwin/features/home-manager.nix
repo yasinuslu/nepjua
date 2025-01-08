@@ -7,36 +7,39 @@
   pkgs,
   myArgs,
   ...
-}: {
+}:
+{
   options.myDarwin.users = lib.mkOption {
-    type = lib.types.attrsOf (lib.types.submodule {
-      options = {
-        userName = lib.mkOption {
-          default = "nepjua";
-          description = ''
-            username
-          '';
-        };
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        options = {
+          userName = lib.mkOption {
+            default = "nepjua";
+            description = ''
+              username
+            '';
+          };
 
-        userConfig = lib.mkOption {
-          default = null;
-          example = "";
-        };
+          userConfig = lib.mkOption {
+            default = null;
+            example = "";
+          };
 
-        userSettings = lib.mkOption {
-          default = {};
-          example = "{}";
+          userSettings = lib.mkOption {
+            default = { };
+            example = "{}";
+          };
         };
-      };
-    });
+      }
+    );
 
-    default = {};
+    default = { };
   };
 
   config = {
     programs.fish.enable = true;
 
-    nix.settings.trusted-users = ["root"] ++ (builtins.attrNames config.myDarwin.users);
+    nix.settings.trusted-users = [ "root" ] ++ (builtins.attrNames config.myDarwin.users);
     nix.settings.trusted-substituters = [
       "https://nix-community.cachix.org/"
       "https://cache.nixos.org/"
@@ -56,27 +59,32 @@
         outputs = inputs.self.outputs;
       };
 
-      users =
-        builtins.mapAttrs (name: user: {...}: {
+      users = builtins.mapAttrs (
+        name: user:
+        { ... }:
+        {
           imports = [
             user.userConfig
-            ({...}: {
-              home.username = name;
-              home.homeDirectory = "/Users/${name}";
-            })
+            (
+              { ... }:
+              {
+                home.username = name;
+                home.homeDirectory = "/Users/${name}";
+              }
+            )
             outputs.homeManagerModules.default
           ];
-        })
-        (config.myDarwin.users);
+        }
+      ) (config.myDarwin.users);
     };
 
     users.users = builtins.mapAttrs (
       name: user:
-        {
-          home = "/Users/${name}";
-          shell = pkgs.fish;
-        }
-        // user.userSettings
+      {
+        home = "/Users/${name}";
+        shell = pkgs.fish;
+      }
+      // user.userSettings
     ) (config.myDarwin.users);
   };
 }

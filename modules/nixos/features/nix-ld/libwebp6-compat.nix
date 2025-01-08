@@ -1,8 +1,8 @@
-{pkgs}:
+{ pkgs }:
 pkgs.stdenv.mkDerivation {
   name = "libwebp6-compat";
 
-  buildInputs = [pkgs.libwebp];
+  buildInputs = [ pkgs.libwebp ];
 
   unpackPhase = "true";
 

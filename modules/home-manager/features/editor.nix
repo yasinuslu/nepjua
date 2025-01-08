@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   home.sessionVariables = {
     EDITOR = "cursor --wait";
     CODE_EDITOR = "cursor";

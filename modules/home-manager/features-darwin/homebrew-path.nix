@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   programs.zsh.initExtraFirst = ''
     __init_homebrew() {
       if [[ -e /opt/homebrew/bin/brew ]]; then

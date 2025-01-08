@@ -1,4 +1,5 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   # FIXME: This no longer works with darwin
   # imports = [
   #   inputs.nix-index-database.nixosModules.nix-index

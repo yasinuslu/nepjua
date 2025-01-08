@@ -1,16 +1,20 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = [
     pkgs.xorg.xrandr
   ];
 
   nixpkgs.overlays = [
-    (let
-      autorandrPkgs = import (builtins.fetchTarball {
-        url = "https://github.com/NixOS/nixpkgs/archive/5a8650469a9f8a1958ff9373bd27fb8e54c4365d.tar.gz";
-      }) {};
-    in (final: previous: {
-      autorandr = autorandrPkgs.autorandr;
-    }))
+    (
+      let
+        autorandrPkgs = import (builtins.fetchTarball {
+          url = "https://github.com/NixOS/nixpkgs/archive/5a8650469a9f8a1958ff9373bd27fb8e54c4365d.tar.gz";
+        }) { };
+      in
+      (final: previous: {
+        autorandr = autorandrPkgs.autorandr;
+      })
+    )
   ];
 
   # x = ''xrandr --newmode "2560x1080_175.00"  748.00  2560 2784 3064 3568  1080 1083 1093 1199 -hsync +vsync'';

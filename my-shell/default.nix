@@ -2,8 +2,10 @@
   pkgs,
   masterNixpkgs,
   ...
-}: {
-  mkShell = {version}:
+}:
+{
+  mkShell =
+    { version }:
     pkgs.mkShell {
       name = "default";
       buildInputs = with pkgs; [

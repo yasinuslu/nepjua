@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.fish.enable = true;
   programs.fish.plugins = [
     {
@@ -107,7 +108,7 @@
 
   programs.fish.functions = {
     git-remove-branches-except = {
-      argumentNames = ["branches"];
+      argumentNames = [ "branches" ];
       description = "Remove all git branches except the specified ones";
       body = ''
         if test -z "$branches"
@@ -151,5 +152,5 @@
     end
   '';
 
-  myHomeManager.paths = ["$HOME/.local/bin"];
+  myHomeManager.paths = [ "$HOME/.local/bin" ];
 }

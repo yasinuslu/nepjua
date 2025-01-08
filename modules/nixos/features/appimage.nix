@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Enable AppImage support
   programs.appimage = {
     enable = true;
@@ -6,8 +7,8 @@
     binfmt = true;
     # Configure extra packages for compatibility
     package = pkgs.appimage-run.override {
-      extraPkgs = pkgs:
-        with pkgs; [
+      extraPkgs =
+        pkgs: with pkgs; [
           # GTK-related
           gtk3
           gtk4

@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Guest-specific SPICE services
   services.spice-vdagentd.enable = true;
   services.spice-autorandr.enable = true;
@@ -18,7 +19,7 @@
   ];
 
   # Add SPICE-specific kernel module
-  boot.kernelModules = ["virtio_gpu"];
+  boot.kernelModules = [ "virtio_gpu" ];
 
   # Memory optimization for SPICE guest
   boot.kernel.sysctl = {

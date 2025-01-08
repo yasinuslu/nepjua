@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   zramSwap.enable = true;
 
   services.printing.enable = true;

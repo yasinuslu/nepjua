@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   myNixOS = {
     qemu-guest.enable = false;
     spice-guest.enable = false;

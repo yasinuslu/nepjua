@@ -1,4 +1,5 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   version = "1.3.6";
   name = "rustdesk";
   appimage = pkgs.fetchurl {
@@ -18,11 +19,15 @@
     icon = "rustdesk";
     desktopName = "RustDesk";
     genericName = "Remote Desktop";
-    categories = ["Network" "RemoteAccess"];
+    categories = [
+      "Network"
+      "RemoteAccess"
+    ];
     startupNotify = true;
     terminal = false;
   };
-in {
+in
+{
   # Add to system packages
   environment.systemPackages = [
     desktopItem
@@ -30,6 +35,7 @@ in {
   ];
 
   # Add XDG autostart entry
-  environment.pathsToLink = ["/etc/xdg/autostart"];
-  environment.etc."xdg/autostart/rustdesk.desktop".source = "${desktopItem}/share/applications/${name}.desktop";
+  environment.pathsToLink = [ "/etc/xdg/autostart" ];
+  environment.etc."xdg/autostart/rustdesk.desktop".source =
+    "${desktopItem}/share/applications/${name}.desktop";
 }

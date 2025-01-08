@@ -2,19 +2,21 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   dag = lib.hm.dag;
   nodeBinDir = "${pkgs.nodejs}/bin";
   npmHome = "$HOME/.npm";
   pnpmHome = "$HOME/.nix-mutable/pnpm";
   globalNodeModules = "$HOME/.nix-mutable/npm/node_modules";
-in {
+in
+{
   home.packages = with pkgs; [
     nodejs
   ];
 
   home.activation = {
-    mutableNodeModules = dag.entryAfter ["writeBoundary"] ''
+    mutableNodeModules = dag.entryAfter [ "writeBoundary" ] ''
       echo "Cleaning up existing global node_modules..."
       rm -rf "${npmHome}"
       # Optional, when needed
@@ -34,7 +36,10 @@ in {
     '';
   };
 
-  myHomeManager.paths = ["${pnpmHome}" "${globalNodeModules}/bin"];
+  myHomeManager.paths = [
+    "${pnpmHome}"
+    "${globalNodeModules}/bin"
+  ];
 
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = globalNodeModules;
