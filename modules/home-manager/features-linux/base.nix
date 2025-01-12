@@ -29,6 +29,13 @@
       cloudflare-warp
       cloudflared
       lens
+      mullvad-vpn
+      tailscale
+      telepresence2
+      nixfmt-rfc-style
+      nixpkgs-review
+      lazygit
+      git-sync
     ]
     ++ (
       if pkgs.stdenv.system == "x86_64-linux" then
