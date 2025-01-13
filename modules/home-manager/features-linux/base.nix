@@ -41,7 +41,7 @@
       if pkgs.stdenv.system == "x86_64-linux" then
         [
           slack
-          zoom-us
+          # zoom-us
           spotify
           lens
           logseq
