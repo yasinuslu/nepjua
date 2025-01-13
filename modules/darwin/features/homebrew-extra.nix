@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   homebrew.taps = [
     "gromgit/fuse"
     "metalbear-co/mirrord"
@@ -21,7 +20,8 @@
     "steam"
     "teamviewer"
     "zoom"
-    "mullvadvpn"
+    # I'm not exactly sure why, but brew is not able to install mullvadvpn
+    # "mullvadvpn"
     "mtmr"
     "macfuse"
     "lens"
