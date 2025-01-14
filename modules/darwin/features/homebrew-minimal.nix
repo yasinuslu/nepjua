@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   homebrew = {
     onActivation = {
       cleanup = "zap";
@@ -7,17 +6,24 @@
       upgrade = true;
     };
     taps = [
+      "gromgit/fuse"
       "hashicorp/tap"
+      "homebrew/cask"
+      "homebrew/core"
+      "metalbear-co/mirrord"
     ];
     enable = true;
     brews = [
       "bfg"
+      "cloudflared"
       "ffmpeg"
       "gh"
       "git-lfs"
+      "gromgit/fuse/sshfs-mac"
       "hashicorp/tap/vault"
       "imagemagick"
       "lazygit"
+      "metalbear-co/mirrord/mirrord"
       "ncdu"
       "openjdk"
       "telnet"
@@ -28,7 +34,7 @@
       "1password-cli"
       "1password"
       "alt-tab"
-      # "background-music"
+      "anydesk"
       "cloudflare-warp"
       "cursor"
       "dbeaver-community"
@@ -38,20 +44,33 @@
       "google-chrome"
       "hoppscotch"
       "insomnia"
+      "lens"
       "logseq"
+      "macfuse"
+      "macfuse"
       "microsoft-auto-update"
       "microsoft-edge"
+      "microsoft-office"
+      "mtmr"
+      "mullvadvpn"
       "notion"
       "obsidian"
+      "parsec"
+      "qbittorrent"
       "rectangle"
       "rustdesk"
+      "slack"
       "spotify"
+      "steam"
+      "teamviewer"
       "visual-studio-code"
       "vlc"
       "warp"
       "whatsapp"
       "zed"
       "zen-browser"
+      "zoom"
+      # "background-music"
     ];
   };
 }
