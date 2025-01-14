@@ -8,9 +8,12 @@
     taps = [
       "gromgit/fuse"
       "hashicorp/tap"
-      "homebrew/cask"
-      "homebrew/core"
       "metalbear-co/mirrord"
+      {
+        name = "yasinuslu/cask";
+        clone_target = "https://github.com/yasinuslu/homebrew-cask.git";
+        force_auto_update = true;
+      }
     ];
     enable = true;
     brews = [
@@ -52,7 +55,7 @@
       "microsoft-edge"
       "microsoft-office"
       "mtmr"
-      "mullvadvpn"
+      "yasinuslu/cask/mullvadvpn"
       "notion"
       "obsidian"
       "parsec"
