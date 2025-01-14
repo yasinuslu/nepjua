@@ -21,7 +21,7 @@
     "teamviewer"
     "zoom"
     # I'm not exactly sure why, but brew is not able to install mullvadvpn
-    # "mullvadvpn"
+    "mullvadvpn"
     "mtmr"
     "macfuse"
     "lens"
