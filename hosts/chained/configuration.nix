@@ -9,7 +9,7 @@
   myDarwin = {
     bundles.darwin-desktop.enable = true;
 
-    homebrew-extra.enable = false;
+    homebrew-extra.enable = true;
 
     users = {
       yahmet = {
