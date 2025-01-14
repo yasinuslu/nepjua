@@ -154,3 +154,71 @@ fi
 - [ ] Add status monitoring
 - [ ] Create setup automation script
 - [ ] Add conflict resolution documentation
+
+## Safety Nets (Multiple Layers)
+
+1. **Git Backup** (Primary)
+   - Remote repository
+   - Version history
+   - Manual recovery possible
+
+2. **Mobile Device** (Secondary)
+   - Naturally resistant to "nuke all computers" events
+   - Separate physical device
+   - Different update/maintenance cycle
+   - iOS data persistence
+   - Automatic recovery path via Syncthing
+
+3. **Syncthing Versions** (Tertiary)
+   - Local version history
+   - Conflict resolution
+   - 30-day retention
+
+### Recovery Priority Flow
+
+1. Try Git repository first
+2. If Git fails, use mobile device as source
+3. If both fail, check local .stversions
+
+### Recovery Flow
+
+```mermaid
+graph TD
+    A[Wiped All Computers] --> B{Did Git backup work?}
+    B -->|Yes| C[Restore from Git]
+    B -->|No| D[Phone has latest data]
+    D --> E[Setup new computer]
+    E --> F[Syncthing connects to phone]
+    F --> G[All data restored]
+```
+
+## Development Workflow
+
+### Script Development Flow
+
+1. **Initial Development** (Private Repo)
+   - Write scripts without worrying about secrets
+   - Include real paths, tokens, passwords during testing
+   - Keep sensitive test data
+   - Rapid prototyping without public exposure
+
+2. **Refinement Process**
+   - Remove hardcoded secrets
+   - Parameterize personal paths
+   - Add proper error handling
+   - Write documentation
+   - Add configuration options
+
+3. **Migration to Public** (nix-config)
+   - Move cleaned scripts to public repo
+   - Replace secrets with environment variables
+   - Use config files for personal settings
+   - Add to proper module structure
+
+### Benefits
+
+- Safe development environment
+- No accidental secret commits
+- Natural progression from prototype to production
+- Keep development notes with scripts
+- History of development process stays private
