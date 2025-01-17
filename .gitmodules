@@ -1,4 +1,0 @@
-[submodule "git/autosync"]
-	path = git/autosync
-	url = git@github.com-yasinuslu:yasinuslu/autosync.git
-	branch = main
