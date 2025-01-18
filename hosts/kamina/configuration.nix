@@ -21,17 +21,7 @@
             programs.git.userName = "Yasin Uslu";
             programs.git.userEmail = "nepjua@gmail.com";
 
-            # Disable all gui stuff
-            myHomeManager.linux.editor.enable = true;
-            myHomeManager.linux.gnome.enable = false;
-            myHomeManager.linux._1password.enable = false;
-            myHomeManager.linux.autorandr.enable = false;
-            myHomeManager.linux.browser.enable = false;
-            myHomeManager.linux.gui.enable = false;
-            myHomeManager.linux.jetbrains.enable = false;
-
-            # Only enable base stuff
-            myHomeManager.linux.base.enable = true;
+            bundles._200-linux-desktop-gnome.enable = true;
           };
 
         userSettings = {
