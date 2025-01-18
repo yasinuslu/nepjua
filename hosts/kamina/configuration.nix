@@ -21,7 +21,9 @@
             programs.git.userName = "Yasin Uslu";
             programs.git.userEmail = "nepjua@gmail.com";
 
-            bundles._200-linux-desktop-gnome.enable = true;
+            myHomeManager = {
+              bundles._200-linux-desktop-gnome.enable = true;
+            };
           };
 
         userSettings = {
