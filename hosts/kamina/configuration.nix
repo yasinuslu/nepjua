@@ -11,7 +11,7 @@
 
   myNixOS = {
     mainUser = "nepjua";
-    bundles.minimal.enable = true;
+    bundles._200-desktop-minimal.enable = true;
 
     users = {
       nepjua = {
