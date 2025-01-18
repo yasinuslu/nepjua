@@ -36,6 +36,7 @@
     {
       nixosConfigurations = {
         kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
+        kamina = mkSystem defaultSystems.linux ./hosts/kamina/configuration.nix;
         pve-sezer = mkSystem "x86_64-linux" ./hosts/pve/sezer/configuration.nix;
         pve-nepjua = mkSystem "x86_64-linux" ./hosts/pve/nepjua/configuration.nix;
         pve-abulut = mkSystem "x86_64-linux" ./hosts/pve/abulut/configuration.nix;
