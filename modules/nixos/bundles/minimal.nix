@@ -4,13 +4,13 @@
 }:
 {
   myNixOS = {
-    bundles.general-desktop.enable = lib.mkDefault false;
+    bundles.general-desktop.enable = lib.mkOverride 500 false;
 
-    flatpak.enable = lib.mkDefault false;
-    appimage.enable = lib.mkDefault false;
-    xserver-nvidia.enable = lib.mkDefault false;
-    gaming.enable = lib.mkDefault false;
-    qemu-guest.enable = lib.mkDefault false;
-    spice-guest.enable = lib.mkDefault false;
+    flatpak.enable = lib.mkOverride 500 false;
+    appimage.enable = lib.mkOverride 500 false;
+    xserver-nvidia.enable = lib.mkOverride 500 false;
+    gaming.enable = lib.mkOverride 500 false;
+    qemu-guest.enable = lib.mkOverride 500 false;
+    spice-guest.enable = lib.mkOverride 500 false;
   };
 }
