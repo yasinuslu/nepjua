@@ -16,7 +16,7 @@ let
   # Taking all modules in ./bundles and adding enables to them
   bundles = myLib.extendModules (name: {
     extraOptions = {
-      myHomeManager.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+      myHomeManager.bundles.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
     };
 
     extraConfig = {
