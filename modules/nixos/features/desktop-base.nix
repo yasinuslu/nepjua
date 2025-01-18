@@ -26,11 +26,17 @@
     # nixgl.auto.nixGLDefault
   ];
 
-  # Enable inter-process communication
+  # XDG desktop integration
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  # };
+
+  # Enable D-Bus
   services.dbus.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

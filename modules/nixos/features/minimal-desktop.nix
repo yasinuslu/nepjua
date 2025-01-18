@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   # Enable X11 and basic desktop environment services
   services.xserver = {
@@ -19,7 +19,7 @@
       enable = true;
       greeters.mini = {
         enable = true;
-        user.enable = true;
+        user = config.myNixOS.mainUser;
         extraConfig = ''
           [greeter]
           show-password-label = false
@@ -54,22 +54,4 @@
     flameshot
   ];
 
-  # Enable sound with pipewire
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # XDG desktop integration
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
-
-  # Enable D-Bus
-  services.dbus.enable = true;
 }
