@@ -4,8 +4,7 @@
   inputs,
   myLib,
   ...
-}:
-let
+}: let
   cfg = config.myNixOS;
 
   # Taking all modules in ./features and adding enables to them
@@ -41,9 +40,8 @@ let
     };
     configExtension = config: (lib.mkIf cfg.services.${name}.enable config);
   }) (myLib.filesIn ./services);
-in
-{
-  imports = [ inputs.home-manager.nixosModules.home-manager ] ++ features ++ bundles ++ services;
+in {
+  imports = [inputs.home-manager.nixosModules.home-manager] ++ features ++ bundles ++ services;
 
   config = {
     nix.settings = {
@@ -55,13 +53,13 @@ in
 
     nix.optimise = {
       automatic = true;
-      dates = [ "03:45" ]; # Runs daily at 3:45 AM
+      dates = ["03:45"]; # Runs daily at 3:45 AM
     };
 
     nixpkgs.config.allowUnfree = true;
     nixpkgs.config.allowUnsupportedSystem = true;
 
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-    system.stateVersion = "24.05";
+    system.stateVersion = "24.11";
   };
 }
