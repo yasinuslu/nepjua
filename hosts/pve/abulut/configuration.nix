@@ -47,7 +47,6 @@
             programs.git.userName = "Abdurrahim Bulut";
             programs.git.userEmail = "bulut.send@gmail.com";
 
-            myHomeManager.docker.enable = false;
           };
 
         userSettings = {

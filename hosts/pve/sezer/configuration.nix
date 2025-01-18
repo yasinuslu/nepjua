@@ -47,7 +47,6 @@
             programs.git.userName = "Sezer Togantemur";
             programs.git.userEmail = "stogantemur8@gmail.com";
 
-            myHomeManager.docker.enable = false;
           };
 
         userSettings = {

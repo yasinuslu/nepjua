@@ -21,8 +21,6 @@
             programs.git.userName = "Yasin Uslu";
             programs.git.userEmail = "nepjua@gmail.com";
 
-            myHomeManager.docker.enable = false;
-
             # Disable all gui stuff
             myHomeManager.linux.editor.enable = true;
             myHomeManager.linux.gnome.enable = false;
