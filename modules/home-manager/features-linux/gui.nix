@@ -1,9 +1,13 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
+  home.file = {
+    ".config/autostart/1password.desktop".source = "${pkgs._1password-gui.outPath}/share/applications/1password.desktop";
+    ".config/autostart/copyq.desktop".source = "${pkgs.copyq.outPath}/share/applications/com.github.hluk.copyq.desktop";
+    ".config/autostart/warp-terminal.desktop".source = "${pkgs.warp-terminal.outPath}/share/applications/dev.warp.Warp.desktop";
+  };
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages =
-    with pkgs;
+  home.packages = with pkgs;
     [
       coreutils-full
       iputils
@@ -23,22 +27,22 @@
       mullvad-vpn
       tailscale
       telepresence2
+      nixfmt-rfc-style
       nixpkgs-review
       lazygit
       git-sync
     ]
     ++ (
-      if pkgs.stdenv.system == "x86_64-linux" then
-        [
-          slack
-          # zoom-us
-          spotify
-          lens
-          logseq
-          gitkraken
-        ]
-      else
-        [ ]
+      if pkgs.stdenv.system == "x86_64-linux"
+      then [
+        slack
+        # zoom-us
+        spotify
+        lens
+        logseq
+        gitkraken
+      ]
+      else []
     );
 
   services.spotifyd = {
