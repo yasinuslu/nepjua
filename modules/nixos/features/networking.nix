@@ -49,4 +49,6 @@
     "net.ipv4.tcp_window_scaling" = 1;
     "net.ipv4.tcp_moderate_rcvbuf" = 1; # Auto-tune receive buffers
   };
+
+  networking.nftables.enable = true;
 }
