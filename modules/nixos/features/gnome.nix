@@ -1,17 +1,5 @@
 { pkgs, ... }:
 {
-  # Enable graphical interface
-  services.xserver.enable = true;
-
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  services.libinput = {
-    enable = true;
-  };
-
   services.xserver.displayManager.gdm.enable = true;
   # Enable Wayland support
   services.xserver.displayManager.gdm.wayland = false;
@@ -52,9 +40,6 @@
     # gnome-extension-manager
     gnome-terminal
   ];
-
-  # Enable inter-process communication
-  services.dbus.enable = true;
 
   # Configure input methods
   i18n.inputMethod = {

@@ -2,8 +2,6 @@
 {
   # Enable X11 and basic desktop environment services
   services.xserver = {
-    enable = true;
-
     # Use i3 as the window manager
     windowManager.i3 = {
       enable = true;
@@ -30,14 +28,6 @@
       };
     };
 
-    # Basic input configuration
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
-
-    # Enable touchpad support
-    libinput.enable = true;
   };
 
   # Essential desktop packages
