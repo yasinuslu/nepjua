@@ -1,0 +1,85 @@
+{ pkgs, ... }:
+{
+  # Enable X11 and basic desktop environment services
+  services.xserver = {
+    enable = true;
+
+    # Use i3 as the window manager
+    windowManager.i3 = {
+      enable = true;
+      package = pkgs.i3-gaps;
+      extraPackages = with pkgs; [
+        dmenu # Application launcher
+        i3status # Status bar
+        i3lock # Screen locker
+        dunst # Notification daemon
+      ];
+    };
+
+    # Minimal display manager
+    displayManager.lightdm = {
+      enable = true;
+      greeters.mini = {
+        enable = true;
+        user.enable = true;
+        extraConfig = ''
+          [greeter]
+          show-password-label = false
+          show-input-cursor = false
+        '';
+      };
+    };
+
+    # Basic input configuration
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
+
+    # Enable touchpad support
+    libinput.enable = true;
+  };
+
+  # Essential desktop packages
+  environment.systemPackages = with pkgs; [
+    # Terminal
+    alacritty
+
+    # Basic utilities
+    rofi # Application launcher
+    polybar # Status bar
+    feh # Wallpaper setter
+    picom # Compositor
+
+    # Notification
+    dunst
+
+    # Screen management
+    arandr
+
+    # Clipboard management
+    xclip
+
+    # Screenshot
+    flameshot
+  ];
+
+  # Enable sound with pipewire
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+  # XDG desktop integration
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
+  # Enable D-Bus
+  services.dbus.enable = true;
+}

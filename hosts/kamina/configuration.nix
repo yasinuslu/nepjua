@@ -43,6 +43,7 @@
             "lxd"
             "kvm"
             "libvirtd"
+            "spice"
           ];
         };
       };

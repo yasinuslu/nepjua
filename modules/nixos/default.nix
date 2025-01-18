@@ -4,7 +4,8 @@
   inputs,
   myLib,
   ...
-}: let
+}:
+let
   cfg = config.myNixOS;
 
   # Taking all modules in ./features and adding enables to them
@@ -14,7 +15,7 @@
     };
 
     extraConfig = {
-      myNixOS.${name}.enable = lib.mkDefault true;
+      myNixOS.${name}.enable = lib.mkDefault false;
     };
 
     configExtension = config: (lib.mkIf cfg.${name}.enable config);
@@ -40,8 +41,9 @@
     };
     configExtension = config: (lib.mkIf cfg.services.${name}.enable config);
   }) (myLib.filesIn ./services);
-in {
-  imports = [inputs.home-manager.nixosModules.home-manager] ++ features ++ bundles ++ services;
+in
+{
+  imports = [ inputs.home-manager.nixosModules.home-manager ] ++ features ++ bundles ++ services;
 
   config = {
     nix.settings = {
@@ -53,7 +55,7 @@ in {
 
     nix.optimise = {
       automatic = true;
-      dates = ["03:45"]; # Runs daily at 3:45 AM
+      dates = [ "03:45" ]; # Runs daily at 3:45 AM
     };
 
     nixpkgs.config.allowUnfree = true;

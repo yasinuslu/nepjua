@@ -1,11 +1,14 @@
-{ ... }:
+{ lib, ... }:
 {
+  # NetworkManager configuration
+  networking.networkmanager.enable = lib.mkDefault true;
+  systemd.services.NetworkManager-wait-online.enable = lib.mkDefault false;
+  networking.networkmanager.wifi.powersave = lib.mkDefault false;
+
   # Common network settings
   networking.nameservers = [
     "1.1.1.1"
-    "1.0.0.1"
     "8.8.8.8"
-    "8.8.4.4"
   ];
 
   # Network performance optimizations
