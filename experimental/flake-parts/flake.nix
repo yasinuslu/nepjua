@@ -29,15 +29,12 @@
       }:
       let
         inherit (flake-parts-lib) importApply;
-        flakeModules.lib = importApply ./lib {
-          inherit withSystem flake-root;
-        };
+        my-lib = import ./my-lib { inherit (nixpkgs) lib; };
       in
       {
         imports = [
           inputs.flake-root.flakeModule
           inputs.treefmt-nix.flakeModule
-          flakeModules.default
         ];
         systems = [
           "x86_64-linux"
@@ -61,12 +58,12 @@
             };
           };
         flake = {
-          inherit flakeModules;
+          # Expose our custom utility library
+          lib = my-lib;
 
           # The usual flake attributes can be defined here, including system-
           # agnostic ones like nixosModule and system-enumerating ones, although
           # those are more easily expressed in perSystem.
-          # Define flake-wide options
         };
       }
     );
