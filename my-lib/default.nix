@@ -98,58 +98,69 @@ rec {
   # ========================== Extenders =========================== #
 
   # Evaluates nixos/home-manager module and extends it's options / config
-  extendModule =
-    { path, ... }@args:
+  wrapModule =
+    {
+      path,
+      fullOptionName,
+      available ? false,
+      name,
+      ...
+    }@args:
     { pkgs, ... }@margs:
     let
-      eval = if (builtins.isString path) || (builtins.isPath path) then import path margs else path margs;
-      evalNoImports = builtins.removeAttrs eval [
-        "imports"
-        "options"
-      ];
+      cfg = margs.config.${fullOptionName};
+      isEnabled = available && cfg.enable;
+      evalFn =
+        { }: (if (builtins.isString path) || (builtins.isPath path) then import path margs else path margs);
+      evalNoImportsFn =
+        { }:
+        builtins.removeAttrs (evalFn { }) [
+          "imports"
+          "options"
+        ];
 
-      extra =
-        if (builtins.hasAttr "extraOptions" args) || (builtins.hasAttr "extraConfig" args) then
-          [
-            (
-              { ... }:
-              {
-                options = args.extraOptions or { };
-                config = args.extraConfig or { };
-              }
-            )
-          ]
-        else
-          [ ];
+      eval = if isEnabled then evalFn else { };
+      evalNoImports = if isEnabled then evalNoImportsFn else { };
+
+      defaultModules = [
+        (
+          { ... }:
+          {
+            imports = [ ];
+            options = {
+              ${fullOptionName}.enable = lib.mkEnableOption "Enable ${name} module";
+            };
+            config = {
+              ${fullOptionName}.enable = lib.mkDefault false;
+            };
+          }
+        )
+      ];
     in
     {
-      imports = (eval.imports or [ ]) ++ extra;
-
-      options =
-        if builtins.hasAttr "optionsExtension" args then
-          (args.optionsExtension (eval.options or { }))
-        else
-          (eval.options or { });
-
-      config =
-        if builtins.hasAttr "configExtension" args then
-          (args.configExtension (eval.config or evalNoImports))
-        else
-          (eval.config or evalNoImports);
+      imports = defaultModules ++ (eval.imports or [ ]);
+      options = (eval.options or { });
+      config = (eval.config or evalNoImports);
     };
 
-  # Applies extendModules to all modules
-  # modules can be defined in the same way
-  # as regular imports, or taken from "filesIn"
-  extendModules =
-    extension: modules:
+  wrapModules =
+    {
+      available ? false,
+      files,
+      prefix ? "",
+      ...
+    }@args:
     map (
       f:
       let
         name = fileNameOf f;
+        fullOptionName = prefix + name;
       in
-      (extendModule ((extension name) // { path = f; }))
-    ) modules;
+      wrapModule {
+        path = f;
+        inherit fullOptionName available name;
+      }
+    ) files;
 
   # ============================ Shell ============================= #
   # Small tool to iterate over each systems
