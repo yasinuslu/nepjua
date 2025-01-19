@@ -29,7 +29,6 @@
       }:
       let
         inherit (flake-parts-lib) importApply;
-        lib = import ./lib { inherit (nixpkgs) lib; };
         moduleArgs = {
           inherit
             inputs
@@ -40,10 +39,7 @@
             flake-root
             ;
         };
-        flakeModules = lib.mkFlakeModules {
-          dir = ./flake-modules;
-          args = moduleArgs;
-        };
+        flakeModules = importApply ./modules/_mod.nix moduleArgs;
       in
       {
         imports = [
@@ -73,7 +69,7 @@
             };
           };
         flake = {
-          inherit lib flakeModules;
+          inherit flakeModules;
         };
       }
     );
