@@ -14,65 +14,35 @@ let
   exitModules = map (f: f.exit) extensions;
 
   # Taking all modules in ./bundles and adding enables to them
-  bundles = myLib.extendModules (name: {
-    extraOptions = {
-      myHomeManager.bundles.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
-    };
-
-    extraConfig = {
-      myHomeManager.bundles.${name}.enable = lib.mkDefault false;
-    };
-
-    configExtension = config: (lib.mkIf (cfg.${name}.enable) config);
-  }) (myLib.filesIn ./bundles);
+  bundles = myLib.wrapModules {
+    available = true;
+    prefix = "myHomeManager.bundles";
+    files = myLib.filesIn ./bundles;
+  };
 
   # Taking all modules in ./features-gui and adding enables to them
-  features = myLib.extendModules (name: {
-    extraOptions = {
-      myHomeManager.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
-    };
-
-    extraConfig = {
-      myHomeManager.${name}.enable = lib.mkDefault false;
-    };
-
-    configExtension = config: (lib.mkIf (cfg.${name}.enable) config);
-  }) (myLib.filesIn ./features);
+  features = myLib.wrapModules {
+    available = true;
+    prefix = "myHomeManager.features";
+    files = myLib.filesIn ./features;
+  };
 
   # Taking all modules in ./features-tui and adding enables to them
-  featuresLinux = myLib.extendModules (name: {
-    extraOptions = {
-      myHomeManager.linux.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
-    };
+  featuresLinux = myLib.wrapModules {
+    available = myArgs.isCurrentSystemLinux;
+    prefix = "myHomeManager.linux";
+    files = myLib.filesIn ./features-linux;
+  };
 
-    extraConfig = {
-      myHomeManager.linux.${name}.enable = lib.mkDefault false;
-    };
-
-    configExtension = config: (lib.mkIf (cfg.linux.${name}.enable) config);
-  }) (myLib.filesIn ./features-linux);
-
-  featuresDarwin = myLib.extendModules (name: {
-    extraOptions = {
-      myHomeManager.darwin.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
-    };
-
-    extraConfig = {
-      myHomeManager.darwin.${name}.enable = lib.mkDefault false;
-    };
-
-    configExtension = config: (lib.mkIf (cfg.darwin.${name}.enable) config);
-  }) (myLib.filesIn ./features-darwin);
+  featuresDarwin = myLib.wrapModules {
+    available = myArgs.isCurrentSystemDarwin;
+    prefix = "myHomeManager.darwin";
+    files = myLib.filesIn ./features-darwin;
+  };
 in
 {
   home.stateVersion = "24.11";
 
   imports =
-    enterModules
-    ++ [ ]
-    ++ bundles
-    ++ features
-    ++ (if myArgs.isCurrentSystemLinux then featuresLinux else [ ])
-    ++ (if myArgs.isCurrentSystemDarwin then featuresDarwin else [ ])
-    ++ exitModules;
+    enterModules ++ [ ] ++ bundles ++ features ++ featuresLinux ++ featuresDarwin ++ exitModules;
 }

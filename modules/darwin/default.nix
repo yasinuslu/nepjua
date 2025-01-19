@@ -9,34 +9,25 @@ let
   cfg = config.myDarwin;
 
   # Taking all modules in ./features and adding enables to them
-  features = myLib.extendModules (name: {
-    extraOptions = {
-      myDarwin.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
-    };
-
-    extraConfig = {
-      myDarwin.${name}.enable = lib.mkDefault true;
-    };
-
-    configExtension = config: (lib.mkIf cfg.${name}.enable config);
-  }) (myLib.filesIn ./features);
+  features = myLib.wrapModules {
+    available = true;
+    files = myLib.filesIn ./features;
+    prefix = "myDarwin";
+  };
 
   # Taking all module bundles in ./bundles and adding bundle.enables to them
-  bundles = myLib.extendModules (name: {
-    extraOptions = {
-      myDarwin.bundles.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
-    };
-
-    configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
-  }) (myLib.filesIn ./bundles);
+  bundles = myLib.wrapModules {
+    available = true;
+    prefix = "myDarwin.bundles";
+    files = myLib.filesIn ./bundles;
+  };
 
   # Taking all module services in ./services and adding services.enables to them
-  services = myLib.extendModules (name: {
-    extraOptions = {
-      myDarwin.services.${name}.enable = lib.mkEnableOption "enable ${name} service";
-    };
-    configExtension = config: (lib.mkIf cfg.services.${name}.enable config);
-  }) (myLib.filesIn ./services);
+  services = myLib.wrapModules {
+    available = true;
+    prefix = "myDarwin.services";
+    files = myLib.filesIn ./services;
+  };
 in
 {
   imports = [ inputs.home-manager.darwinModules.home-manager ] ++ features ++ bundles ++ services;
