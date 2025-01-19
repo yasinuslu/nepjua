@@ -29,6 +29,10 @@
       }:
       let
         inherit (flake-parts-lib) importApply;
+        myLib = import ./my-lib {
+          lib = nixpkgs.lib;
+          inherit inputs;
+        };
         moduleArgs = {
           inherit
             inputs
@@ -39,13 +43,19 @@
             flake-root
             ;
         };
-        flakeModules = importApply ./modules/_mod.nix moduleArgs;
+
+        # Auto-discover all modules
+        flakeModules = myLib.autoDiscoverModules {
+          baseDir = ./modules;
+          inherit moduleArgs;
+        };
       in
       {
         imports = [
           inputs.flake-root.flakeModule
           inputs.treefmt-nix.flakeModule
-        ] ++ builtins.attrValues flakeModules;
+          # flakeModules.nixos.features
+        ];
 
         systems = [
           "x86_64-linux"
