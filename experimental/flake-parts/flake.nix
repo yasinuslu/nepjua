@@ -29,13 +29,28 @@
       }:
       let
         inherit (flake-parts-lib) importApply;
-        my-lib = import ./my-lib { inherit (nixpkgs) lib; };
+        lib = import ./lib { inherit (nixpkgs) lib; };
+        moduleArgs = {
+          inherit
+            inputs
+            nixpkgs
+            flake-parts-lib
+            importApply
+            withSystem
+            flake-root
+            ;
+        };
+        flakeModules = lib.mkFlakeModules {
+          dir = ./flake-modules;
+          args = moduleArgs;
+        };
       in
       {
         imports = [
           inputs.flake-root.flakeModule
           inputs.treefmt-nix.flakeModule
-        ];
+        ] ++ builtins.attrValues flakeModules;
+
         systems = [
           "x86_64-linux"
           "aarch64-linux"
@@ -58,12 +73,7 @@
             };
           };
         flake = {
-          # Expose our custom utility library
-          lib = my-lib;
-
-          # The usual flake attributes can be defined here, including system-
-          # agnostic ones like nixosModule and system-enumerating ones, although
-          # those are more easily expressed in perSystem.
+          inherit lib flakeModules;
         };
       }
     );
