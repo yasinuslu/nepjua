@@ -101,17 +101,6 @@ let
           inherit meta module;
         };
 
-      # mkMyModule =
-      #   file:
-      #   let
-      #     meta = pathToModuleInfo file;
-      #     originalModule = topModuleArgs.flake-parts-lib.importApply meta.path topModuleArgs;
-      #     module = originalModule;
-      #   in
-      #   {
-      #     inherit meta module;
-      #   };
-
       # Find all module files
       moduleFiles = findModFiles baseDir;
 
