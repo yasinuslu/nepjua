@@ -45,7 +45,7 @@
         };
 
         # Auto-discover all modules
-        flakeModules = myLib.autoDiscoverModules {
+        flakeModules = myLib.discoverModules {
           baseDir = ./modules;
           inherit moduleArgs;
         };
@@ -54,8 +54,7 @@
         imports = [
           inputs.flake-root.flakeModule
           inputs.treefmt-nix.flakeModule
-          # flakeModules.nixos.features
-        ];
+        ] ++ builtins.attrValues flakeModules;
 
         systems = [
           "x86_64-linux"

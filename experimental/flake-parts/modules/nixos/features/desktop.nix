@@ -1,0 +1,7 @@
+localFlake:
+{ ... }:
+{
+  flake = {
+    desktop = "here";
+  };
+}

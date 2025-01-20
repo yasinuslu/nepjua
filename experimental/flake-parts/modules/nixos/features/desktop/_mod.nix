@@ -1,7 +1,0 @@
-localFlake:
-{ ... }:
-{
-  flake = {
-    someCustomAttribute = "someCustomValue";
-  };
-}
