@@ -48,6 +48,19 @@
         flakeModules = myLib.discoverModules {
           baseDir = ./modules;
           inherit moduleArgs;
+          wrapModule =
+            module:
+            { config, lib, ... }:
+            {
+              # Preserve the original module
+              inherit (module) imports;
+
+              # Add metadata to _module.args
+              _module.args = (module._module.args or { }) // {
+                # Example: Add the module's source path
+                modulePath = module.path or null;
+              };
+            };
         };
       in
       {

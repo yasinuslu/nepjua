@@ -8,6 +8,7 @@ let
     {
       baseDir, # Root directory to search
       moduleArgs ? { }, # Arguments to pass to each module
+      wrapModule ? (module: module), # Optional function to wrap/transform modules
     }:
     let
       # Recursively find .nix files
@@ -42,8 +43,8 @@ let
           name = lib.strings.removePrefix "${toString baseDir}/" (
             lib.strings.removeSuffix ".nix" (toString modPath)
           );
-          # Import module with arguments
-          value = moduleArgs.importApply modPath moduleArgs;
+          # Import module with arguments and optional wrapping
+          value = wrapModule (moduleArgs.importApply modPath moduleArgs);
         }) moduleFiles
       );
 
