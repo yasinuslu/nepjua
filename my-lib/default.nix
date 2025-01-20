@@ -69,32 +69,35 @@ let
         let
           meta = pathToModuleInfo file;
           originalModule = topModuleArgs.flake-parts-lib.importApply meta.path topModuleArgs;
-          firstModule = builtins.head originalModule.imports;
           configComponents = [ "my" ] ++ meta.components;
           enableComponents = configComponents ++ [ "enable" ];
           setEnableAttr = lib.attrsets.setAttrByPath enableComponents;
           getEnableAttr = lib.attrsets.getAttrFromPath enableComponents;
           module = {
             _file = originalModule._file;
-            imports = [
-              (
-                { lib, ... }:
-                {
-                  options = setEnableAttr (lib.mkEnableOption "Enable ${meta.relativePath}");
-                  config = setEnableAttr (lib.mkDefault true);
-                }
-              )
-              (
-                args:
-                let
-                  my = {
-                    cfg = lib.attrsets.getAttrFromPath configComponents args.config;
-                  };
-                  firstModuleResult = firstModule (args // { inherit my; });
-                in
-                lib.mkIf (getEnableAttr args.config) firstModuleResult
-              )
-            ];
+            imports =
+              [
+                (
+                  { lib, ... }:
+                  {
+                    options = setEnableAttr (lib.mkEnableOption "Enable ${meta.relativePath}");
+                    config = setEnableAttr (lib.mkDefault true);
+                  }
+                )
+              ]
+              ++ builtins.map (
+                mod:
+                (
+                  args:
+                  let
+                    my = {
+                      cfg = lib.attrsets.getAttrFromPath configComponents args.config;
+                    };
+                    result = mod (args // { inherit my; });
+                  in
+                  lib.mkIf (getEnableAttr args.config) result
+                )
+              ) originalModule.imports;
           };
         in
         {

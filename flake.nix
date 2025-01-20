@@ -58,27 +58,22 @@
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } (
-      {
+      flakePartsArgs@{
         withSystem,
         flake-parts-lib,
         flake-root,
         ...
       }:
       let
-        inherit (flake-parts-lib) importApply;
+        lib = nixpkgs.lib;
         myLib = import ./my-lib {
           lib = nixpkgs.lib;
           inherit inputs;
         };
-        moduleArgs = {
-          inherit
-            inputs
-            nixpkgs
-            flake-parts-lib
-            importApply
-            withSystem
-            flake-root
-            ;
+        moduleArgs = flakePartsArgs // {
+          inherit lib;
+          inherit (flake-parts-lib) importApply;
+          inherit inputs;
         };
 
         # Auto-discover all modules
