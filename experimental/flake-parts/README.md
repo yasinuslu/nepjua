@@ -25,17 +25,17 @@ nix repl
 
 ### Phase 1: Basic Structure
 
-- [ ] Set up basic flake with flake-parts
-- [ ] Create minimal directory structure
-- [ ] Implement basic file discovery (find all default.nix files)
-- [ ] Create a simple test module to verify discovery
+- [x] Set up basic flake with flake-parts
+- [x] Create minimal directory structure
+- [x] Implement basic file discovery (find all .nix files)
+- [x] Create a simple test module to verify discovery
 
 ### Phase 2: Module System
 
-- [ ] Implement basic module wrapping (just the enable flag)
-- [ ] Create namespace mapping (file path → module path)
-- [ ] Test with a simple feature module
-- [ ] Verify REPL accessibility
+- [x] Implement basic module wrapping (just the enable flag)
+- [x] Create namespace mapping (file path → module path)
+- [x] Test with a simple feature module
+- [x] Verify REPL accessibility
 
 ### Phase 3: Integration
 
@@ -55,9 +55,14 @@ nix repl
 
 ### Namespaces and Auto-Discovery
 
-- Each `_mod.nix` file defines a namespace entry point
-- File paths directly map to module paths
-- Everything else in the directory is private to that namespace
+- Each .nix file is a flake-module that is automatically discovered and imported
+  at the root of the flake
+- Each module is assigned in `flakeModules."${modulePath}"`
+- Each module introduces myFlake."${modulePath}".enable flag to enable it
+- Each module receives its configuration via `config.myFlake."${modulePath}"`
+- Modules can define `options` that are merged into their namespace
+- File paths directly map to module paths (e.g.,
+  `modules/nixos/features/hello.nix` → `myFlake.nixos.features.hello`)
 - No manual imports needed
 - Modules do nothing until explicitly enabled
 
@@ -74,20 +79,20 @@ Each system type (NixOS, Darwin, Home Manager) follows the same pattern:
 
 ```nix
 # NixOS modules
-modules.nixos.features.desktop.enable = true;
-modules.nixos.bundles.server.enable = true;
+myFlake.nixos.features.desktop.enable = true;
+myFlake.nixos.bundles.server.enable = true;
 
 # Darwin modules
-modules.darwin.features.dock.enable = true;
-modules.darwin.bundles.workstation.enable = true;
+myFlake.darwin.features.dock.enable = true;
+myFlake.darwin.bundles.workstation.enable = true;
 
 # Home Manager modules
-modules.home-manager.features.dev.enable = true;
-modules.home-manager.bundles.developer.enable = true;
+myFlake.home-manager.features.dev.enable = true;
+myFlake.home-manager.bundles.developer.enable = true;
 
 # Host-specific configurations
-modules.hosts.nixos.kamina.enable = true;
-modules.hosts.darwin.joyboy.enable = true;
+myFlake.hosts.nixos.kamina.enable = true;
+myFlake.hosts.darwin.joyboy.enable = true;
 ```
 
 ### Module Types
@@ -97,7 +102,7 @@ modules.hosts.darwin.joyboy.enable = true;
 - Individual, focused pieces of functionality
 - Independently enableable
 - Located in `features/` under each system type
-- Defined by `_mod.nix` in their directory
+- Each feature is a single .nix file
 
 #### Bundles
 
@@ -105,14 +110,14 @@ modules.hosts.darwin.joyboy.enable = true;
 - Use `mkDefault` to enable features
 - Can be overridden by user configuration
 - Located in `bundles/` under each system type
-- Defined by `_mod.nix` in their directory
+- Each bundle is a single .nix file
 
 #### Hosts
 
 - System-specific configurations
 - Can include user-specific settings
 - Located in `modules/hosts/{nixos,darwin}`
-- Defined by `_mod.nix` in their directory
+- Each host is a single .nix file
 
 ### Directory Structure
 
@@ -120,68 +125,28 @@ modules.hosts.darwin.joyboy.enable = true;
 modules/
 ├── nixos/
 │   ├── features/          # NixOS-specific features
-│   │   ├── desktop/
-│   │   │   ├── _mod.nix  # Namespace: modules.nixos.features.desktop
-│   │   │   ├── impl.nix  # Private implementation
-│   │   │   └── utils.nix # Private utilities
-│   │   └── server/
-│   │       ├── _mod.nix
-│   │       └── impl.nix
+│   │   ├── desktop.nix    # Namespace: myFlake.nixos.features.desktop
+│   │   └── server.nix     # Namespace: myFlake.nixos.features.server
 │   └── bundles/          # NixOS feature collections
-│       ├── desktop/
-│       │   ├── _mod.nix
-│   │   │   └── impl.nix
-│   │   └── server/
-│   │       ├── _mod.nix
-│   │       └── impl.nix
-│   └── darwin/
-│       ├── features/         # Darwin-specific features
-│       │   ├── dock/
-│       │   │   ├── _mod.nix
-│       │   │   └── impl.nix
-│       │   └── finder/
-│       │       ├── _mod.nix
-│       │       └── impl.nix
-│       └── bundles/         # Darwin feature collections
-│           └── workstation/
-│               ├── _mod.nix
-│               └── impl.nix
+│       ├── desktop.nix    # Namespace: myFlake.nixos.bundles.desktop
+│       └── server.nix     # Namespace: myFlake.nixos.bundles.server
+├── darwin/
+│   ├── features/         # Darwin-specific features
+│   │   ├── dock.nix      # Namespace: myFlake.darwin.features.dock
+│   │   └── finder.nix    # Namespace: myFlake.darwin.features.finder
+│   └── bundles/         # Darwin feature collections
+│       └── workstation.nix # Namespace: myFlake.darwin.bundles.workstation
 ├── home-manager/
 │   ├── features/        # User-specific features
-│   │   ├── desktop/
-│   │   │   ├── _mod.nix
-│   │   │   └── impl.nix
-│   │   ├── gaming/
-│   │   │   ├── _mod.nix
-│   │   │   └── impl.nix
-│   │   └── dev/
-│   │       ├── _mod.nix
-│   │       └── impl.nix
+│   │   ├── desktop.nix  # Namespace: myFlake.home-manager.features.desktop
+│   │   ├── gaming.nix   # Namespace: myFlake.home-manager.features.gaming
+│   │   └── dev.nix      # Namespace: myFlake.home-manager.features.dev
 │   └── bundles/        # User feature collections
-│       ├── developer/
-│       │   ├── _mod.nix
-│       │   └── impl.nix
-│       └── gamer/
-│           ├── _mod.nix
-│           └── impl.nix
+│       ├── developer.nix # Namespace: myFlake.home-manager.bundles.developer
+│       └── gamer.nix     # Namespace: myFlake.home-manager.bundles.gamer
 └── hosts/              # Host-specific configurations
     ├── nixos/
-    │   └── kamina/
-    │       ├── _mod.nix
-    │       ├── hardware.nix
-    │       └── users/
-    │           ├── alice/
-    │           │   ├── _mod.nix
-    │           │   └── impl.nix
-    │           └── bob/
-    │               ├── _mod.nix
-    │               └── impl.nix
+    │   └── kamina.nix   # Namespace: myFlake.hosts.nixos.kamina
     └── darwin/
-        └── joyboy/
-            ├── _mod.nix
-            ├── hardware.nix
-            └── users/
-                └── alice/
-                    ├── _mod.nix
-                    └── impl.nix
+        └── joyboy.nix   # Namespace: myFlake.hosts.darwin.joyboy
 ```

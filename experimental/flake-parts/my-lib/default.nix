@@ -1,5 +1,6 @@
 {
   lib,
+  inputs,
   ...
 }:
 let
@@ -8,7 +9,6 @@ let
     {
       baseDir, # Root directory to search
       moduleArgs ? { }, # Arguments to pass to each module
-      wrapModule ? (module: module), # Optional function to wrap/transform modules
     }:
     let
       # Recursively find .nix files
@@ -18,33 +18,47 @@ let
           # Read directory contents safely
           contents = if builtins.pathExists dir then builtins.readDir dir else { };
 
-          # Recursive traversal
-          processEntry =
+          # Process each item in the directory
+          processItem =
             name: type:
-            if type == "directory" && !(lib.hasPrefix "." name) then
-              findModFiles (dir + "/${name}")
-            else if type == "regular" && lib.hasSuffix ".nix" name then
-              [ (dir + "/${name}") ]
+            let
+              path = dir + "/${name}";
+            in
+            if type == "regular" && lib.hasSuffix ".nix" name then
+              [
+                {
+                  inherit path;
+                  name = lib.removeSuffix ".nix" name;
+                }
+              ]
+            else if type == "directory" then
+              findModFiles path
             else
               [ ];
 
-          # Collect module files
-          modFiles = lib.flatten (lib.mapAttrsToList processEntry contents);
+          # Map over directory contents
+          results = lib.mapAttrsToList processItem contents;
         in
-        modFiles;
+        builtins.concatLists results;
 
-      # Collect all module files
+      # Convert file paths to module paths
+      pathToModulePath =
+        path:
+        let
+          # Remove baseDir prefix and .nix suffix
+          relative = lib.removePrefix (toString baseDir + "/") (toString path);
+          withoutNix = lib.removeSuffix ".nix" relative;
+        in
+        withoutNix;
+
+      # Find all module files
       moduleFiles = findModFiles baseDir;
 
-      # Transform module files into an attribute set
-      moduleAttrs = builtins.listToAttrs (
-        builtins.map (modPath: {
-          # Create module name from path
-          name = lib.strings.removePrefix "${toString baseDir}/" (
-            lib.strings.removeSuffix ".nix" (toString modPath)
-          );
-          # Import module with arguments and optional wrapping
-          value = wrapModule (moduleArgs.importApply modPath moduleArgs);
+      # Create the final modules
+      modules = builtins.listToAttrs (
+        map (file: {
+          name = pathToModulePath file.path;
+          value = moduleArgs.flake-parts-lib.importApply file.path;
         }) moduleFiles
       );
 
@@ -54,12 +68,10 @@ let
           "No .nix modules discovered in ${toString baseDir}"
         else
           "Discovered ${toString (builtins.length moduleFiles)} .nix modules"
-      );
+      ) null;
     in
-    moduleAttrs;
-
+    modules;
 in
 {
-  # Expose the discovery function
   inherit discoverModules;
 }
