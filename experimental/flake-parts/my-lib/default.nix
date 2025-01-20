@@ -61,13 +61,7 @@ let
 
       # Create nested structure from components
       mkNestedAttrs =
-        components: value:
-        if components == [ ] then
-          value
-        else
-          {
-            ${builtins.head components} = mkNestedAttrs (builtins.tail components) value;
-          };
+        components: value: if components == [ ] then value else lib.attrsets.setAttrByPath components value;
 
       # Create module for a single file
       mkMyModule =
@@ -76,19 +70,18 @@ let
           meta = pathToModuleInfo file;
           originalModule = topModuleArgs.flake-parts-lib.importApply meta.path topModuleArgs;
           firstModule = builtins.head originalModule.imports;
-          mkModuleAttrs = mkNestedAttrs ([ "my" ] ++ meta.components);
+          configComponents = [ "my" ] ++ meta.components;
+          enableComponents = configComponents ++ [ "enable" ];
+          setEnableAttr = lib.attrsets.setAttrByPath enableComponents;
+          getEnableAttr = lib.attrsets.getAttrFromPath enableComponents;
           module = {
             _file = originalModule._file;
             imports = [
               (
                 { lib, ... }:
                 {
-                  options = mkModuleAttrs {
-                    enable = lib.mkEnableOption "Enable ${meta.relativePath}";
-                  };
-                  config = mkModuleAttrs {
-                    enable = lib.mkDefault true;
-                  };
+                  options = setEnableAttr (lib.mkEnableOption "Enable ${meta.relativePath}");
+                  config = setEnableAttr (lib.mkDefault true);
                 }
               )
               (
@@ -96,7 +89,7 @@ let
                 let
                   firstModuleResult = firstModule args;
                 in
-                lib.mkIf args.config.my.${meta.dotPath}.enable firstModuleResult
+                lib.mkIf (getEnableAttr args.config) firstModuleResult
               )
             ];
           };
@@ -104,6 +97,17 @@ let
         {
           inherit meta module;
         };
+
+      # mkMyModule =
+      #   file:
+      #   let
+      #     meta = pathToModuleInfo file;
+      #     originalModule = topModuleArgs.flake-parts-lib.importApply meta.path topModuleArgs;
+      #     module = originalModule;
+      #   in
+      #   {
+      #     inherit meta module;
+      #   };
 
       # Find all module files
       moduleFiles = findModFiles baseDir;

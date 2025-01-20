@@ -6,6 +6,6 @@ localFlake:
 }:
 {
   flake = {
-    testingIfConfigIsSet = config;
+    testingIfConfigIsSet = config.my.nixos.features.hello.enable;
   };
 }
