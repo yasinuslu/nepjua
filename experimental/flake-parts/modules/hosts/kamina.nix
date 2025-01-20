@@ -1,7 +1,0 @@
-localFlake:
-{ ... }:
-{
-  flake = {
-    kamina = "here";
-  };
-}

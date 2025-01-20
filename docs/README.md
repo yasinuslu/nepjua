@@ -1,71 +1,68 @@
-# Nepjua Nix Configuration Documentation
+# Nix Configuration Documentation
 
 Welcome to the documentation for the Nepjua Nix Configuration system. This
-documentation will help you understand, use, and contribute to this Nix-based
-system configuration framework.
+documentation explains our modular, auto-discovering Nix configuration
+framework.
 
-## Documentation Structure
+## Core Concepts
 
-- [Getting Started](./getting-started/README.md)
-  - Installation and basic setup
-  - Quick start guides
-  - System requirements
+- **Auto-Discovery**: Modules are automatically discovered and imported
+- **Flake-Parts**: Leveraging flake-parts for modular configuration
+- **REPL-Driven Development**: Testable, verifiable configuration approach
 
-- [Architecture](./architecture/README.md)
-  - System overview
-  - Design principles
-  - Module structure
+## Documentation Sections
 
-- [Modules](./modules/README.md)
-  - NixOS modules
-  - Darwin modules
-  - Home Manager modules
-  - Feature modules
-  - Bundle configurations
+### Getting Started
 
-- [Host Configurations](./hosts/README.md)
-  - Host setup guides
-  - Platform-specific configurations
-  - Example configurations
+- [Development Workflow](getting-started/development-workflow.md)
+  - REPL-driven development process
+  - Module testing and validation
 
-- [Features](./features/README.md)
-  - Available features
-  - Feature configuration
-  - Platform-specific features
+### Module System
 
-- [Development](./development/README.md)
-  - Development environment
-  - Contributing guidelines
-  - Best practices
+- [Module System Overview](modules/module-system.md)
+  - Namespaces and auto-discovery
+  - Module types (Features, Bundles)
+  - Implementation details
 
-- [Troubleshooting](./troubleshooting/README.md)
-  - Common issues
-  - Debugging guides
-  - FAQ
-
-## Quick Links
-
-- [Installation Guide](./getting-started/installation.md)
-- [Configuration Guide](./getting-started/configuration.md)
-- [Feature List](./features/available-features.md)
-- [Contributing Guide](./development/contributing.md)
-
-## Repository Structure
+### Project Structure
 
 ```
 .
-├── flake.nix           # Main entry point
-├── hosts/              # Host-specific configurations
-├── modules/            # Modular configuration components
-│   ├── darwin/         # macOS-specific modules
-│   ├── nixos/          # NixOS-specific modules
-│   └── home-manager/   # User environment modules
-├── my-lib/             # Custom Nix functions
-└── docs/               # Documentation
+├── modules/
+│   ├── nixos/
+│   │   ├── features/    # NixOS-specific features
+│   │   └── bundles/     # NixOS feature collections
+│   └── darwin/
+│       ├── features/    # Darwin-specific features
+│       └── bundles/     # Darwin feature collections
+└── hosts/               # Host-specific configurations
+    ├── nixos/
+    └── darwin/
 ```
 
-## Getting Help
+## Key Technologies
 
-- Check the [Troubleshooting Guide](./troubleshooting/README.md)
-- Review the [FAQ](./troubleshooting/faq.md)
-- File an issue on the repository
+- Nix Flakes
+- Flake-Parts
+- NixOS
+- nix-darwin
+- Home Manager
+
+## Contributing
+
+1. Read the [Development Workflow](getting-started/development-workflow.md)
+2. Follow REPL-driven development principles
+3. Ensure module testability
+4. Maintain clean, focused modules
+
+## Troubleshooting
+
+- Verify module discovery in REPL
+- Check flake outputs
+- Validate module structure
+
+## Quick Links
+
+- [Development Workflow](getting-started/development-workflow.md)
+- [Module System Overview](modules/module-system.md)

@@ -1,172 +1,141 @@
-{ inputs, ... }:
+{
+  lib,
+  inputs,
+  ...
+}:
 let
-  lib = inputs.nixpkgs.lib;
-  darwin = inputs.darwin;
-  myLib = (import ./default.nix) { inherit inputs; };
-  outputs = inputs.self.outputs;
-in
-rec {
-  defaultSystems = {
-    linux = "x86_64-linux";
-    darwin = "aarch64-darwin";
-  };
-
-  systems = [
-    "aarch64-linux"
-    "i686-linux"
-    "x86_64-linux"
-    "aarch64-darwin"
-    "x86_64-darwin"
-  ];
-
-  # ================================================================ #
-  # =                            My Lib                            = #
-  # ================================================================ #
-
-  # ======================= Package Helpers ======================== #
-
-  pkgsFor = sys: inputs.nixpkgs.legacyPackages.${sys};
-
-  # ========================== Buildables ========================== #
-
-  mkSystem =
-    sys: config:
-    lib.nixosSystem {
-      specialArgs = {
-        inherit inputs outputs myLib;
-        myArgs = {
-          system = sys;
-          isCurrentSystemLinux = isLinuxSystem sys;
-          isCurrentSystemDarwin = isDarwinSystem sys;
-        };
-      };
-      modules = [
-        config
-        outputs.nixosModules.default
-      ];
-    };
-
-  mkDarwinSystem =
-    sys: config:
-    darwin.lib.darwinSystem {
-      system = sys;
-
-      specialArgs = {
-        inherit inputs outputs myLib;
-        myArgs = {
-          system = sys;
-          isCurrentSystemLinux = isLinuxSystem sys;
-          isCurrentSystemDarwin = isDarwinSystem sys;
-        };
-      };
-
-      modules = [
-        config
-        outputs.darwinModules.default
-      ];
-    };
-
-  mkHome =
-    sys: config:
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = pkgsFor sys;
-      extraSpecialArgs = {
-        inherit inputs myLib outputs;
-        myArgs = {
-          system = sys;
-          isCurrentSystemLinux = isLinuxSystem sys;
-          isCurrentSystemDarwin = isDarwinSystem sys;
-        };
-      };
-      modules = [
-        config
-        outputs.homeManagerModules.default
-      ];
-    };
-
-  # =========================== Helpers ============================ #
-
-  isLinuxSystem = lib.strings.hasSuffix "-linux";
-  isDarwinSystem = lib.strings.hasSuffix "-darwin";
-
-  filesIn = dir: (map (fname: dir + "/${fname}") (builtins.attrNames (builtins.readDir dir)));
-
-  dirsIn = dir: lib.filterAttrs (name: value: value == "directory") (builtins.readDir dir);
-
-  fileNameOf = path: (builtins.head (builtins.split "\\." (baseNameOf path)));
-
-  # ========================== Extenders =========================== #
-
-  # Evaluates nixos/home-manager module and extends it's options / config
-  wrapModule =
+  # Core module discovery function
+  discoverModules =
     {
-      path,
-      fullOptionName,
-      available ? false,
-      name,
-      ...
-    }@args:
-    { pkgs, ... }@margs:
+      baseDir, # Root directory to search
+      topModuleArgs ? { }, # Arguments to pass to each module
+    }:
     let
-      cfg = margs.config.${fullOptionName};
-      isEnabled = available && cfg.enable;
-      evalFn =
-        { }: (if (builtins.isString path) || (builtins.isPath path) then import path margs else path margs);
-      evalNoImportsFn =
-        { }:
-        builtins.removeAttrs (evalFn { }) [
-          "imports"
-          "options"
-        ];
+      # Recursively find .nix files
+      findModFiles =
+        dir:
+        let
+          # Read directory contents safely
+          contents = if builtins.pathExists dir then builtins.readDir dir else { };
 
-      eval = if isEnabled then evalFn else { };
-      evalNoImports = if isEnabled then evalNoImportsFn else { };
+          # Process each item in the directory
+          processItem =
+            name: type:
+            let
+              path = dir + "/${name}";
+            in
+            if type == "regular" && lib.hasSuffix ".nix" name && !(lib.hasPrefix "_" name) then
+              [
+                {
+                  inherit path;
+                  name = lib.removeSuffix ".nix" name;
+                }
+              ]
+            else if type == "directory" then
+              findModFiles path
+            else
+              [ ];
 
-      defaultModules = [
-        (
-          { ... }:
+          # Map over directory contents
+          results = lib.mapAttrsToList processItem contents;
+        in
+        builtins.concatLists results;
+
+      # Convert file paths to module paths and option paths
+      pathToModuleInfo =
+        file:
+        let
+          # Remove baseDir prefix and .nix suffix
+          relative = lib.removePrefix (toString baseDir + "/") (toString file.path);
+          withoutNix = lib.removeSuffix ".nix" relative;
+
+          # Split path into components
+          components = lib.splitString "/" withoutNix;
+          dotPath = lib.concatStringsSep "." components;
+          relativePath = withoutNix;
+        in
+        {
+          inherit (file) path;
+          inherit components dotPath relativePath;
+        };
+
+      # Create nested structure from components
+      mkNestedAttrs =
+        components: value: if components == [ ] then value else lib.attrsets.setAttrByPath components value;
+
+      # Create module for a single file
+      mkMyModule =
+        file:
+        let
+          meta = pathToModuleInfo file;
+          originalModule = topModuleArgs.flake-parts-lib.importApply meta.path topModuleArgs;
+          firstModule = builtins.head originalModule.imports;
+          configComponents = [ "my" ] ++ meta.components;
+          enableComponents = configComponents ++ [ "enable" ];
+          setEnableAttr = lib.attrsets.setAttrByPath enableComponents;
+          getEnableAttr = lib.attrsets.getAttrFromPath enableComponents;
+          module = {
+            _file = originalModule._file;
+            imports = [
+              (
+                { lib, ... }:
+                {
+                  options = setEnableAttr (lib.mkEnableOption "Enable ${meta.relativePath}");
+                  config = setEnableAttr (lib.mkDefault true);
+                }
+              )
+              (
+                args:
+                let
+                  my = {
+                    cfg = lib.attrsets.getAttrFromPath configComponents args.config;
+                  };
+                  firstModuleResult = firstModule (args // { inherit my; });
+                in
+                lib.mkIf (getEnableAttr args.config) firstModuleResult
+              )
+            ];
+          };
+        in
+        {
+          inherit meta module;
+        };
+
+      # Find all module files
+      moduleFiles = findModFiles baseDir;
+
+      # First create a flat attribute set with relative paths as keys
+      modulesByPath = lib.listToAttrs (
+        map (
+          file:
+          let
+            myModule = mkMyModule file;
+          in
           {
-            imports = [ ];
-            options = {
-              ${fullOptionName}.enable = lib.mkEnableOption "Enable ${name} module";
-            };
-            config = {
-              ${fullOptionName}.enable = lib.mkDefault false;
-            };
+            name = myModule.meta.relativePath;
+            value = myModule;
           }
-        )
-      ];
+        ) moduleFiles
+      );
+
+      # Convert flat attribute set to nested structure
+      nestedModules = lib.foldr lib.recursiveUpdate { } (
+        lib.mapAttrsToList (path: mod: mkNestedAttrs mod.meta.components mod) modulesByPath
+      );
+
+      # Optional debug logging
+      _ = lib.warn (
+        if builtins.length moduleFiles == 0 then
+          "No .nix modules discovered in ${toString baseDir}"
+        else
+          "Discovered ${toString (builtins.length moduleFiles)} .nix modules"
+      ) null;
     in
     {
-      imports = defaultModules ++ (eval.imports or [ ]);
-      options = (eval.options or { });
-      config = (eval.config or evalNoImports);
+      nested = nestedModules;
+      flat = map (info: info.module) (builtins.attrValues modulesByPath);
     };
-
-  wrapModules =
-    {
-      available ? false,
-      files,
-      prefix ? "",
-      ...
-    }@args:
-    map (
-      f:
-      let
-        name = fileNameOf f;
-        fullOptionName = prefix + name;
-      in
-      wrapModule {
-        path = f;
-        inherit fullOptionName available name;
-      }
-    ) files;
-
-  # ============================ Shell ============================= #
-  # Small tool to iterate over each systems
-  eachSystem =
-    f: inputs.nixpkgs.lib.genAttrs systems (system: f inputs.nixpkgs.legacyPackages.${system});
-
-  # Eval the treefmt modules from ./treefmt.nix
-  treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ../treefmt.nix);
+in
+{
+  inherit discoverModules;
 }
