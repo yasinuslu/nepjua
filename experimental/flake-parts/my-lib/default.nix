@@ -81,7 +81,7 @@ let
                 { lib, ... }:
                 {
                   options = setEnableAttr (lib.mkEnableOption "Enable ${meta.relativePath}");
-                  config = setEnableAttr (lib.mkDefault true);
+                  config = setEnableAttr (lib.mkDefault false);
                 }
               )
               (
