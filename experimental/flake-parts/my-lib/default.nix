@@ -51,11 +51,12 @@ let
 
           # Split path into components
           components = lib.splitString "/" withoutNix;
+          dotPath = lib.concatStringsSep "." components;
+          relativePath = withoutNix;
         in
         {
           inherit (file) path;
-          relativePath = withoutNix;
-          components = components;
+          inherit components dotPath relativePath;
         };
 
       # Create nested structure from components
@@ -69,13 +70,16 @@ let
           };
 
       # Create module for a single file
-      makeModule =
+      mkMyModule =
         file:
         let
           moduleInfo = pathToModuleInfo file;
           originalModule = topModuleArgs.flake-parts-lib.importApply moduleInfo.path topModuleArgs;
         in
-        originalModule;
+        {
+          meta = moduleInfo;
+          module = originalModule;
+        };
 
       # Find all module files
       moduleFiles = findModFiles baseDir;
@@ -85,21 +89,18 @@ let
         map (
           file:
           let
-            moduleInfo = pathToModuleInfo file;
+            myModule = mkMyModule file;
           in
           {
-            name = moduleInfo.relativePath;
-            value = {
-              inherit (moduleInfo) components;
-              module = makeModule file;
-            };
+            name = myModule.meta.relativePath;
+            value = myModule;
           }
         ) moduleFiles
       );
 
       # Convert flat attribute set to nested structure
       nestedModules = lib.foldr lib.recursiveUpdate { } (
-        lib.mapAttrsToList (path: info: mkNestedAttrs info.components info.module) modulesByPath
+        lib.mapAttrsToList (path: mod: mkNestedAttrs mod.meta.components mod) modulesByPath
       );
 
       # Optional debug logging
