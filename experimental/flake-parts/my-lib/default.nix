@@ -73,12 +73,36 @@ let
       mkMyModule =
         file:
         let
-          moduleInfo = pathToModuleInfo file;
-          originalModule = topModuleArgs.flake-parts-lib.importApply moduleInfo.path topModuleArgs;
+          meta = pathToModuleInfo file;
+          originalModule = topModuleArgs.flake-parts-lib.importApply meta.path topModuleArgs;
+          firstModule = builtins.head originalModule.imports;
+          mkModuleAttrs = mkNestedAttrs ([ "my" ] ++ meta.components);
+          module = {
+            _file = originalModule._file;
+            imports = [
+              (
+                { lib, ... }:
+                {
+                  options = mkModuleAttrs {
+                    enable = lib.mkEnableOption "Enable ${meta.relativePath}";
+                  };
+                  config = mkModuleAttrs {
+                    enable = lib.mkDefault true;
+                  };
+                }
+              )
+              (
+                args:
+                let
+                  firstModuleResult = firstModule args;
+                in
+                lib.mkIf args.config.my.${meta.dotPath}.enable firstModuleResult
+              )
+            ];
+          };
         in
         {
-          meta = moduleInfo;
-          module = originalModule;
+          inherit meta module;
         };
 
       # Find all module files
