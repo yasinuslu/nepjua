@@ -17,10 +17,10 @@ We follow a REPL-driven development process:
 Example REPL workflow:
 
 ```nix
-# 1. Test file discovery
+# 1. Test file discovery and flake outputs
 nix repl
 > :lf .#
-> :p flakeModules.nixos.features.desktop
+> outputs.desktop  # Access module's flake outputs
 ```
 
 ### Phase 1: Basic Structure
@@ -32,10 +32,11 @@ nix repl
 
 ### Phase 2: Module System
 
-- [x] Implement basic module wrapping (just the enable flag)
+- [x] Implement module discovery using flake-parts
 - [x] Create namespace mapping (file path → module path)
 - [x] Test with a simple feature module
 - [x] Verify REPL accessibility
+- [x] Support module flake outputs
 
 ### Phase 3: Integration
 
@@ -56,22 +57,37 @@ nix repl
 ### Namespaces and Auto-Discovery
 
 - Each .nix file is a flake-module that is automatically discovered and imported
-  at the root of the flake
-- Each module is assigned in `flakeModules."${modulePath}"`
-- Each module introduces myFlake."${modulePath}".enable flag to enable it
-- Each module receives its configuration via `config.myFlake."${modulePath}"`
-- Modules can define `options` that are merged into their namespace
+- Modules are processed using `flake-parts-lib.importApply`
 - File paths directly map to module paths (e.g.,
-  `modules/nixos/features/hello.nix` → `myFlake.nixos.features.hello`)
+  `modules/nixos/features/hello.nix` → `nixos.features.hello`)
 - No manual imports needed
-- Modules do nothing until explicitly enabled
+- Modules can expose flake outputs directly through their `flake` attribute
 
-### Enable Flags
+### Module Structure
 
-- Every module gets an automatic enable flag
-- Enable flags follow the namespace structure
-- Modules are inert until enabled
-- REPL-friendly for inspection before enabling
+Each module can be either:
+
+1. A direct flake module:
+
+```nix
+{
+  flake = {
+    # Direct flake outputs
+    myOutput = "value";
+  };
+}
+```
+
+2. A function that returns a flake module:
+
+```nix
+localFlake: { config, lib, ... }: {
+  flake = {
+    # Computed flake outputs
+    myOutput = "value";
+  };
+}
+```
 
 ### Module Organization
 
@@ -79,20 +95,14 @@ Each system type (NixOS, Darwin, Home Manager) follows the same pattern:
 
 ```nix
 # NixOS modules
-myFlake.nixos.features.desktop.enable = true;
-myFlake.nixos.bundles.server.enable = true;
-
-# Darwin modules
-myFlake.darwin.features.dock.enable = true;
-myFlake.darwin.bundles.workstation.enable = true;
-
-# Home Manager modules
-myFlake.home-manager.features.dev.enable = true;
-myFlake.home-manager.bundles.developer.enable = true;
-
-# Host-specific configurations
-myFlake.hosts.nixos.kamina.enable = true;
-myFlake.hosts.darwin.joyboy.enable = true;
+modules/
+├── nixos/
+│   ├── features/          # NixOS-specific features
+│   │   ├── desktop.nix    # Exposes: outputs.desktop
+│   │   └── server.nix     # Exposes: outputs.server
+│   └── bundles/          # NixOS feature collections
+│       ├── desktop.nix    # Exposes: outputs.desktopBundle
+│       └── server.nix     # Exposes: outputs.serverBundle
 ```
 
 ### Module Types
@@ -100,24 +110,16 @@ myFlake.hosts.darwin.joyboy.enable = true;
 #### Features
 
 - Individual, focused pieces of functionality
-- Independently enableable
+- Can expose flake outputs directly
 - Located in `features/` under each system type
 - Each feature is a single .nix file
 
 #### Bundles
 
 - Collections of related features
-- Use `mkDefault` to enable features
-- Can be overridden by user configuration
+- Can expose combined flake outputs
 - Located in `bundles/` under each system type
 - Each bundle is a single .nix file
-
-#### Hosts
-
-- System-specific configurations
-- Can include user-specific settings
-- Located in `modules/hosts/{nixos,darwin}`
-- Each host is a single .nix file
 
 ### Directory Structure
 
@@ -125,28 +127,42 @@ myFlake.hosts.darwin.joyboy.enable = true;
 modules/
 ├── nixos/
 │   ├── features/          # NixOS-specific features
-│   │   ├── desktop.nix    # Namespace: myFlake.nixos.features.desktop
-│   │   └── server.nix     # Namespace: myFlake.nixos.features.server
+│   │   ├── desktop.nix    # Example: { flake.desktop = "here"; }
+│   │   └── server.nix     # Example: { flake.server = "running"; }
 │   └── bundles/          # NixOS feature collections
-│       ├── desktop.nix    # Namespace: myFlake.nixos.bundles.desktop
-│       └── server.nix     # Namespace: myFlake.nixos.bundles.server
 ├── darwin/
 │   ├── features/         # Darwin-specific features
-│   │   ├── dock.nix      # Namespace: myFlake.darwin.features.dock
-│   │   └── finder.nix    # Namespace: myFlake.darwin.features.finder
 │   └── bundles/         # Darwin feature collections
-│       └── workstation.nix # Namespace: myFlake.darwin.bundles.workstation
-├── home-manager/
-│   ├── features/        # User-specific features
-│   │   ├── desktop.nix  # Namespace: myFlake.home-manager.features.desktop
-│   │   ├── gaming.nix   # Namespace: myFlake.home-manager.features.gaming
-│   │   └── dev.nix      # Namespace: myFlake.home-manager.features.dev
-│   └── bundles/        # User feature collections
-│       ├── developer.nix # Namespace: myFlake.home-manager.bundles.developer
-│       └── gamer.nix     # Namespace: myFlake.home-manager.bundles.gamer
 └── hosts/              # Host-specific configurations
     ├── nixos/
-    │   └── kamina.nix   # Namespace: myFlake.hosts.nixos.kamina
     └── darwin/
-        └── joyboy.nix   # Namespace: myFlake.hosts.darwin.joyboy
+```
+
+### Implementation Details
+
+The module discovery system:
+
+1. Recursively finds all `.nix` files in the modules directory
+2. Converts file paths to module paths
+3. Uses `flake-parts-lib.importApply` to process each module
+4. Collects and exposes flake outputs from all modules
+
+Example module with flake outputs:
+
+```nix
+# modules/nixos/features/desktop.nix
+localFlake: { ... }: {
+  flake = {
+    desktop = "here";  # Accessible via `outputs.desktop`
+  };
+}
+```
+
+Access in REPL:
+
+```nix
+nix repl
+> :lf .#
+> outputs.desktop
+"here"
 ```
