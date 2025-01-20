@@ -54,6 +54,7 @@ let
         in
         {
           inherit (file) path;
+          relativePath = withoutNix;
           components = components;
         };
 
@@ -79,12 +80,27 @@ let
       # Find all module files
       moduleFiles = findModFiles baseDir;
 
-      # Create modules with both nested and flat structures
-      nestedModules = lib.foldr lib.recursiveUpdate { } (
-        map (file: mkNestedAttrs (pathToModuleInfo file).components (makeModule file)) moduleFiles
+      # First create a flat attribute set with relative paths as keys
+      modulesByPath = lib.listToAttrs (
+        map (
+          file:
+          let
+            moduleInfo = pathToModuleInfo file;
+          in
+          {
+            name = moduleInfo.relativePath;
+            value = {
+              inherit (moduleInfo) components;
+              module = makeModule file;
+            };
+          }
+        ) moduleFiles
       );
 
-      flatModules = map makeModule moduleFiles;
+      # Convert flat attribute set to nested structure
+      nestedModules = lib.foldr lib.recursiveUpdate { } (
+        lib.mapAttrsToList (path: info: mkNestedAttrs info.components info.module) modulesByPath
+      );
 
       # Optional debug logging
       _ = lib.warn (
@@ -96,7 +112,7 @@ let
     in
     {
       nested = nestedModules;
-      flat = flatModules;
+      flat = map (info: info.module) (builtins.attrValues modulesByPath);
     };
 in
 {

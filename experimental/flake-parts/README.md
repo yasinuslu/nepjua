@@ -17,10 +17,10 @@ We follow a REPL-driven development process:
 Example REPL workflow:
 
 ```nix
-# 1. Test file discovery and flake outputs
+# 1. Test module discovery
 nix repl
 > :lf .#
-> outputs.desktop  # Access module's flake outputs
+> flakeModules.nixos.features.hello  # Access nested structure
 ```
 
 ### Phase 1: Basic Structure
@@ -37,12 +37,14 @@ nix repl
 - [x] Test with a simple feature module
 - [x] Verify REPL accessibility
 - [x] Support module flake outputs
+- [x] Implement nested module structure
+- [x] Add automatic module importing
 
 ### Phase 3: Integration
 
 - [ ] Add home-manager support
 - [ ] Add host configurations
-- [ ] Test cross-module dependencies
+- [x] Test cross-module dependencies
 - [ ] Verify enable/disable behavior
 
 ### Phase 4: Refinement
@@ -60,8 +62,11 @@ nix repl
 - Modules are processed using `flake-parts-lib.importApply`
 - File paths directly map to module paths (e.g.,
   `modules/nixos/features/hello.nix` → `nixos.features.hello`)
-- No manual imports needed
-- Modules can expose flake outputs directly through their `flake` attribute
+- No manual imports needed - modules are automatically imported via the flat
+  structure
+- Modules can be accessed via both nested and flat structures
+- The nested structure (`flakeModules`) provides organized navigation
+- The flat structure is used for automatic importing
 
 ### Module Structure
 
@@ -98,11 +103,11 @@ Each system type (NixOS, Darwin, Home Manager) follows the same pattern:
 modules/
 ├── nixos/
 │   ├── features/          # NixOS-specific features
-│   │   ├── desktop.nix    # Exposes: outputs.desktop
-│   │   └── server.nix     # Exposes: outputs.server
+│   │   ├── desktop.nix    # Available as: flakeModules.nixos.features.desktop
+│   │   └── server.nix     # Available as: flakeModules.nixos.features.server
 │   └── bundles/          # NixOS feature collections
-│       ├── desktop.nix    # Exposes: outputs.desktopBundle
-│       └── server.nix     # Exposes: outputs.serverBundle
+│       ├── desktop.nix    # Available as: flakeModules.nixos.bundles.desktop
+│       └── server.nix     # Available as: flakeModules.nixos.bundles.server
 ```
 
 ### Module Types
@@ -113,6 +118,7 @@ modules/
 - Can expose flake outputs directly
 - Located in `features/` under each system type
 - Each feature is a single .nix file
+- Automatically imported and available in the nested structure
 
 #### Bundles
 
@@ -120,6 +126,7 @@ modules/
 - Can expose combined flake outputs
 - Located in `bundles/` under each system type
 - Each bundle is a single .nix file
+- Automatically imported and available in the nested structure
 
 ### Directory Structure
 
@@ -143,18 +150,31 @@ modules/
 The module discovery system:
 
 1. Recursively finds all `.nix` files in the modules directory
-2. Converts file paths to module paths
+2. Creates both nested and flat structures:
+   - Nested: Mirrors directory hierarchy for organization
+   - Flat: Array of modules for automatic importing
 3. Uses `flake-parts-lib.importApply` to process each module
-4. Collects and exposes flake outputs from all modules
+4. Automatically imports all modules via the flat structure
+5. Exposes the nested structure via `flakeModules`
 
-Example module with flake outputs:
+Example usage in flake:
 
 ```nix
-# modules/nixos/features/desktop.nix
-localFlake: { ... }: {
-  flake = {
-    desktop = "here";  # Accessible via `outputs.desktop`
+let
+  allModules = myLib.discoverModules {
+    baseDir = ./modules;
+    topModuleArgs = moduleArgs;
   };
+in
+{
+  # Automatic importing
+  imports = [
+    inputs.flake-root.flakeModule
+    inputs.treefmt-nix.flakeModule
+  ] ++ allModules.flat;
+
+  # Nested structure for organization
+  flake.flakeModules = allModules.nested;
 }
 ```
 
@@ -163,6 +183,5 @@ Access in REPL:
 ```nix
 nix repl
 > :lf .#
-> outputs.desktop
-"here"
+> flakeModules.nixos.features.hello  # Access nested structure
 ```
