@@ -81,13 +81,16 @@ let
                 { lib, ... }:
                 {
                   options = setEnableAttr (lib.mkEnableOption "Enable ${meta.relativePath}");
-                  config = setEnableAttr (lib.mkDefault false);
+                  config = setEnableAttr (lib.mkDefault true);
                 }
               )
               (
                 args:
                 let
-                  firstModuleResult = firstModule args;
+                  my = {
+                    cfg = lib.attrsets.getAttrFromPath configComponents args.config;
+                  };
+                  firstModuleResult = firstModule (args // { inherit my; });
                 in
                 lib.mkIf (getEnableAttr args.config) firstModuleResult
               )
