@@ -79,10 +79,12 @@ let
       # Find all module files
       moduleFiles = findModFiles baseDir;
 
-      # Create the final modules by merging all nested attribute sets
-      modules = lib.foldr lib.recursiveUpdate { } (
+      # Create modules with both nested and flat structures
+      nestedModules = lib.foldr lib.recursiveUpdate { } (
         map (file: mkNestedAttrs (pathToModuleInfo file).components (makeModule file)) moduleFiles
       );
+
+      flatModules = map makeModule moduleFiles;
 
       # Optional debug logging
       _ = lib.warn (
@@ -92,7 +94,10 @@ let
           "Discovered ${toString (builtins.length moduleFiles)} .nix modules"
       ) null;
     in
-    modules;
+    {
+      nested = nestedModules;
+      flat = flatModules;
+    };
 in
 {
   inherit discoverModules;
