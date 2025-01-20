@@ -41,100 +41,47 @@ let
         in
         builtins.concatLists results;
 
-      # Convert file paths to module paths
-      pathToModulePath =
-        path:
+      # Convert file paths to module paths and option paths
+      pathToModuleInfo =
+        file:
         let
           # Remove baseDir prefix and .nix suffix
-          relative = lib.removePrefix (toString baseDir + "/") (toString path);
+          relative = lib.removePrefix (toString baseDir + "/") (toString file.path);
           withoutNix = lib.removeSuffix ".nix" relative;
+
+          # Split path into components
+          components = lib.splitString "/" withoutNix;
         in
-        withoutNix;
+        {
+          inherit (file) path;
+          components = components;
+        };
+
+      # Create nested structure from components
+      mkNestedAttrs =
+        components: value:
+        if components == [ ] then
+          value
+        else
+          {
+            ${builtins.head components} = mkNestedAttrs (builtins.tail components) value;
+          };
+
+      # Create module for a single file
+      makeModule =
+        file:
+        let
+          moduleInfo = pathToModuleInfo file;
+          originalModule = topModuleArgs.flake-parts-lib.importApply moduleInfo.path topModuleArgs;
+        in
+        originalModule;
 
       # Find all module files
       moduleFiles = findModFiles baseDir;
 
-      # Create the final modules
-      # modules = builtins.listToAttrs (
-      #   map (file: {
-      #     name = pathToModulePath file.path;
-      #     value =
-      #       let
-      #         originalModule = topModuleArgs.flake-parts-lib.importApply file.path topModuleArgs;
-      #         wrapper =
-      #           moduleArgs:
-      #           let
-      #             _debugThing = builtins.trace (toString moduleArgs) null;
-      #             extraArgs = {
-      #               cfgPath = file.path;
-      #             };
-      #             originalModuleResult = originalModule (moduleArgs // extraArgs);
-      #             configOrTopLevel =
-      #               if builtins.isAttrs originalModuleResult.config then
-      #                 originalModuleResult.config
-      #               else
-      #                 originalModuleResult;
-      #             options = originalModuleResult.options or { };
-      #             imports = configOrTopLevel.imports or [ ];
-      #             flake = configOrTopLevel.flake or { };
-      #             perSystem = configOrTopLevel.perSystem or null;
-      #             perInput = configOrTopLevel.perInput or null;
-      #           in
-      #           {
-      #             options = options // {
-      #               myFlake."${file.path}".enable = lib.mkEnableOption "Enable ${file.path}";
-      #             };
-      #             config = configOrTopLevel // {
-      #               inherit
-      #                 imports
-      #                 flake
-      #                 perSystem
-      #                 perInput
-      #                 ;
-      #             };
-      #           };
-      #       in
-      #       wrapper;
-      #   }) moduleFiles
-      # );
-
-      modules = builtins.listToAttrs (
-        map (file: {
-          name = pathToModulePath file.path;
-          value =
-            let
-              originalModule = topModuleArgs.flake-parts-lib.importApply file.path topModuleArgs;
-              originalModuleImport = builtins.head originalModule.imports;
-              stringPath = toString file.path;
-              # Convert path to a safe string identifier
-              safeId = builtins.replaceStrings [ "/" ] [ "--" ] stringPath;
-            in
-            {
-              _file = originalModule._file;
-              imports = [
-                (
-                  { ... }:
-                  {
-                    options = {
-                      myFlake.${safeId}.enable = lib.mkEnableOption "Enable ${stringPath}";
-                    };
-                  }
-                )
-                (
-                  { ... }:
-                  {
-                    myFlake.${safeId}.enable = lib.mkDefault false;
-                  }
-                )
-                (
-                  { config, ... }:
-                  {
-                    imports = if config.myFlake.${safeId}.enable then [ originalModuleImport ] else [ ];
-                  }
-                )
-              ];
-            };
-        }) moduleFiles
+      # Create the final modules by merging all nested attribute sets
+      modules = lib.foldr lib.recursiveUpdate { } (
+        map (file: mkNestedAttrs (pathToModuleInfo file).components (makeModule file)) moduleFiles
       );
 
       # Optional debug logging
