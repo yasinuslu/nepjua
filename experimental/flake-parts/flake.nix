@@ -47,7 +47,7 @@
         # Auto-discover all modules
         flakeModules = myLib.discoverModules {
           baseDir = ./modules;
-          inherit moduleArgs;
+          topModuleArgs = moduleArgs;
         };
       in
       {

@@ -1,4 +1,5 @@
 # A simple hello module to test our module system
+localFlake:
 {
   config,
   lib,
@@ -6,21 +7,11 @@
   ...
 }:
 {
-  options = {
-    message = lib.mkOption {
-      type = lib.types.str;
-      default = "Hello, World!";
-      description = "The message to display";
-    };
-
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.hello;
-      description = "The hello package to use";
-    };
-  };
+  options = { };
 
   config = {
-    environment.systemPackages = [ config.myFlake.nixos.features.hello.package ];
+    flake = {
+      testingIfConfigIsSet = config.myFlake.nixos.features.hello.enable;
+    };
   };
 }
