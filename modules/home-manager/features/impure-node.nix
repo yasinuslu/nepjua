@@ -31,7 +31,7 @@ in
       npm uninstall -g pnpm yarn
       npm i -g corepack
       echo "Installing other global modules using pnpm..."
-      corepack install -g pnpm@9.7.0 yarn
+      corepack install -g pnpm@9.15.4 yarn
       pnpm i -g serve
     '';
   };

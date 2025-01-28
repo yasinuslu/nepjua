@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   homebrew = {
     onActivation = {
       cleanup = "zap";
@@ -22,6 +23,7 @@
       "telnet"
       "tesseract"
       "tig"
+      "ollama"
     ];
     casks = [
       "1password-cli"
