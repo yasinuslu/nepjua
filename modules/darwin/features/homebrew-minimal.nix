@@ -23,7 +23,6 @@
       "telnet"
       "tesseract"
       "tig"
-      "ollama"
     ];
     casks = [
       "1password-cli"
@@ -55,6 +54,7 @@
       "whatsapp"
       "zed"
       "zen-browser"
+      "ollama"
     ];
   };
 }
