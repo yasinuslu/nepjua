@@ -30,7 +30,7 @@
       "alt-tab"
       # "background-music"
       "cloudflare-warp"
-      "cursor"
+      # "cursor"
       "dbeaver-community"
       "discord"
       "gitkraken-cli"

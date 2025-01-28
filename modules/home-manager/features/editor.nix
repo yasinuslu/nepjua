@@ -5,13 +5,13 @@
 }:
 {
   home.sessionVariables = {
-    EDITOR = "cursor --wait";
-    CODE_EDITOR = "cursor";
-    REACT_EDITOR = "cursor";
+    EDITOR = "code --wait";
+    CODE_EDITOR = "code";
+    REACT_EDITOR = "code";
   };
 
   programs.zsh.initExtraFirst = ''
-    alias code="cursor"
+    # alias code="cursor"
     ${lib.optionalString pkgs.stdenv.isDarwin ''
       alias mscode="/opt/homebrew/bin/code"
     ''}
@@ -21,7 +21,7 @@
   '';
 
   programs.bash.profileExtra = ''
-    alias code="cursor"
+    # alias code="cursor"
     ${lib.optionalString pkgs.stdenv.isDarwin ''
       alias mscode="/opt/homebrew/bin/code"
     ''}
@@ -31,7 +31,7 @@
   '';
 
   programs.fish.loginShellInit = ''
-    alias code="cursor"
+    # alias code="cursor"
     ${lib.optionalString pkgs.stdenv.isDarwin ''
       alias mscode="/opt/homebrew/bin/code"
     ''}
