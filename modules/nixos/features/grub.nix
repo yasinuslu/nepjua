@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   # Disable systemd-boot
   boot.loader.systemd-boot.enable = lib.mkForce false;
 
@@ -13,7 +14,7 @@
 
     # Install GRUB to the default location
     # This can be customized per-host if needed
-    devices = ["nodev"];
+    devices = [ "nodev" ];
   };
 
   # Optional: Enable EFI if needed

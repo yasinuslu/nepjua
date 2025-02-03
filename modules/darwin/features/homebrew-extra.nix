@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   homebrew.taps = [
     "gromgit/fuse"
     "metalbear-co/mirrord"

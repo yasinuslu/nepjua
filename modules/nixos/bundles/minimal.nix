@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   myNixOS = {
     bundles.general-desktop.enable = lib.mkForce false;
 
