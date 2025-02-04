@@ -28,7 +28,7 @@
       "1password-cli"
       "1password"
       "alt-tab"
-      "bettermouse"
+      "mos"
       # "background-music"
       "cloudflare-warp"
       "cursor"
