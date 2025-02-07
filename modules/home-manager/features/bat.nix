@@ -8,7 +8,7 @@
   };
 
   home.shellAliases = {
-    cat = "bat";
+    # cat = "bat";
     pcat = "bat --plain";
     man = "batman";
   };
