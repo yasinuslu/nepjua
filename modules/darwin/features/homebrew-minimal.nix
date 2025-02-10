@@ -30,6 +30,7 @@
       "alt-tab"
       "mos"
       # "background-music"
+      "bettermouse"
       "cloudflare-warp"
       "cursor"
       "blitz-gg"
