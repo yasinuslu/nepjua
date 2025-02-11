@@ -22,6 +22,8 @@
     bundles.general-desktop.enable = true;
 
     zoom-us.enable = false;
+    xserver-nvidia.enable = false;
+    xserver-radeon.enable = true;
 
     users = {
       nepjua = {
