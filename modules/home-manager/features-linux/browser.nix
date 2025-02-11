@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  home.sessionVariables = {
+    BROWSER = "microsoft-edge";
+  };
+
   home.packages =
     with pkgs;
     [
@@ -22,9 +26,5 @@
     "text/xml" = [ "microsoft-edge.desktop" ];
     "x-scheme-handler/http" = [ "microsoft-edge.desktop" ];
     "x-scheme-handler/https" = [ "microsoft-edge.desktop" ];
-  };
-
-  environment.sessionVariables = {
-    BROWSER = "microsoft-edge";
   };
 }
