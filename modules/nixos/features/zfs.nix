@@ -2,16 +2,19 @@
 {
   boot.supportedFilesystems = [ "zfs" ];
   boot.initrd.supportedFilesystems = {
-    zfs = lib.mkDefault true;
+    zfs = lib.mkForce true;
   };
   boot.zfs = {
-    enabled = lib.mkDefault true;
-    forceImportRoot = lib.mkDefault false;
-    extraPools = [ "zpool" ];
+    # enabled = lib.mkForce true;
+    forceImportRoot = lib.mkForce false;
+    # extraPools = [ "zpool" ];
   };
 
   services.zfs = {
-    autoReplication.enable = true;
+    # autoReplication = {
+    #   enable = true;
+    #   username = "nepjua";
+    # };
     autoScrub.enable = true;
     autoSnapshot.enable = true;
     trim.enable = true;
