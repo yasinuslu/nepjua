@@ -13,8 +13,17 @@ host := `hostname`
 default:
     @just --list
 
+_setup:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo -e "\n🔍 Setting up environment variables\n"
+
+    export NIX_CONFIG := `gh auth token | xargs -I {} echo "extra-access-tokens = github.com={}"`
+
+
 # Clean up and optimize the Nix store
-gc:
+gc: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -28,15 +37,15 @@ gc:
     echo -e "\n✅ Garbage collection completed at $(date)\n"
 
 # Open a Nix REPL with trace
-repl:
+repl: _setup
     nix repl --show-trace
 
 # Open a Nix REPL with nixpkgs
-repl-nixpkgs:
+repl-nixpkgs: _setup
     nix repl -f flake:nixpkgs
 
 # Build with verbose output and no cache
-build-verbose-no-cache:
+build-verbose-no-cache: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -52,7 +61,7 @@ build-verbose-no-cache:
     echo -e "\n✅ Build completed at $(date)\n"
 
 # Build with verbose output
-build-verbose:
+build-verbose: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -66,7 +75,7 @@ build-verbose:
 
     echo -e "\n✅ Build completed at $(date)\n"
 
-build:
+build: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -81,7 +90,7 @@ build:
       {{ rebuild_args }}
 
 # Switch configuration using the detected rebuild command with retries
-switch:
+switch: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -100,7 +109,7 @@ switch:
     echo -e "❌ Switch failed after 3 attempts at $(date)\n"
     exit 1
 
-boot:
+boot: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -120,7 +129,7 @@ boot:
     exit 1
 
 # Update dconf settings
-update-dconf:
+update-dconf: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -201,15 +210,15 @@ update-dconf:
     fi
 
 # Update flake
-up:
+up: _setup
     nix flake update
 
 # Fetch submodules
-sub-fetch:
+sub-fetch: _setup
     git submodule update --init --recursive
 
 # Commit all submodules using heredoc syntax and handle no changes
-sub-sync:
+sub-sync: _setup
     #!/usr/bin/env bash
     git submodule foreach --quiet 'git add . && \
       if ! git diff --cached --quiet; then \
