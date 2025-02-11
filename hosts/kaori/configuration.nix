@@ -20,6 +20,7 @@
   myNixOS = {
     mainUser = "nepjua";
     bundles.general-desktop.enable = true;
+    grub.enable = false;
 
     zoom-us.enable = false;
     xserver-nvidia.enable = false;

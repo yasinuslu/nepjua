@@ -7,7 +7,7 @@
   boot.loader.grub = {
     enable = true;
     # Default to BIOS, but allow for easy UEFI configuration
-    efiSupport = lib.mkDefault false;
+    efiSupport = lib.mkDefault true;
 
     # Automatically detect other operating systems
     useOSProber = lib.mkDefault true;
@@ -19,6 +19,6 @@
 
   # Optional: Enable EFI if needed
   boot.loader.efi = {
-    canTouchEfiVariables = lib.mkDefault false;
+    canTouchEfiVariables = lib.mkDefault true;
   };
 }
