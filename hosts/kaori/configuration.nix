@@ -21,6 +21,8 @@
     mainUser = "nepjua";
     bundles.general-desktop.enable = true;
 
+    zoom-us.enable = false;
+
     users = {
       nepjua = {
         userConfig =
