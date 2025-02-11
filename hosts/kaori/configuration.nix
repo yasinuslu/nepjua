@@ -8,6 +8,7 @@
   ];
 
   networking.hostName = "kaori";
+  networking.hostId = "5bf9bcae";
   networking.firewall.enable = false;
 
   # networking.interfaces.eno1 = {
