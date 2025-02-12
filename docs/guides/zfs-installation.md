@@ -167,19 +167,13 @@ ls -la /mnt/nix/store | head -n 5
 1. Install the system:
 
 ```bash
-nixos-install --root /mnt --flake '/home/nixos/code/nepjua#kaori'
+cd ~/code/nepjua
+git pull; nixos-install --root /mnt --flake .#kaori
 ```
 
-Or you may want to do fail-forward installation:
+1. Set root password when prompted
 
-```bash
-cd /home/nixos/code/nepjua
-git pull; sudo NIX_STORE=/mnt/nix/store nixos-install --root /mnt --flake .#kaori
-```
-
-2. Set root password when prompted
-
-3. Set final mountpoints:
+2. Set final mountpoints:
 
 ```bash
 # Now set the final mountpoints for when we reboot
