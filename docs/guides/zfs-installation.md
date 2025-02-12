@@ -168,7 +168,7 @@ ls -la /mnt/nix/store | head -n 5
 
 ```bash
 cd ~/code/nepjua
-git pull; nixos-install --root /mnt --flake .#kaori
+git pull; sudo nixos-install --root /mnt --flake .#kaori
 ```
 
 1. Set root password when prompted
