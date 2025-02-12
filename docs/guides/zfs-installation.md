@@ -1,4 +1,4 @@
-# NixOS Full ZFS Installation Guide (Flake-Centric, ZFS Boot, systemd-boot) - Using `/dev/disk/by-label` for ESP
+# NixOS Full ZFS Installation Guide (Flake-Centric, ZFS Boot, systemd-boot)
 
 ## Hardware Reference Configuration
 
@@ -14,12 +14,10 @@
 
 - NixOS installation media (USB drive or ISO image)
 - High-performance NVMe drives
-- At least 32GB RAM for optimal ZFS caching (consider at least 8GB RAM for basic
-  ZFS functionality)
-- Stable internet connection during installation (for package downloads)
-- Backup of all important data on the target drives before proceeding
-- **Your NixOS flake repository cloned to `/home/nixos/code/nepjua` on the NixOS
-  installation media**
+- At least 32GB RAM for optimal ZFS caching
+- Stable internet connection
+- Backup of all important data (drives will be completely wiped)
+- Your NixOS flake repository cloned to `/home/nixos/code/nepjua`
 
 ## 1. Storage Layout
 
@@ -27,221 +25,195 @@
 nvme0n1 (Samsung 990 PRO 2TB):
 ├── EFI partition (1GB)
 └── ZFS partition (1.9TB) ─┐
-                           ├── ZFS RAID0 pool (5.34TB total) - **Performance-focused, NO redundancy**
-nvme1n1 (Patriot 4TB):     │
+                          ├── ZFS RAID0 pool (5.34TB total)
+nvme1n1 (Patriot 4TB):    │
 └── ZFS partition (3.9TB) ─┘
 
-**Dataset Layout under `tank` pool:**
-- `tank/root/nixos`:  Root filesystem dataset (mounted at `/`)
-- `tank/nix`: Nix structure dataset (mounted at `/nix`)
-- `tank/nix/store`: Nix store packages dataset (mounted at `/nix/store`)
-- `tank/boot`: Boot dataset (mounted at `/boot`)
-- `tank/vm`: Virtual machine images dataset (mounted at `/tank/vm`)
-- `tank/data`: General data dataset (mounted at `/tank/data`)
+Dataset Layout:
+tank/
+├── root/
+│   └── nixos  (/)
+├── nix        (/nix)
+│   └── store  (/nix/store)
+├── boot       (/boot)
+├── vm         (/tank/vm)
+└── data       (/tank/data)
 
-**Important Note:** This guide uses RAID0 for the ZFS pool to maximize performance by striping data across both NVMe drives. **RAID0 provides NO data redundancy.** If either NVMe drive fails, **all data in the pool will be lost.**
-
-**For users prioritizing data safety, consider using RAID1 (mirror) instead,** especially if you are only using two drives. RAID1 will halve the usable space but provide redundancy against a single drive failure.
+Note: RAID0 provides NO redundancy - data loss if either drive fails
 ```
 
-## 2. Disk Preparation
+## 2. Initial Setup
 
-1. Identify your disks:
+1. Boot from NixOS installation media and verify disks:
 
 ```bash
-ls -la /dev/disk/by-id/
+ls -la /dev/disk/by-id/ | grep -E 'nvme-Samsung|nvme-Viper'
 ```
 
-2. Create partitions:
+2. Set disk variables (adjust paths based on your output):
 
 ```bash
-# Replace X with your disk identifiers
 DISK1=/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J
 DISK2=/dev/disk/by-id/nvme-Viper_VP4300L_4TB_VP4300LFDBA234200458
 
-**WARNING: Double-check that DISK1 and DISK2 variables correctly identify your intended NVMe drives. Incorrect disk selection in the following commands WILL lead to DATA LOSS.**
+# Verify variables are set correctly
+echo "DISK1: $DISK1"
+echo "DISK2: $DISK2"
+```
 
-# Create partition table on primary disk (nvme0n1 - Samsung 990 PRO 2TB)
-parted $DISK1 -- mklabel gpt
-parted $DISK1 -- mkpart ESP fat32 1MiB 1GiB
-parted $DISK1 -- set 1 esp on
-parted $DISK1 -- mkpart primary 1GiB 100%   # ZFS partition (for RAID0 pool, rest of disk)
+3. Completely wipe both disks:
 
-# Create partition table on secondary disk (nvme1n1 - Patriot Viper VP4300L 4TB)
-parted $DISK2 -- mklabel gpt
-parted $DISK2 -- mkpart primary 1MiB 100%     # Full disk for ZFS (for RAID0 pool)
+```bash
+wipefs -a ${DISK1}
+wipefs -a ${DISK2}
+```
 
-# Format boot partition (EFI)
-mkfs.fat -F 32 -n boot ${DISK1}-part1
+4. Create partitions:
 
-# **Label the EFI System Partition (ESP)**
-fatlabel ${DISK1}-part1 boot-efi # Label the ESP partition as "boot-efi"
+```bash
+# Primary disk
+parted ${DISK1} -- mklabel gpt
+parted ${DISK1} -- mkpart ESP fat32 1MiB 1GiB
+parted ${DISK1} -- set 1 esp on
+parted ${DISK1} -- mkpart primary 1GiB 100%
 
-**Alternative to `parted`:** Some users may prefer `gdisk` for GPT partitioning. The commands would be different; consult `gdisk` documentation if you prefer to use it.
+# Secondary disk
+parted ${DISK2} -- mklabel gpt
+parted ${DISK2} -- mkpart primary 1MiB 100%
+
+# Format and label ESP
+mkfs.fat -F 32 -n BOOT-EFI ${DISK1}-part1
 ```
 
 ## 3. ZFS Pool Creation
 
-Create the ZFS pool with performance-optimized settings:
+1. Create the pool with optimal settings:
 
 ```bash
-# Create RAID0 pool for maximum performance
 zpool create -f -o ashift=12 \
     -O mountpoint=none \
     -O acltype=posixacl \
-    -O compression=lz4 \         # Fastest compression (lz4 is highly recommended for performance)
-    -O atime=off \              # Disable access time updates (improves performance)
-    -O xattr=sa \               # System attributes in inodes (performance improvement)
-    -O dnodesize=auto \         # Let ZFS decide dnode size (generally optimal)
-    -O normalization=formD \     # Unicode normalization (generally recommended default)
+    -O compression=lz4 \
+    -O atime=off \
+    -O xattr=sa \
+    -O dnodesize=auto \
+    -O normalization=formD \
     tank ${DISK1}-part2 ${DISK2}-part1
 
-# Create system datasets
-
-zfs create -o mountpoint=none tank/root
-zfs create -o mountpoint=/ \
-    -o recordsize=32k \          # Optimal for mixed workloads (system files, config, etc.)
-    -o compression=lz4 \
-    -o atime=off \
-    tank/root/nixos
-
-# Create Nix structure datasets
-zfs create -o mountpoint=/nix \
-    -o recordsize=64k \          # Good compromise for Nix store (packages, derivations)
-    -o compression=lz4 \
-    -o atime=off \
-    tank/nix
-zfs create -o mountpoint=/nix/store \
-    -o recordsize=64k \          # Good compromise for Nix store (packages, derivations)
-    -o compression=lz4 \
-    -o atime=off \
-    tank/nix/store
-
-# Create boot dataset
-zfs create -o mountpoint=/boot \
-    tank/boot
-
-# Create VM dataset with optimal performance settings
-zfs create -o mountpoint=/tank/vm \
-    -o recordsize=64k \          # Optimal for VM images and general VM workload
-    -o sync=disabled \           # **EXTREME PERFORMANCE, EXTREME DATA LOSS RISK!** - ONLY for non-critical VMs
-    -o compression=lz4 \         # Fastest compression
-    -o atime=off \
-    -o logbias=throughput \      # Optimize for throughput (VM disk access)
-    -o primarycache=all \        # Utilize ARC (RAM cache) for all data
-    -o secondarycache=all \      # Utilize L2ARC (if configured, not in this guide) for all data
-    tank/vm
-**WARNING:** `sync=disabled` for `tank/vm` dataset significantly increases write performance for VMs, but it **completely disables synchronous writes and poses a SEVERE DATA LOSS RISK** in case of power failure or system crash. **Use `sync=disabled` ONLY for VMs where data loss is acceptable and you understand the risks.** For most VM use cases, use the default `sync=standard` or `sync=always` for data safety.
-
-
-# Create data dataset
-zfs create -o mountpoint=/tank/data \
-    -o recordsize=1M \           # Larger blocks for general data storage (large files, media)
-    -o compression=lz4 \
-    -o atime=off \
-    tank/data
-
-**Recordsize Rationale:**
-- `32k` for `tank/root/nixos`: Good for general system files and mixed workloads.
-- `64k` for `tank/nix` and `tank/nix/store`: Compromise between metadata and data for package store and VM images.
-- `1M` for `tank/data`: Optimal for large files and sequential I/O typical of general data storage.
-
-**ARC and L2ARC:**
-- `primarycache=all` and `secondarycache=all` settings utilize the ZFS Adaptive Replacement Cache (ARC) in RAM and, if configured, a Level 2 ARC (L2ARC) on SSD for caching data, improving read performance. With 64GB RAM, a 32GB ARC limit (set in kernel parameters later) is reasonable.
+# Verify pool creation
+zpool status tank
 ```
 
-## 4. System Configuration (Flake-First, systemd-boot, ZFS /boot) - Manual `hardware-configuration.nix` (using `/dev/disk/by-label`)
-
-This guide now exclusively uses NixOS flakes for system configuration and boots
-from ZFS `/boot` using `systemd-boot`. We will create a `flake.nix` at the root
-of your configuration repository which acts as the main entry point.
-`configuration.nix` will be used as a module imported by the flake. We will also
-manually configure `hardware-configuration.nix` to label the EFI System
-Partition (ESP) using `/dev/disk/by-label` paths.
-
-**Important:** Before proceeding, ensure you have cloned your NixOS flake
-repository to `/home/nixos/code/nepjua` within the live NixOS environment.
-
-1. Mount boot partition:
+2. Create root dataset structure (all unmounted initially):
 
 ```bash
-mount -t vfat ${DISK1}-part1 /mnt/boot
+# Root structure
+zfs create -u -o mountpoint=none tank/root
+zfs create -u -o mountpoint=none \
+    -o recordsize=32k \
+    tank/root/nixos
+
+# Nix structure
+zfs create -u -o mountpoint=none \
+    -o recordsize=64k \
+    tank/nix
+zfs create -u -o mountpoint=none \
+    -o recordsize=64k \
+    tank/nix/store
+
+# Additional datasets
+zfs create -u -o mountpoint=none tank/boot
+zfs create -u -o mountpoint=none \
+    -o recordsize=64k \
+    -o sync=disabled \
+    -o logbias=throughput \
+    tank/vm
+zfs create -u -o mountpoint=none \
+    -o recordsize=1M \
+    tank/data
 ```
 
-2. **Manually create and edit `hardware-configuration.nix`:**
+3. Set mountpoints and mount datasets in order:
 
-Instead of auto-generating `hardware-configuration.nix`, we will create it
-manually and use `/dev/disk/by-label` paths to specify the EFI System Partition
-(ESP).
+```bash
+# Set temporary mountpoints first
+zfs set mountpoint=/mnt tank/root/nixos
+zfs set mountpoint=/mnt/nix tank/nix
+zfs set mountpoint=/mnt/nix/store tank/nix/store
+zfs set mountpoint=/mnt/boot tank/boot
+zfs set mountpoint=/mnt/tank/vm tank/vm
+zfs set mountpoint=/mnt/tank/data tank/data
 
-a. **Create `hardware-configuration.nix` at
-`/home/nixos/code/nepjua/hardware-configuration.nix`:**
+# Mount in order
+zfs mount tank/root/nixos
+zfs mount tank/nix
+zfs mount tank/nix/store
+zfs mount tank/boot
+zfs mount tank/vm
+zfs mount tank/data
 
-Create a new file named `hardware-configuration.nix` in your flake repository
-directory (`/home/nixos/code/nepjua`).
+# Mount ESP
+mkdir -p /mnt/boot/efi
+mount -t vfat /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
 
-b. **Verify the label for your EFI System Partition (ESP):**
+# Verify mounts
+zfs mount
+mount | grep efi
 
-Use the `ls -la /dev/disk/by-label/` command to list disk labels. After labeling
-the ESP in the "Disk Preparation" step, you should see a label named `boot-efi`
-(or whatever label you chose) pointing to your ESP partition.
+# Restore nix store from backup
+echo "Restoring nix store from backup..."
+rsync -av /run/media/nixos/obito/backup/nixstore/ /mnt/nix/store/
 
-The output will show symbolic links like this (example):
-
-```plaintext
-lrwxrwxrwx 1 root root 10 Feb 12 23:45 boot-efi ->../../nvme0n1p1
+# Verify the restore
+echo "Verifying nix store restore..."
+du -sh /mnt/nix/store
 ```
 
-**Confirm that you see the `boot-efi` label (or your chosen label) and that it
-points to the correct partition (e.g., `../../nvme0n1p1`).**
+## 4. System Configuration
 
-c. **Edit `/home/nixos/code/nepjua/hardware-configuration.nix`:**
+1. Create hardware configuration:
 
-Open `/home/nixos/code/nepjua/hardware-configuration.nix` in a text editor (like
-`nano` or `vim`) and paste the following configuration.
-
-```nix
-# /home/nixos/code/nepjua/hardware-configuration.nix
-
-{ config, lib, pkgs,... }:
+```bash
+mkdir -p /home/nixos/code/nepjua
+cat > /home/nixos/code/nepjua/hardware-configuration.nix << 'EOF'
+{ config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix> ];
+  imports = [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix> ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "vfat" "zfs" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ]; # or "kvm-amd"
+  boot.kernelModules = [ "kvm-amd" ];
 
   boot.zfs.forceImportRoot = false;
   boot.zfs.devNodes = "/dev/disk/by-id";
 
   fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-label/boot-efi"; # **Using /dev/disk/by-label/boot-efi for ESP**
+    device = "/dev/disk/by-label/BOOT-EFI";
     fsType = "vfat";
   };
 
   swapDevices = [ ];
 
-  # Enables DHCPv4 client on enp7s0 - adjust interface name if needed
+  networking.useDHCP = false;
   networking.interfaces.enp7s0.useDHCP = true;
-  networking.wireless.enable = false;  # Disable wireless
+  networking.wireless.enable = false;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.video.hidpi.enable = lib.mkDefault false; # Disable HiDPI for now
 }
+EOF
 ```
 
-**3. Create `flake.nix` at `/home/nixos/code/nepjua/flake.nix`:**
+2. Create flake configuration:
 
-```nix
+```bash
+cat > /home/nixos/code/nepjua/flake.nix << 'EOF'
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; # Or your preferred nixpkgs version
-    flake-utils.url = "github:numtide/flake-utils"; # Utility functions for flakes
-    # Add other flake inputs here if needed (e.g., home-manager)
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = { self, nixpkgs, flake-utils, ... }:
@@ -253,63 +225,54 @@ Open `/home/nixos/code/nepjua/hardware-configuration.nix` in a text editor (like
         nixosConfigurations.kaori = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            ./configuration.nix # Import our main NixOS configuration as a module
-            ./hardware-configuration.nix # Manually configured hardware config
-            # Add other NixOS modules here, or from flake inputs
+            ./configuration.nix
+            ./hardware-configuration.nix
           ];
-          # Special system configurations (systemd-boot, ZFS) are in configuration.nix
         };
       }
     );
 }
+EOF
 ```
 
-**4. Edit `configuration.nix` at `/home/nixos/code/nepjua/configuration.nix`:**
+3. Create system configuration:
 
-```nix
+```bash
+cat > /home/nixos/code/nepjua/configuration.nix << 'EOF'
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ]; # Keep this import - hardware config is still needed
+  imports = [ ./hardware-configuration.nix ];
 
-  nix = {
-    settings.experimental-features = [ "nix-command" "flakes" ]; # Enable flakes - already in flake.nix, but good to have here too
-    gc.automatic = true; # Enable garbage collection
-  };
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.gc.automatic = true;
 
-  networking.hostName = "kaori"; # Set hostname
-  # networking.hostId = "$(head -c 8 /etc/machine-id)"; # Remove - usually unnecessary
+  networking.hostName = "kaori";
 
-  # ZFS support - crucial for ZFS root
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.devNodes = "/dev/disk/by-id";
-  boot.zfs.enable = true; # Enable ZFS boot - necessary for ZFS root
+  boot.zfs.enable = true;
 
-  # Boot loader - systemd-boot for UEFI and ZFS /boot
-  boot.loader.systemd-boot.enable = true; # Enable systemd-boot
-  boot.loader.efi.canTouchEfiVariables = true; # Required for UEFI systemd-boot
-  boot.loader.efi.efiSysMountPoint = "/boot/efi"; # **Explicitly set ESP mount point** - important for manual config
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
-  # ZFS performance settings (kernel parameters)
   boot.kernelParams = [
-    "zfs.zfs_arc_max=34359738368"      # 32GB max ARC size (adjust based on RAM)
-    "zfs.zfs_txg_timeout=5"            # Faster transaction commits
+    "zfs.zfs_arc_max=34359738368"
+    "zfs.zfs_txg_timeout=5"
     "zfs.zfs_vdev_async_read_max_active=12"
     "zfs.zfs_vdev_async_write_max_active=12"
   ];
 
-  # ZFS service configuration
   services.zfs = {
-    trim.enable = true;                 # Enable TRIM for SSDs
+    trim.enable = true;
     autoScrub = {
       enable = true;
-      interval = "weekly";             # Consider weekly for RAID0
+      interval = "weekly";
     };
-    # autoSnapshot.enable = false;        # Disabled for performance - consider enabling and tuning snapshots
-    autoSnapshot.hourly.enable = true;   # Example: Enable hourly snapshots (tune retention in flake)
+    autoSnapshot.enable = true;
   };
 
-  # VM related settings (libvirt, qemu)
   virtualisation = {
     libvirtd = {
       enable = true;
@@ -322,230 +285,112 @@ Open `/home/nixos/code/nepjua/hardware-configuration.nix` in a text editor (like
             tpmSupport = true;
           })];
         };
-        verbatimConfig = ''
-          namespaces = [ ]
-          user = "root"
-          group = "root"
-          clear_emulator_capabilities = 0
-        '';
       };
     };
     spiceUSBRedirection.enable = true;
   };
 
-  # Add user to libvirt and kvm groups (replace 'your-username')
-  users.users.your-username.extraGroups = [ "libvirtd" "kvm" ];
+  users.users.your-username = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "libvirtd" "kvm" ];
+  };
 
-  # System packages
   environment.systemPackages = with pkgs; [
     virt-manager
     virt-viewer
     spice-gtk
-    win-virtio    # Windows VirtIO drivers
-    swtpm         # TPM emulator
-    arc-summary   # For ARC monitoring
-    zfstools      # For zfs commands in recovery
+    win-virtio
+    swtpm
+    arc-summary
+    zfstools
   ];
 
-  system.stateVersion = "24.05"; # Or your desired NixOS version
+  system.stateVersion = "24.05";
 }
+EOF
 ```
 
-## 5. Installation and First Boot
+## 5. Installation
 
-1. Install NixOS using your flake configuration:
+1. Install the system:
 
 ```bash
-nixos-install --root /mnt --flake '/home/nixos/code/nepjua#kaori' # **Adjust the flake path and system name (`kaori`) if necessary to match your flake repository and system configuration name.**
-# IMPORTANT: The path now points to the directory containing your flake in /home/nixos/code/nepjua, and the system name 'kaori' is defined in flake.nix
+nixos-install --root /mnt --flake '/home/nixos/code/nepjua#kaori'
 ```
 
-2. **Set root password:** You will be prompted to set the root password during
-   the installation process. **Do not forget the root password\!**
+2. Set root password when prompted
 
-3. Reboot:
+3. Set final mountpoints:
+
+```bash
+# Now set the final mountpoints for when we reboot
+zfs set mountpoint=/ tank/root/nixos
+zfs set mountpoint=/nix tank/nix
+zfs set mountpoint=/nix/store tank/nix/store
+zfs set mountpoint=/boot tank/boot
+zfs set mountpoint=/tank/vm tank/vm
+zfs set mountpoint=/tank/data tank/data
+```
+
+4. Reboot:
 
 ```bash
 reboot
 ```
 
-## 6. Performance Monitoring
+## 6. Post-Installation
 
-After installation and during system usage, you can use these commands to
-monitor ZFS performance:
+After first boot:
 
-```bash
-# Check compression ratio for a dataset (e.g., tank/vm)
-zfs get compressratio tank/vm
-# Output will show the compression ratio achieved (e.g., 2.50x means 2.5 times space saving)
-
-# Monitor real-time I/O performance of the entire pool and individual vdevs (disks)
-zpool iostat -v 1
-# This command updates every 1 second. Look for:
-# - Bandwidth (read/write MB/s)
-# - Operations per second (ops)
-# - Latency (latency, wait times)
-# High latency or saturation can indicate performance bottlenecks.
-
-# Check Adaptive Replacement Cache (ARC) statistics
-arc_summary
-# Provides detailed stats about ARC hit ratios, cache size, and memory usage.
-# High hit ratios (e.g., >90% for primary cache) indicate efficient caching.
-
-# Check ZFS dataset space usage, compression, and compression ratio
-zfs list -o name,used,avail,compression,compressratio
-# Shows used and available space, compression algorithm, and achieved compression ratio for each dataset.
-```
-
-## 7. Recovery Procedures
-
-If your system fails to boot or you need to perform maintenance, boot from the
-NixOS installation media.
-
-1. **Check ZFS pool status:** Before importing, check the pool health:
+1. Verify ZFS status:
 
 ```bash
 zpool status tank
-# Examine the output for any errors or pool degradation.
+zfs list
+arc_summary
 ```
 
-2. Import the ZFS pool:
+2. Create your user account if not done during installation:
 
 ```bash
-zpool import -f tank
-# `-f` (force) may be needed if the pool was not cleanly exported. Use with caution.
+useradd -m -G wheel,libvirtd,kvm your-username
+passwd your-username
 ```
 
-3. Mount essential filesystems:
+3. Configure system:
 
 ```bash
-mount -t zfs tank/root/nixos /mnt
-mount -t zfs tank/boot /mnt/boot # Mount ZFS /boot dataset
-mount -t vfat /dev/disk/by-label/boot-efi /mnt/boot/efi # Mount EFI partition under /boot/efi using label
+# Update flake inputs
+cd /home/nixos/code/nepjua
+nix flake update
+
+# Rebuild system
+nixos-rebuild switch --flake .#kaori
 ```
 
-4. Enter the installed NixOS system environment (chroot):
+## Recovery Procedures
+
+If you need to recover or reinstall:
+
+1. Boot from NixOS installation media
+
+2. Import the pool:
+
+```bash
+zpool import -N tank
+zfs mount tank/root/nixos
+zfs mount tank/boot
+mount -t vfat /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
+```
+
+3. Enter the system:
 
 ```bash
 nixos-enter --root /mnt
-# This command changes your root directory to /mnt, allowing you to run commands as if you were in your installed NixOS system.
-# From here, you can try to diagnose and fix configuration issues, rebuild the system, etc.
 ```
 
-**Recovery with ZFS Snapshots (if enabled):** If you have enabled ZFS snapshots,
-you can potentially roll back to a previous snapshot of your `tank/root/nixos`
-dataset to recover from configuration issues. This guide does not detail
-snapshot rollback, but refer to ZFS documentation for snapshot management
-commands (`zfs list -t snapshot`, `zfs rollback`).
+## References
 
-## 8. VM Configuration for virt-manager
-
-This section provides guidance on configuring virtual machines within
-virt-manager to leverage the ZFS storage and optimize performance.
-
-1. Optimal VM storage configuration in virt-manager:
-   - Storage pool configuration:
-
-```xml
-<pool type='zfs'>
-  <name>tank</name>
-  <source>
-    <name>tank/vm</name>
-  </source>
-  <target>
-    <path>/tank/vm</path>
-  </target>
-</pool>
-```
-
-2. VM performance optimizations:
-   - Use **virtio drivers** for all virtual devices (disk, network, graphics,
-     etc.) for optimal performance. VirtIO is paravirtualized and designed for
-     VMs.
-   - **Enable CPU host-passthrough:** Allows the VM to directly utilize the host
-     CPU's features and extensions, improving performance.
-   - **Use hugepages for memory:** Hugepages can significantly improve VM memory
-     performance by reducing TLB (Translation Lookaside Buffer) pressure.
-   - **Configure NUMA for optimal CPU/memory access:**
-
-**NUMA (Non-Uniform Memory Access) Explanation:** Modern CPUs, especially
-multi-socket or high-core-count CPUs like the Ryzen 7950X3D, often use NUMA
-architecture. NUMA means that memory access times are not uniform; accessing
-memory closer to a CPU core is faster than accessing memory further away (e.g.,
-memory attached to a different CPU socket or NUMA node).
-
-**For optimal VM performance, it's crucial to align VM vCPUs and memory
-allocation within the same NUMA node as much as possible.**
-
-To determine your host's NUMA configuration, use commands like `lscpu --topo` or
-`numactl --hardware` on your NixOS host. Then, configure your VM XML to match
-the host NUMA layout.
-
-Example VM XML snippets for best performance:
-
-```xml
-<cpu mode='host-passthrough' check='none' migratable='off'>
-  <topology sockets='1' dies='1' cores='8' threads='2'/> <cache mode='passthrough'/>
-  <feature policy='require' name='topoext'/>
-</cpu>
-
-<memory unit='GiB'>32</memory> <memoryBacking>
-  <hugepages/>
-  <allocation mode='immediate'/>
-</memoryBacking>
-
-<disk type='block' device='disk'>
-  <driver name='qemu' type='raw' cache='none' io='native' discard='unmap'/>
-  <source dev='/dev/zvol/tank/vm/windows'/> <target dev='vda' bus='virtio'/>
-</disk>
-
-<interface type='bridge'>
-  <source bridge='br0'/> <model type='virtio'/>
-  <driver name='vhost' queues='8'/>
-</interface>
-```
-
-3. Performance monitoring for VMs:
-
-```bash
-# Monitor VM I/O performance (disk and network)
-iostat -xm 1
-# Look for disk and network I/O statistics for your VMs (device names will vary)
-
-# Check VM CPU usage
-virt-top
-# Shows real-time CPU usage per VM and for the hypervisor
-
-# Monitor ZFS VM dataset performance
-zpool iostat -v tank/vm 1
-# Specifically monitor the I/O performance of the `tank/vm` dataset
-```
-
-## 9. References
-
-- [NixOS Manual](https://www.google.com/url?sa=E&source=gmail&q=https://nixos.org/manual/nixos/stable/)
-- [OpenZFS Documentation](https://www.google.com/url?sa=E&source=gmail&q=https://openzfs.github.io/openzfs-docs/)
-- [NixOS ZFS Wiki](https://www.google.com/url?sa=E&source=gmail&q=https://nixos.wiki/wiki/ZFS)
-
-**Important Considerations when using `/dev/disk/by-label` paths:**
-
-- **Labeling is crucial:** Ensure you correctly label the ESP partition in the
-  "Disk Preparation" step using `fatlabel`. The label in
-  `hardware-configuration.nix` **must exactly match** the label you set on the
-  partition.
-- **Potential for Label Conflicts:** If you have multiple partitions with the
-  same label (e.g., if you reuse labels across different drives or systems),
-  `/dev/disk/by-label` might become ambiguous, and NixOS might mount the wrong
-  partition. **Ensure labels are unique within your system.**
-- **Label Changes:** If you accidentally change or remove the label from the ESP
-  partition after installation, your system **might fail to boot.**
-- **Less Robust than UUIDs:** While labels are more human-readable than UUIDs,
-  they are generally considered **less robust** for system configuration
-  compared to UUIDs (`PARTUUID`) because labels can be more easily changed or
-  accidentally duplicated.
-- **If you encounter boot issues:** If you face boot problems after using
-  `/dev/disk/by-label` paths, double-check that the label in
-  `hardware-configuration.nix` exactly matches the label on your ESP partition.
-  If issues persist, consider switching to `PARTUUID` in
-  `hardware-configuration.nix` or even `/dev/disk/by-id` for potentially
-  increased reliability.
+- [NixOS Manual](https://nixos.org/manual/nixos/stable/)
+- [OpenZFS Documentation](https://openzfs.github.io/openzfs-docs/)
+- [NixOS ZFS Wiki](https://nixos.wiki/wiki/ZFS)
