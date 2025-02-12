@@ -17,6 +17,23 @@
   #   wakeOnLan.enable = true;
   #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
   # };
+  fileSystems."/tank/vm" = {
+    device = "tank/vm";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/tank/data" = {
+    device = "tank/data";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/tank/nixstore" = {
+    device = "tank/nixstore";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
 
   myNixOS = {
     mainUser = "nepjua";

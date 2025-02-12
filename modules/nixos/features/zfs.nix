@@ -7,7 +7,7 @@
   boot.zfs = {
     # enabled = lib.mkForce true;
     forceImportRoot = lib.mkForce false;
-    # extraPools = [ "zpool" ];
+    extraPools = [ "tank" ];
   };
 
   services.zfs = {
