@@ -28,21 +28,29 @@
   fileSystems."/" = {
     device = "tank/root/nixos";
     fsType = "zfs";
+    options = [ "zfsutil" ];
+    neededForBoot = true;
   };
 
   fileSystems."/nix" = {
     device = "tank/nix";
     fsType = "zfs";
+    options = [ "zfsutil" ];
+    neededForBoot = true;
   };
 
   fileSystems."/nix/store" = {
     device = "tank/nix/store";
     fsType = "zfs";
+    options = [ "zfsutil" ];
+    neededForBoot = true;
   };
 
   fileSystems."/boot" = {
     device = "tank/boot";
     fsType = "zfs";
+    options = [ "zfsutil" ];
+    neededForBoot = true;
   };
 
   fileSystems."/boot/efi" = {
@@ -57,11 +65,13 @@
   fileSystems."/tank/vm" = {
     device = "tank/vm";
     fsType = "zfs";
+    options = [ "zfsutil" ];
   };
 
   fileSystems."/tank/data" = {
     device = "tank/data";
     fsType = "zfs";
+    options = [ "zfsutil" ];
   };
 
   swapDevices = [ ];
