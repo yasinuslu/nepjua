@@ -59,7 +59,7 @@ in
     };
 
     nixpkgs.config.allowUnfree = true;
-    nixpkgs.config.allowUnsupportedSystem = true;
+    nixpkgs.config.allowUnsupportedSystem = false;
 
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     system.stateVersion = "24.11";
