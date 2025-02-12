@@ -29,10 +29,19 @@
     options = [ "zfsutil" ];
   };
 
+  # Remove this mount since we're moving it to /nix/store
   fileSystems."/tank/nixstore" = {
     device = "tank/nixstore";
     fsType = "zfs";
     options = [ "zfsutil" ];
+  };
+
+  # Keep this one
+  fileSystems."/nix/store" = {
+    device = "tank/nixstore";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+    neededForBoot = true;
   };
 
   myNixOS = {
