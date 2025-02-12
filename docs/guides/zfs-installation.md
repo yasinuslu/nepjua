@@ -136,21 +136,13 @@ zfs create -u -o mountpoint=none \
 3. Set mountpoints and mount datasets in order:
 
 ```bash
-# Set temporary mountpoints first
+# Set mountpoints - ZFS will automatically mount them
 zfs set mountpoint=/mnt tank/root/nixos
 zfs set mountpoint=/mnt/nix tank/nix
 zfs set mountpoint=/mnt/nix/store tank/nix/store
 zfs set mountpoint=/mnt/boot tank/boot
 zfs set mountpoint=/mnt/tank/vm tank/vm
 zfs set mountpoint=/mnt/tank/data tank/data
-
-# Mount in order
-zfs mount tank/root/nixos
-zfs mount tank/nix
-zfs mount tank/nix/store
-zfs mount tank/boot
-zfs mount tank/vm
-zfs mount tank/data
 
 # Mount ESP
 mkdir -p /mnt/boot/efi
@@ -160,22 +152,104 @@ mount -t vfat /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
 zfs mount
 mount | grep efi
 
-# Restore nix store from backup
+# Restore nix store from backup (preserving all attributes and showing progress)
 echo "Restoring nix store from backup..."
-rsync -av /run/media/nixos/obito/backup/nixstore/ /mnt/nix/store/
+rsync -avxHAX --progress --numeric-ids --delete /run/media/nixos/obito/backup/nixstore/ /mnt/nix/store/
 
 # Verify the restore
 echo "Verifying nix store restore..."
 du -sh /mnt/nix/store
+ls -la /mnt/nix/store | head -n 5
 ```
 
-## 4. System Configuration
+## 4. System Installation
 
-1. Create hardware configuration:
+1. Install the system:
 
 ```bash
-mkdir -p /home/nixos/code/nepjua
-cat > /home/nixos/code/nepjua/hardware-configuration.nix << 'EOF'
+nixos-install --root /mnt --flake '/home/nixos/code/nepjua#kaori'
+```
+
+2. Set root password when prompted
+
+3. Set final mountpoints:
+
+```bash
+# Now set the final mountpoints for when we reboot
+zfs set mountpoint=/ tank/root/nixos
+zfs set mountpoint=/nix tank/nix
+zfs set mountpoint=/nix/store tank/nix/store
+zfs set mountpoint=/boot tank/boot
+zfs set mountpoint=/tank/vm tank/vm
+zfs set mountpoint=/tank/data tank/data
+```
+
+4. Reboot:
+
+```bash
+reboot
+```
+
+## 5. Post-Installation
+
+After first boot:
+
+1. Verify ZFS status:
+
+```bash
+zpool status tank
+zfs list
+arc_summary
+```
+
+2. Create your user account if not done during installation:
+
+```bash
+useradd -m -G wheel,libvirtd,kvm your-username
+passwd your-username
+```
+
+3. Configure system:
+
+```bash
+# Update flake inputs
+cd /home/nixos/code/nepjua
+nix flake update
+
+# Rebuild system
+nixos-rebuild switch --flake .#kaori
+```
+
+## 6. Recovery Procedures
+
+If you need to recover or reinstall:
+
+1. Boot from NixOS installation media
+
+2. Import the pool:
+
+```bash
+zpool import -N tank
+zfs mount tank/root/nixos
+zfs mount tank/boot
+mount -t vfat /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
+```
+
+3. Enter the system:
+
+```bash
+nixos-enter --root /mnt
+```
+
+## Reference Configurations
+
+These are example configurations that you can use as a reference. You'll likely
+want to adapt these to your existing flake structure.
+
+### Hardware Configuration
+
+```nix
+# hardware-configuration.nix
 { config, lib, pkgs, ... }:
 
 {
@@ -203,13 +277,12 @@ cat > /home/nixos/code/nepjua/hardware-configuration.nix << 'EOF'
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
-EOF
 ```
 
-2. Create flake configuration:
+### Example Flake Configuration
 
-```bash
-cat > /home/nixos/code/nepjua/flake.nix << 'EOF'
+```nix
+# flake.nix
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -232,13 +305,12 @@ cat > /home/nixos/code/nepjua/flake.nix << 'EOF'
       }
     );
 }
-EOF
 ```
 
-3. Create system configuration:
+### Example System Configuration
 
-```bash
-cat > /home/nixos/code/nepjua/configuration.nix << 'EOF'
+```nix
+# configuration.nix
 { config, pkgs, ... }:
 
 {
@@ -307,86 +379,6 @@ cat > /home/nixos/code/nepjua/configuration.nix << 'EOF'
 
   system.stateVersion = "24.05";
 }
-EOF
-```
-
-## 5. Installation
-
-1. Install the system:
-
-```bash
-nixos-install --root /mnt --flake '/home/nixos/code/nepjua#kaori'
-```
-
-2. Set root password when prompted
-
-3. Set final mountpoints:
-
-```bash
-# Now set the final mountpoints for when we reboot
-zfs set mountpoint=/ tank/root/nixos
-zfs set mountpoint=/nix tank/nix
-zfs set mountpoint=/nix/store tank/nix/store
-zfs set mountpoint=/boot tank/boot
-zfs set mountpoint=/tank/vm tank/vm
-zfs set mountpoint=/tank/data tank/data
-```
-
-4. Reboot:
-
-```bash
-reboot
-```
-
-## 6. Post-Installation
-
-After first boot:
-
-1. Verify ZFS status:
-
-```bash
-zpool status tank
-zfs list
-arc_summary
-```
-
-2. Create your user account if not done during installation:
-
-```bash
-useradd -m -G wheel,libvirtd,kvm your-username
-passwd your-username
-```
-
-3. Configure system:
-
-```bash
-# Update flake inputs
-cd /home/nixos/code/nepjua
-nix flake update
-
-# Rebuild system
-nixos-rebuild switch --flake .#kaori
-```
-
-## Recovery Procedures
-
-If you need to recover or reinstall:
-
-1. Boot from NixOS installation media
-
-2. Import the pool:
-
-```bash
-zpool import -N tank
-zfs mount tank/root/nixos
-zfs mount tank/boot
-mount -t vfat /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
-```
-
-3. Enter the system:
-
-```bash
-nixos-enter --root /mnt
 ```
 
 ## References

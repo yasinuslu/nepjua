@@ -4,7 +4,7 @@
 { ... }:
 {
   imports = [
-    ./hardware-configuration.nix
+    ./custom-hardware-configuration.nix
   ];
 
   networking.hostName = "kaori";
