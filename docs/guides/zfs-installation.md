@@ -56,8 +56,8 @@ ls -la /dev/disk/by-id/
 
 ```bash
 # Replace X with your disk identifiers
-DISK1=/dev/disk/by-id/nvme-Samsung_990_PRO_2TB
-DISK2=/dev/disk/by-id/nvme-Patriot_Viper_VP4300L_4TB
+DISK1=/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J
+DISK2=/dev/disk/by-id/nvme-Viper_VP4300L_4TB_VP4300LFDBA234200458
 
 **WARNING: Double-check that DISK1 and DISK2 variables correctly identify your intended NVMe drives. Incorrect disk selection in the following commands WILL lead to DATA LOSS.**
 
