@@ -1,22 +1,29 @@
 { lib, ... }:
 {
   boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs = {
+    forceImportRoot = lib.mkForce false;
+    devNodes = "/dev/disk/by-id";
+    extraPools = [ "tank" ];
+  };
   boot.initrd.supportedFilesystems = {
     zfs = lib.mkForce true;
   };
-  boot.zfs = {
-    # enabled = lib.mkForce true;
-    forceImportRoot = lib.mkForce false;
-    extraPools = [ "tank" ];
-  };
+
+  # Add performance tuning parameters
+  boot.kernelParams = [
+    "zfs.zfs_arc_max=34359738368" # 32GB max ARC size (adjust based on your RAM)
+    "zfs.zfs_txg_timeout=5" # Faster sync writes
+    "zfs.zfs_vdev_async_read_max_active=12"
+    "zfs.zfs_vdev_async_write_max_active=12"
+  ];
 
   services.zfs = {
-    # autoReplication = {
-    #   enable = true;
-    #   username = "nepjua";
-    # };
-    autoScrub.enable = true;
-    autoSnapshot.enable = true;
     trim.enable = true;
+    autoScrub = {
+      enable = true;
+      interval = "weekly";
+    };
+    autoSnapshot.enable = true;
   };
 }
