@@ -33,7 +33,7 @@ with lib.hm.gvariant;
       welcome-dialog-last-shown-version = "43.2";
     };
 
-    "extensions/advanced-alt-tab-window-switcher" = {
+    "org/gnome/shell/extensions/advanced-alt-tab-window-switcher" = {
       animation-time-factor = 200;
       app-switcher-popup-raise-first-only = true;
       hot-edge-position = 2;
@@ -58,7 +58,7 @@ with lib.hm.gvariant;
       win-switcher-single-prev-size = 192;
     };
 
-    "extensions/pano" = {
+    "org/gnome/shell/extensions/pano" = {
       global-shortcut = [ "<Control><Alt>v" ];
     };
 
