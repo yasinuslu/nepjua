@@ -6,7 +6,7 @@ with lib.hm.gvariant;
 {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      color-scheme = "default";
+      color-scheme = "prefer-dark";
       cursor-theme = "Adwaita";
       document-font-name = "Cantarell 11";
       font-antialiasing = "grayscale";
