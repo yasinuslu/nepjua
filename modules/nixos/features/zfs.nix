@@ -2,7 +2,7 @@
 {
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs = {
-    forceImportRoot = lib.mkForce false;
+    forceImportRoot = true;
     devNodes = "/dev/disk/by-id";
     extraPools = [ "tank" ];
   };
