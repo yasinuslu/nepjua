@@ -26,8 +26,6 @@
       htop
       vesktop
       electron_27
-      cloudflare-warp
-      cloudflared
       lens
       mullvad-vpn
       tailscale

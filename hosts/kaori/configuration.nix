@@ -27,6 +27,7 @@
     zoom-us.enable = false;
     xserver-nvidia.enable = false;
     xserver-radeon.enable = true;
+    tailscale.enable = false;
 
     users = {
       nepjua = {
