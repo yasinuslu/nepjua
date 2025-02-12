@@ -170,6 +170,13 @@ ls -la /mnt/nix/store | head -n 5
 nixos-install --root /mnt --flake '/home/nixos/code/nepjua#kaori'
 ```
 
+Or you may want to do fail-forward installation:
+
+```bash
+cd /home/nixos/code/nepjua
+git pull; sudo NIX_STORE=/mnt/nix/store nixos-install --root /mnt --flake .#kaori
+```
+
 2. Set root password when prompted
 
 3. Set final mountpoints:

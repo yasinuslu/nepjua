@@ -17,32 +17,6 @@
   #   wakeOnLan.enable = true;
   #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
   # };
-  fileSystems."/tank/vm" = {
-    device = "tank/vm";
-    fsType = "zfs";
-    options = [ "zfsutil" ];
-  };
-
-  fileSystems."/tank/data" = {
-    device = "tank/data";
-    fsType = "zfs";
-    options = [ "zfsutil" ];
-  };
-
-  # Remove this mount since we're moving it to /nix/store
-  fileSystems."/tank/nixstore" = {
-    device = "tank/nixstore";
-    fsType = "zfs";
-    options = [ "zfsutil" ];
-  };
-
-  # Keep this one
-  fileSystems."/nix/store" = {
-    device = "tank/nixstore";
-    fsType = "zfs";
-    options = [ "zfsutil" ];
-    neededForBoot = true;
-  };
 
   myNixOS = {
     mainUser = "nepjua";
