@@ -220,7 +220,7 @@ mount_filesystems() {
     
     # Verify mounts
     execute zfs mount
-    execute mount | grep -E 'zfs|efi'
+    execute mount
 }
 
 # Function to unmount filesystems
@@ -344,10 +344,6 @@ main() {
 
     log_info "Starting ZFS installation..."
     [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
-
-    execute "zfs list | grep tank"  # Will now work properly
-    execute "echo foo && echo bar"  # Will also work
-    exit 0
 
     # Execute installation steps
     wipe_disks
