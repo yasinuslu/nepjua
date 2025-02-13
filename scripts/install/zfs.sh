@@ -266,6 +266,21 @@ install_nixos() {
     log_info "Please set root password after first boot"
 }
 
+# Function to unmount existing mounts on disks
+unmount_existing_mounts() {
+    local disks=("$@")
+    log_info "Unmounting any existing mounts on disks..."
+    for disk in "${disks[@]}"; do
+        log_info "Trying to unmount partitions on ${disk}..."
+        execute umount -l "${disk}-part1" 2>/dev/null || true
+        execute umount -l "${disk}-part2" 2>/dev/null || true
+        execute umount -l "${disk}-part3" 2>/dev/null || true
+        execute umount -l "${disk}-part4" 2>/dev/null || true
+        # Add more partitions if you expect more than 4 partitions to be potentially mounted
+    done
+    log_info "Existing mounts unmounted (if any)."
+}
+
 # Main script starts here
 main() {
     # Check if running as root
@@ -338,6 +353,9 @@ main() {
     validate_disks "$DISK1" "$DISK2"
     [[ -n "${ZIL_PART:-}" ]] && validate_disks "$ZIL_PART"
     [[ -n "${L2ARC_PART:-}" ]] && validate_disks "$L2ARC_PART"
+
+    # Unmount any existing mounts on the disks
+    unmount_existing_mounts "$DISK1" "$DISK2"
 
     # Confirm destruction
     confirm_destruction "$DISK1" "$DISK2"
