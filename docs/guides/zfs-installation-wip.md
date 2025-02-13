@@ -31,15 +31,19 @@ nvme1n1 (Patriot 4TB):    │
 
 Dataset Layout:
 tank/
-├── root/
-│   └── nixos  (/)
-├── nix        (/nix)
-│   └── store  (/nix/store)
-├── boot       (/boot)
-├── vm         (/tank/vm)
-└── data       (/tank/data)
-
-Note: RAID0 provides NO redundancy - data loss if either drive fails
+├── system/
+│   ├── root    (/)
+│   ├── nix     (/nix)
+│   │   └── store (/nix/store)
+│   ├── boot    (/boot)
+│   ├── var     (/var)
+│   └── tmp     (/tmp)
+├── user/
+│   ├── home    (/home)
+│   └── persist (/persist)
+└── data/
+    ├── vm      (/tank/vm)
+    └── data    (/tank/data)
 ```
 
 ## 2. Initial Setup
@@ -107,99 +111,73 @@ zpool status tank
 2. Create root dataset structure with optimized properties:
 
 ```bash
-# Root structure with 32k recordsize (optimized for OS and small files)
-zfs create -u -o mountpoint=none \
-    -o recordsize=32k \
-    -o primarycache=all \
-    -o logbias=latency \
-    -o sync=disabled \
-    -o acltype=posixacl \
-    -o xattr=sa \
-    -o atime=off \
-    -o compression=lz4 \
-    -o dnodesize=auto \
-    -o normalization=formD \
-    tank/root/nixos
+# Create parent datasets for categories
+zfs create -o mountpoint=none tank/system
+zfs create -o mountpoint=none tank/user
+zfs create -o mountpoint=none tank/data
 
-# Nix structure with 64k recordsize (optimized for package management)
-zfs create -u -o mountpoint=none \
+# System datasets - under tank/system
+zfs set recordsize=32k tank/system
+
+# Root dataset
+zfs create -u -o mountpoint=/mnt tank/system/root
+
+# Nix datasets
+zfs create -u -o mountpoint=/mnt/nix tank/system/nix
+zfs create -u -o mountpoint=/mnt/nix/store \
     -o recordsize=64k \
-    -o primarycache=all \
-    -o logbias=latency \
-    -o sync=disabled \
-    -o acltype=posixacl \
-    -o xattr=sa \
-    -o atime=off \
-    -o compression=lz4 \
-    -o dnodesize=auto \
-    -o normalization=formD \
-    tank/nix
+    tank/system/nix/store
 
-zfs create -u -o mountpoint=none \
-    -o recordsize=64k \
-    -o primarycache=all \
-    -o logbias=latency \
-    -o sync=disabled \
-    -o acltype=posixacl \
-    -o xattr=sa \
-    -o atime=off \
-    -o compression=lz4 \
-    -o dnodesize=auto \
-    -o normalization=formD \
-    tank/nix/store
+# Boot dataset
+zfs create -u -o mountpoint=/mnt/boot tank/system/boot
 
-# Boot dataset (optimized for small files)
-zfs create -u -o mountpoint=none \
-    -o recordsize=32k \
-    -o primarycache=all \
-    -o logbias=latency \
-    -o sync=disabled \
-    -o acltype=posixacl \
-    -o xattr=sa \
-    -o atime=off \
-    -o compression=lz4 \
-    -o dnodesize=auto \
-    -o normalization=formD \
-    tank/boot
+# Var dataset
+zfs create -u -o mountpoint=/mnt/var tank/system/var
 
-# VM dataset (optimized for VM images and performance)
-zfs create -u -o mountpoint=none \
-    -o recordsize=64k \
-    -o primarycache=all \
-    -o logbias=throughput \
+# Tmp dataset
+zfs create -u -o mountpoint=/mnt/tmp \
     -o sync=disabled \
-    -o acltype=posixacl \
-    -o xattr=sa \
-    -o atime=off \
-    -o compression=lz4 \
-    -o dnodesize=auto \
-    -o normalization=formD \
-    tank/vm
+    -o compression=off \
+    tank/system/tmp
 
-# Data dataset (optimized for large files)
-zfs create -u -o mountpoint=none \
+# User datasets - under tank/user
+zfs set recordsize=32k tank/user # Apply recordsize to user category
+
+# Home dataset
+zfs create -u -o mountpoint=/mnt/home tank/user/home
+
+# Persist dataset
+zfs create -u -o mountpoint=/mnt/persist tank/user/persist
+
+# Data datasets - under tank/data
+zfs set recordsize=1M tank/data
+zfs set logbias=throughput tank/data
+
+# VM dataset
+zfs create -u -o mountpoint=/mnt/vm \
+    -o compression=off \
+    tank/data/vm
+
+# Data dataset
+zfs create -u -o mountpoint=/mnt/data \
     -o recordsize=1M \
-    -o primarycache=all \
-    -o logbias=throughput \
-    -o acltype=posixacl \
-    -o xattr=sa \
-    -o atime=off \
-    -o compression=lz4 \
-    -o dnodesize=auto \
-    -o normalization=formD \
-    tank/data
+    tank/data/storage
 ```
 
 3. Set mountpoints and mount datasets in order:
 
 ```bash
 # Set mountpoints - ZFS will automatically mount them with basic options (zfsutil,noatime,xattr)
-zfs set mountpoint=/mnt tank/root/nixos
-zfs set mountpoint=/mnt/nix tank/nix
-zfs set mountpoint=/mnt/nix/store tank/nix/store
-zfs set mountpoint=/mnt/boot tank/boot
-zfs set mountpoint=/mnt/tank/vm tank/vm
-zfs set mountpoint=/mnt/tank/data tank/data
+zfs set mountpoint=/mnt tank/system/root
+zfs set mountpoint=/mnt/nix tank/system/nix
+zfs set mountpoint=/mnt/nix/store tank/system/nix/store
+zfs set mountpoint=/mnt/boot tank/system/boot
+zfs set mountpoint=/mnt/var tank/system/var
+zfs set mountpoint=/mnt/tmp tank/system/tmp
+zfs set mountpoint=/mnt/home tank/user/home
+zfs set mountpoint=/mnt/persist tank/user/persist
+zfs set mountpoint=/mnt/vm tank/data/vm
+zfs set mountpoint=/mnt/data tank/data/storage
 
 # Mount ESP with specific options
 mkdir -p /mnt/boot/efi
@@ -235,12 +213,16 @@ git pull; sudo nixos-install --root /mnt --flake .#kaori
 ```bash
 # Now set the final mountpoints for when we reboot
 # These will mount with basic options (zfsutil,noatime,xattr)
-zfs set mountpoint=/ tank/root/nixos
-zfs set mountpoint=/nix tank/nix
-zfs set mountpoint=/nix/store tank/nix/store
-zfs set mountpoint=/boot tank/boot
-zfs set mountpoint=/tank/vm tank/vm
-zfs set mountpoint=/tank/data tank/data
+zfs set mountpoint=/ tank/system/root
+zfs set mountpoint=/tank/system/nix tank/system/nix
+zfs set mountpoint=/tank/system/nix/store tank/system/nix/store
+zfs set mountpoint=/tank/system/boot tank/system/boot
+zfs set mountpoint=/tank/system/var tank/system/var
+zfs set mountpoint=/tank/system/tmp tank/system/tmp
+zfs set mountpoint=/tank/user/home tank/user/home
+zfs set mountpoint=/tank/user/persist tank/user/persist
+zfs set mountpoint=/tank/vm tank/data/vm
+zfs set mountpoint=/tank/data tank/data/storage
 ```
 
 4. Reboot:
@@ -272,19 +254,19 @@ passwd your-username
 
 ```bash
 # Root dataset (optimized for OS and small files)
-zfs set recordsize=32k tank/root/nixos
-zfs set primarycache=all tank/root/nixos
-zfs set logbias=latency tank/root/nixos
-zfs set sync=disabled tank/root/nixos
-zfs set acltype=posixacl tank/root/nixos
-zfs set xattr=sa tank/root/nixos
-zfs set atime=off tank/root/nixos
-zfs set compression=lz4 tank/root/nixos
-zfs set dnodesize=auto tank/root/nixos
-zfs set normalization=formD tank/root/nixos
+zfs set recordsize=32k tank/system/root/nixos
+zfs set primarycache=all tank/system/root/nixos
+zfs set logbias=latency tank/system/root/nixos
+zfs set sync=disabled tank/system/root/nixos
+zfs set acltype=posixacl tank/system/root/nixos
+zfs set xattr=sa tank/system/root/nixos
+zfs set atime=off tank/system/root/nixos
+zfs set compression=lz4 tank/system/root/nixos
+zfs set dnodesize=auto tank/system/root/nixos
+zfs set normalization=formD tank/system/root/nixos
 
 # Nix datasets (optimized for package management)
-for dataset in tank/nix tank/nix/store; do
+for dataset in tank/system/nix tank/system/nix/store; do
     zfs set recordsize=64k $dataset
     zfs set primarycache=all $dataset
     zfs set logbias=latency $dataset
@@ -298,42 +280,53 @@ for dataset in tank/nix tank/nix/store; do
 done
 
 # Boot dataset (optimized for small files)
-zfs set recordsize=32k tank/boot
-zfs set primarycache=all tank/boot
-zfs set logbias=latency tank/boot
-zfs set sync=disabled tank/boot
-zfs set acltype=posixacl tank/boot
-zfs set xattr=sa tank/boot
-zfs set atime=off tank/boot
-zfs set compression=lz4 tank/boot
-zfs set dnodesize=auto tank/boot
-zfs set normalization=formD tank/boot
+zfs set recordsize=32k tank/system/boot
+zfs set primarycache=all tank/system/boot
+zfs set logbias=latency tank/system/boot
+zfs set sync=disabled tank/system/boot
+zfs set acltype=posixacl tank/system/boot
+zfs set xattr=sa tank/system/boot
+zfs set atime=off tank/system/boot
+zfs set compression=lz4 tank/system/boot
+zfs set dnodesize=auto tank/system/boot
+zfs set normalization=formD tank/system/boot
 
 # VM dataset (optimized for VM images and performance)
-zfs set recordsize=64k tank/vm
-zfs set primarycache=all tank/vm
-zfs set logbias=throughput tank/vm
-zfs set sync=disabled tank/vm
-zfs set acltype=posixacl tank/vm
-zfs set xattr=sa tank/vm
-zfs set atime=off tank/vm
-zfs set compression=lz4 tank/vm
-zfs set dnodesize=auto tank/vm
-zfs set normalization=formD tank/vm
+zfs set recordsize=64k tank/data/vm
+zfs set primarycache=all tank/data/vm
+zfs set logbias=throughput tank/data/vm
+zfs set sync=disabled tank/data/vm
+zfs set acltype=posixacl tank/data/vm
+zfs set xattr=sa tank/data/vm
+zfs set atime=off tank/data/vm
+zfs set compression=lz4 tank/data/vm
+zfs set dnodesize=auto tank/data/vm
+zfs set normalization=formD tank/data/vm
 
 # Data dataset (optimized for large files)
-zfs set recordsize=1M tank/data
-zfs set primarycache=all tank/data
-zfs set logbias=throughput tank/data
-zfs set acltype=posixacl tank/data
-zfs set xattr=sa tank/data
-zfs set atime=off tank/data
-zfs set compression=lz4 tank/data
-zfs set dnodesize=auto tank/data
-zfs set normalization=formD tank/data
+zfs set recordsize=1M tank/data/storage
+zfs set primarycache=all tank/data/storage
+zfs set logbias=throughput tank/data/storage
+zfs set acltype=posixacl tank/data/storage
+zfs set xattr=sa tank/data/storage
+zfs set atime=off tank/data/storage
+zfs set compression=lz4 tank/data/storage
+zfs set dnodesize=auto tank/data/storage
+zfs set normalization=formD tank/data/storage
+
+# Persist dataset (optimized for persistent data)
+zfs set recordsize=1M tank/user/persist
+zfs set primarycache=all tank/user/persist
+zfs set logbias=throughput tank/user/persist
+zfs set acltype=posixacl tank/user/persist
+zfs set xattr=sa tank/user/persist
+zfs set atime=off tank/user/persist
+zfs set compression=lz4 tank/user/persist
+zfs set dnodesize=auto tank/user/persist
+zfs set normalization=formD tank/user/persist
 
 # Verify all settings
-for dataset in tank/root/nixos tank/nix tank/nix/store tank/boot tank/vm tank/data; do
+for dataset in tank/system/root/nixos tank/system/nix tank/system/nix/store tank/system/boot tank/data/vm tank/data/storage tank/user/persist; do
     echo "=== $dataset ==="
     zfs get all $dataset | grep -E 'recordsize|primarycache|logbias|sync|acltype|xattr|atime|compression|dnodesize|normalization'
 done
@@ -360,8 +353,8 @@ If you need to recover or reinstall:
 
 ```bash
 zpool import -N tank
-zfs mount tank/root/nixos
-zfs mount tank/boot
+zfs mount tank/system/root/nixos
+zfs mount tank/system/boot
 mount -t vfat /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
 ```
 

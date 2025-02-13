@@ -155,86 +155,100 @@ create_zfs_pool() {
 # Function to create dataset hierarchy
 create_datasets() {
     log_info "Creating dataset hierarchy..."
-    
-    # Create parent datasets
+
+    # Define base mount point for installation
+    INSTALL_MNT="/mnt"
+
+    # Create parent datasets for categories
     execute zfs create -o mountpoint=none tank/system
     execute zfs create -o mountpoint=none tank/user
     execute zfs create -o mountpoint=none tank/data
 
-    # System datasets - optimized for OS and small files
+    # System datasets - under tank/system
     execute zfs set recordsize=32K tank/system
 
-    # Create root dataset
-    execute zfs create -o mountpoint=/ tank/system/root
-    
-    # Nix store - optimized for package management
-    # -o recordsize=128K     # Larger blocks for better read performance
-    # -o logbias=throughput  # Optimize for throughput over latency
-    # -o secondarycache=all  # Benefit from L2ARC
-    execute zfs create -o mountpoint=/nix tank/system/nix
-    execute zfs create -o mountpoint=/nix/store \
+    # Root dataset
+    execute zfs create -o mountpoint="${INSTALL_MNT}" tank/system/root
+
+    # Nix datasets
+    execute zfs create -o mountpoint="${INSTALL_MNT}/nix" tank/system/nix
+    execute zfs create -o mountpoint="${INSTALL_MNT}/nix/store" \
         -o recordsize=128K \
         -o logbias=throughput \
         -o secondarycache=all \
         tank/system/nix/store
-    
-    # Var directory - mixed workload
-    execute zfs create -o mountpoint=/var tank/system/var
-    
-    # Home directory - optimized for development (pnpm, git)
-    # -o recordsize=32K      # Smaller recordsize for pnpm's many small files
-    execute zfs create -o mountpoint=/home \
-        -o recordsize=32K \
-        tank/user/home
 
-    # Persist directory - for persistent data
-    execute zfs create -o mountpoint=/persist tank/user/persist
+    # Boot dataset
+    execute zfs create -o mountpoint="${INSTALL_MNT}/boot" tank/system/boot
 
-    # Data datasets - optimized for large files and throughput
+    # Var directory
+    execute zfs create -o mountpoint="${INSTALL_MNT}/var" tank/system/var
+
+    # Tmp directory
+    execute zfs create -o mountpoint="${INSTALL_MNT}/tmp" tank/system/tmp
+
+    # User datasets - under tank/user
+    execute zfs set recordsize=32K tank/user # Apply recordsize to user category
+
+    # Home directory
+    execute zfs create -o mountpoint="${INSTALL_MNT}/home" tank/user/home
+
+    # Persist directory
+    execute zfs create -o mountpoint="${INSTALL_MNT}/persist" tank/user/persist
+
+    # Data datasets - under tank/data
     execute zfs set recordsize=1M tank/data
     execute zfs set logbias=throughput tank/data
 
-    # VM dataset - optimized for VM images
-    # -o recordsize=128K     # Larger blocks for better VM performance
-    # -o compression=off     # VMs are usually already compressed
-    # -o primarycache=metadata   # Only cache metadata, not VM data
-    # -o secondarycache=none     # Skip L2ARC for VM data
-    execute zfs create -o mountpoint=/vm \
+    # VM dataset - MOUNT UNDER /mnt/tank during installation
+    execute zfs create -o mountpoint="${INSTALL_MNT}/tank/vm" \
         -o recordsize=128K \
         -o compression=off \
         -o primarycache=metadata \
         -o secondarycache=none \
         tank/data/vm
 
-    # General storage - optimized for large files
-    execute zfs create -o mountpoint=/data \
+    # General storage - MOUNT UNDER /mnt/tank during installation
+    execute zfs create -o mountpoint="${INSTALL_MNT}/tank/data" \
         -o recordsize=1M \
         tank/data/storage
-
-    # Tmp directory - maximum performance, no durability needed
-    # -o sync=disabled       # Safe for temporary data
-    # -o compression=off     # No compression for temp files
-    # -o primarycache=metadata   # Only cache metadata
-    execute zfs create -o mountpoint=/tmp \
-        -o setuid=off \
-        -o devices=off \
-        -o sync=disabled \
-        -o compression=off \
-        -o primarycache=metadata \
-        tank/system/tmp
 }
 
 # Function to mount filesystems
 mount_filesystems() {
     log_info "Mounting filesystems..."
     
+    INSTALL_MNT="/mnt"
+
     # Create EFI mount point and mount
-    execute mkdir -p /boot/efi
-    execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" /boot/efi
+    execute mkdir -p "${INSTALL_MNT}/boot/efi"
+    execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
     
     # Verify mounts
     execute zfs mount
     execute mount | grep -E 'zfs|efi'
+}
+
+# Function to unmount filesystems
+unmount_filesystems() {
+    log_info "Unmounting filesystems..."
+    execute zfs unmount
+    execute umount -l /boot/efi
+}
+
+# Function to set runtime mountpoints
+set_runtime_mountpoints() {
+    log_info "Setting runtime mountpoints..."
+    execute zfs set mountpoint=/ tank/system/root
+    execute zfs set mountpoint=/nix tank/system/nix
+    execute zfs set mountpoint=/nix/store tank/system/nix/store
+    execute zfs set mountpoint=/boot tank/system/boot
+    execute zfs set mountpoint=/var tank/system/var
+    execute zfs set mountpoint=/tmp tank/system/tmp
+    execute zfs set mountpoint=/home tank/user/home
+    execute zfs set mountpoint=/persist tank/user/persist
+    execute zfs set mountpoint=/tank/vm tank/data/vm
+    execute zfs set mountpoint=/tank/data tank/data/storage
 }
 
 # Function to install NixOS
@@ -245,6 +259,7 @@ install_nixos() {
     REPO="${REPO:-/home/nixos/code/nepjua}"
     BRANCH="${BRANCH:-main}"
     HOSTNAME="${HOSTNAME:-kaori}"
+    INSTALL_MNT="/mnt"
 
     # Create directory and clone repository
     execute mkdir -p "$(dirname "$REPO")"
@@ -252,7 +267,7 @@ install_nixos() {
     execute git -C "$REPO" checkout "$BRANCH"
 
     # Install NixOS using the flake
-    execute nixos-install --root /mnt --flake "$REPO#$HOSTNAME" --no-root-passwd
+    execute nixos-install --root "${INSTALL_MNT}" --flake "$REPO#$HOSTNAME" --no-root-passwd
 
     log_info "NixOS installation completed!"
     log_info "Please set root password after first boot"
@@ -344,6 +359,8 @@ main() {
     create_datasets
     mount_filesystems
     install_nixos
+    unmount_filesystems
+    set_runtime_mountpoints
 
     log_info "Installation completed successfully!"
     log_info "You can now reboot into your new system"

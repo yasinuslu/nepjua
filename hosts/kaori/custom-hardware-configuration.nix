@@ -26,7 +26,7 @@
   boot.zfs.devNodes = "/dev/disk/by-id";
 
   fileSystems."/" = {
-    device = "tank/root/nixos";
+    device = "tank/system/root";
     fsType = "zfs";
     options = [
       "zfsutil"
@@ -37,7 +37,7 @@
   };
 
   fileSystems."/nix" = {
-    device = "tank/nix";
+    device = "tank/system/nix";
     fsType = "zfs";
     options = [
       "zfsutil"
@@ -48,7 +48,7 @@
   };
 
   fileSystems."/nix/store" = {
-    device = "tank/nix/store";
+    device = "tank/system/nix/store";
     fsType = "zfs";
     options = [
       "zfsutil"
@@ -59,7 +59,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "tank/boot";
+    device = "tank/system/boot";
     fsType = "zfs";
     options = [
       "zfsutil"
@@ -78,24 +78,70 @@
     ];
   };
 
-  fileSystems."/tank/vm" = {
-    device = "tank/vm";
+  fileSystems."/var" = {
+    device = "tank/system/var";
     fsType = "zfs";
     options = [
       "zfsutil"
       "noatime"
       "xattr"
     ];
+    neededForBoot = true;
+  };
+
+  fileSystems."/tmp" = {
+    device = "tank/system/tmp";
+    fsType = "zfs";
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
+    neededForBoot = true;
+  };
+
+  fileSystems."/home" = {
+    device = "tank/user/home";
+    fsType = "zfs";
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
+    neededForBoot = false;
+  };
+
+  fileSystems."/persist" = {
+    device = "tank/user/persist";
+    fsType = "zfs";
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
+    neededForBoot = false;
+  };
+
+  fileSystems."/tank/vm" = {
+    device = "tank/data/vm";
+    fsType = "zfs";
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
+    neededForBoot = false;
   };
 
   fileSystems."/tank/data" = {
-    device = "tank/data";
+    device = "tank/data/storage";
     fsType = "zfs";
     options = [
       "zfsutil"
       "noatime"
       "xattr"
     ];
+    neededForBoot = false;
   };
 
   swapDevices = [ ];
