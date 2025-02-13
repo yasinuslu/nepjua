@@ -19,5 +19,4 @@
   services.spice-vdagentd.enable = true;
 
   programs.virt-manager.enable = true;
-
 }
