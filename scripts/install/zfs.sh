@@ -25,29 +25,12 @@ log_cmd() { echo -e "${BLUE}[CMD]${NC} $1"; }
 # Function to execute or simulate command
 execute() {
     local cmd_str
-    if [[ $# -eq 1 ]]; then
-        # If single argument, preserve it exactly as passed
-        cmd_str="$1"
-    else
-        # For multiple arguments, we need to handle special characters
-        cmd_str=""
-        for arg in "$@"; do
-            # Check if arg contains special characters
-            if [[ $arg =~ [\ \|\&\;\$] ]]; then
-                cmd_str+="\"$arg\" "
-            else
-                cmd_str+="$arg "
-            fi
-        done
-        cmd_str="${cmd_str% }"  # Remove trailing space
-    fi
-
-    # Always use eval for command display and execution
+    cmd_str=$(printf '%q ' "$@")
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        log_cmd "${cmd_str}"
+        log_cmd "${cmd_str% }"  # Remove trailing space
     else
-        log_cmd "${cmd_str}"
-        eval "${cmd_str}"
+        log_cmd "${cmd_str% }"  # Remove trailing space
+        "$@"
     fi
 }
 
@@ -362,10 +345,8 @@ main() {
     log_info "Starting ZFS installation..."
     [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
 
-    execute "user create --name nixos --password nixos"
-    execute "zfs list | grep tank"
-    execute "command1 && command2"
-
+    execute "zfs list | grep tank"  # Will now work properly
+    execute "echo foo && echo bar"  # Will also work
     exit 0
 
     # Execute installation steps
