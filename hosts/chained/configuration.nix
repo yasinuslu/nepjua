@@ -16,8 +16,8 @@
         userConfig =
           { ... }:
           {
-            programs.git.userName = "Yasin Uslu";
-            programs.git.userEmail = "yahmet@mastercontrol.com";
+            programs.git.userName = "TO BE SET";
+            programs.git.userEmail = "to-be-set@example.com";
 
             myHomeManager = {
               # impure-node.enable = false;
