@@ -24,13 +24,25 @@ log_cmd() { echo -e "${BLUE}[CMD]${NC} $1"; }
 
 # Function to execute or simulate command
 execute() {
-    local cmd_str
-    cmd_str=$(printf '%q ' "$@")
-    if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        log_cmd "${cmd_str% }"  # Remove trailing space
+    if [[ $# -eq 1 ]]; then
+        # If single argument, treat as a command string
+        local cmd_str="$1"
     else
-        log_cmd "${cmd_str% }"  # Remove trailing space
-        "$@"
+        # Multiple arguments, format as quoted command
+        local cmd_str
+        cmd_str=$(printf '%q ' "$@")
+        cmd_str="${cmd_str% }"  # Remove trailing space
+    fi
+
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_cmd "$cmd_str"
+    else
+        log_cmd "$cmd_str"
+        if [[ $# -eq 1 ]]; then
+            eval "$1"
+        else
+            "$@"
+        fi
     fi
 }
 
