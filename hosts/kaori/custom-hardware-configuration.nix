@@ -16,7 +16,7 @@
     "usbhid"
     "usb_storage"
     "sd_mod"
-    "zfs" # Added for ZFS support
+    "zfs"
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
@@ -28,28 +28,44 @@
   fileSystems."/" = {
     device = "tank/root/nixos";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
     neededForBoot = true;
   };
 
   fileSystems."/nix" = {
     device = "tank/nix";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
     neededForBoot = true;
   };
 
   fileSystems."/nix/store" = {
     device = "tank/nix/store";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
     neededForBoot = true;
   };
 
   fileSystems."/boot" = {
     device = "tank/boot";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
     neededForBoot = true;
   };
 
@@ -65,13 +81,21 @@
   fileSystems."/tank/vm" = {
     device = "tank/vm";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
   };
 
   fileSystems."/tank/data" = {
     device = "tank/data";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
   };
 
   swapDevices = [ ];

@@ -104,39 +104,96 @@ zpool create -f -o ashift=12 \
 zpool status tank
 ```
 
-2. Create root dataset structure (all unmounted initially):
+2. Create root dataset structure with optimized properties:
 
 ```bash
-# Root structure
-zfs create -u -o mountpoint=none tank/root
+# Root structure with 32k recordsize (optimized for OS and small files)
 zfs create -u -o mountpoint=none \
     -o recordsize=32k \
+    -o primarycache=all \
+    -o logbias=latency \
+    -o sync=disabled \
+    -o acltype=posixacl \
+    -o xattr=sa \
+    -o atime=off \
+    -o compression=lz4 \
+    -o dnodesize=auto \
+    -o normalization=formD \
     tank/root/nixos
 
-# Nix structure
+# Nix structure with 64k recordsize (optimized for package management)
 zfs create -u -o mountpoint=none \
     -o recordsize=64k \
+    -o primarycache=all \
+    -o logbias=latency \
+    -o sync=disabled \
+    -o acltype=posixacl \
+    -o xattr=sa \
+    -o atime=off \
+    -o compression=lz4 \
+    -o dnodesize=auto \
+    -o normalization=formD \
     tank/nix
+
 zfs create -u -o mountpoint=none \
     -o recordsize=64k \
+    -o primarycache=all \
+    -o logbias=latency \
+    -o sync=disabled \
+    -o acltype=posixacl \
+    -o xattr=sa \
+    -o atime=off \
+    -o compression=lz4 \
+    -o dnodesize=auto \
+    -o normalization=formD \
     tank/nix/store
 
-# Additional datasets
-zfs create -u -o mountpoint=none tank/boot
+# Boot dataset (optimized for small files)
+zfs create -u -o mountpoint=none \
+    -o recordsize=32k \
+    -o primarycache=all \
+    -o logbias=latency \
+    -o sync=disabled \
+    -o acltype=posixacl \
+    -o xattr=sa \
+    -o atime=off \
+    -o compression=lz4 \
+    -o dnodesize=auto \
+    -o normalization=formD \
+    tank/boot
+
+# VM dataset (optimized for VM images and performance)
 zfs create -u -o mountpoint=none \
     -o recordsize=64k \
-    -o sync=disabled \
+    -o primarycache=all \
     -o logbias=throughput \
+    -o sync=disabled \
+    -o acltype=posixacl \
+    -o xattr=sa \
+    -o atime=off \
+    -o compression=lz4 \
+    -o dnodesize=auto \
+    -o normalization=formD \
     tank/vm
+
+# Data dataset (optimized for large files)
 zfs create -u -o mountpoint=none \
     -o recordsize=1M \
+    -o primarycache=all \
+    -o logbias=throughput \
+    -o acltype=posixacl \
+    -o xattr=sa \
+    -o atime=off \
+    -o compression=lz4 \
+    -o dnodesize=auto \
+    -o normalization=formD \
     tank/data
 ```
 
 3. Set mountpoints and mount datasets in order:
 
 ```bash
-# Set mountpoints - ZFS will automatically mount them
+# Set mountpoints - ZFS will automatically mount them with basic options (zfsutil,noatime,xattr)
 zfs set mountpoint=/mnt tank/root/nixos
 zfs set mountpoint=/mnt/nix tank/nix
 zfs set mountpoint=/mnt/nix/store tank/nix/store
@@ -144,13 +201,13 @@ zfs set mountpoint=/mnt/boot tank/boot
 zfs set mountpoint=/mnt/tank/vm tank/vm
 zfs set mountpoint=/mnt/tank/data tank/data
 
-# Mount ESP
+# Mount ESP with specific options
 mkdir -p /mnt/boot/efi
-mount -t vfat /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
+mount -t vfat -o fmask=0077,dmask=0077 /dev/disk/by-label/BOOT-EFI /mnt/boot/efi
 
 # Verify mounts
 zfs mount
-mount | grep efi
+mount | grep -E 'zfs|efi'
 
 # Restore nix store from backup (preserving all attributes and showing progress)
 echo "Restoring nix store from backup..."
@@ -177,6 +234,7 @@ git pull; sudo nixos-install --root /mnt --flake .#kaori
 
 ```bash
 # Now set the final mountpoints for when we reboot
+# These will mount with basic options (zfsutil,noatime,xattr)
 zfs set mountpoint=/ tank/root/nixos
 zfs set mountpoint=/nix tank/nix
 zfs set mountpoint=/nix/store tank/nix/store
@@ -210,7 +268,78 @@ useradd -m -G wheel,libvirtd,kvm your-username
 passwd your-username
 ```
 
-3. Configure system:
+3. Apply ZFS Dataset Optimizations:
+
+```bash
+# Root dataset (optimized for OS and small files)
+zfs set recordsize=32k tank/root/nixos
+zfs set primarycache=all tank/root/nixos
+zfs set logbias=latency tank/root/nixos
+zfs set sync=disabled tank/root/nixos
+zfs set acltype=posixacl tank/root/nixos
+zfs set xattr=sa tank/root/nixos
+zfs set atime=off tank/root/nixos
+zfs set compression=lz4 tank/root/nixos
+zfs set dnodesize=auto tank/root/nixos
+zfs set normalization=formD tank/root/nixos
+
+# Nix datasets (optimized for package management)
+for dataset in tank/nix tank/nix/store; do
+    zfs set recordsize=64k $dataset
+    zfs set primarycache=all $dataset
+    zfs set logbias=latency $dataset
+    zfs set sync=disabled $dataset
+    zfs set acltype=posixacl $dataset
+    zfs set xattr=sa $dataset
+    zfs set atime=off $dataset
+    zfs set compression=lz4 $dataset
+    zfs set dnodesize=auto $dataset
+    zfs set normalization=formD $dataset
+done
+
+# Boot dataset (optimized for small files)
+zfs set recordsize=32k tank/boot
+zfs set primarycache=all tank/boot
+zfs set logbias=latency tank/boot
+zfs set sync=disabled tank/boot
+zfs set acltype=posixacl tank/boot
+zfs set xattr=sa tank/boot
+zfs set atime=off tank/boot
+zfs set compression=lz4 tank/boot
+zfs set dnodesize=auto tank/boot
+zfs set normalization=formD tank/boot
+
+# VM dataset (optimized for VM images and performance)
+zfs set recordsize=64k tank/vm
+zfs set primarycache=all tank/vm
+zfs set logbias=throughput tank/vm
+zfs set sync=disabled tank/vm
+zfs set acltype=posixacl tank/vm
+zfs set xattr=sa tank/vm
+zfs set atime=off tank/vm
+zfs set compression=lz4 tank/vm
+zfs set dnodesize=auto tank/vm
+zfs set normalization=formD tank/vm
+
+# Data dataset (optimized for large files)
+zfs set recordsize=1M tank/data
+zfs set primarycache=all tank/data
+zfs set logbias=throughput tank/data
+zfs set acltype=posixacl tank/data
+zfs set xattr=sa tank/data
+zfs set atime=off tank/data
+zfs set compression=lz4 tank/data
+zfs set dnodesize=auto tank/data
+zfs set normalization=formD tank/data
+
+# Verify all settings
+for dataset in tank/root/nixos tank/nix tank/nix/store tank/boot tank/vm tank/data; do
+    echo "=== $dataset ==="
+    zfs get all $dataset | grep -E 'recordsize|primarycache|logbias|sync|acltype|xattr|atime|compression|dnodesize|normalization'
+done
+```
+
+4. Configure system:
 
 ```bash
 # Update flake inputs

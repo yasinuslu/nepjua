@@ -22,7 +22,6 @@
       obs-studio
       bottles
       qbittorrent
-      warp-terminal
       htop
       vesktop
       electron_27

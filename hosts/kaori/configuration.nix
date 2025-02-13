@@ -40,6 +40,9 @@
             myHomeManager = {
               linux.cloudflare.enable = false;
               docker.enable = false;
+
+              # We are in winter, so sun doesn't bother me that much these days
+              linux.darkman.enable = false;
             };
           };
 

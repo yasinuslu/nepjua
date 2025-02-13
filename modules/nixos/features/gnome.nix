@@ -64,4 +64,20 @@
       libpinyin
     ];
   };
+
+  # Increase system limits
+  security.pam.loginLimits = [
+    {
+      domain = "*";
+      type = "soft";
+      item = "nofile";
+      value = "8388608"; # 2^23
+    }
+    {
+      domain = "*";
+      type = "hard";
+      item = "nofile";
+      value = "8388608"; # 2^23
+    }
+  ];
 }

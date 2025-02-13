@@ -35,6 +35,12 @@
     alejandra
     openssl
     rclone
+
+    coreutils-full
+    gnugrep
+    findutils
+    binutils
+    file
   ];
 
   home.sessionVariables = {

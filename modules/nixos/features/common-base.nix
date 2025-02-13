@@ -6,6 +6,12 @@
   ...
 }:
 {
+  # Increase inotify watches
+  boot.kernel.sysctl = {
+    "fs.inotify.max_user_watches" = 8388608; # 2^23 (~8GB max kernel memory)
+    "fs.inotify.max_user_instances" = 8388608; # 2^23
+  };
+
   boot.supportedFilesystems = [
     "zfs"
     "ntfs"
@@ -53,5 +59,15 @@
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+  };
+
+  # Mount temp directories in RAM
+  fileSystems."/tmp" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [
+      "size=16G"
+      "mode=1777"
+    ];
   };
 }
