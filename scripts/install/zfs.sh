@@ -2,6 +2,9 @@
 #!nix-shell -i bash -p util-linux parted dosfstools git nixos-install-tools zfs gum
 # shellcheck shell=bash
 
+# Common variables
+INSTALL_MNT="/mnt"
+
 # Strict error handling
 set -euo pipefail
 IFS=$'\n\t'
@@ -72,14 +75,10 @@ confirm_destruction() {
     print_summary
     log_warn "This will DESTROY ALL DATA on the following disks:"
     printf '%s\n' "${disks[@]}"
+
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
         log_info "Dry run mode - no changes will be made"
         return
-    fi
-    
-    if ! command -v gum >/dev/null 2>&1; then
-        log_info "Installing gum for interactive confirmation..."
-        execute curl -fsSL https://gum.charm.sh/install.sh | execute bash 2>/dev/null
     fi
 
     if ! gum confirm --prompt.foreground="#FF0000" "Are you absolutely sure you want to proceed?" --affirmative="Yes, destroy all data" --negative="No, abort"; then
@@ -156,9 +155,6 @@ create_zfs_pool() {
 create_datasets() {
     log_info "Creating dataset hierarchy..."
 
-    # Define base mount point for installation
-    INSTALL_MNT="/mnt"
-
     # Create parent datasets for categories
     execute zfs create -o mountpoint=none tank/system
     execute zfs create -o mountpoint=none tank/user
@@ -217,8 +213,6 @@ create_datasets() {
 # Function to mount filesystems
 mount_filesystems() {
     log_info "Mounting filesystems..."
-    
-    INSTALL_MNT="/mnt"
 
     # Create EFI mount point and mount
     execute mkdir -p "${INSTALL_MNT}/boot/efi"
@@ -255,19 +249,18 @@ set_runtime_mountpoints() {
 install_nixos() {
     log_info "Installing NixOS..."
 
-    # Set defaults
-    REPO="${REPO:-/home/nixos/code/nepjua}"
-    BRANCH="${BRANCH:-main}"
+    GIT_REPO="${GIT_REPO:-https://github.com/yasinuslu/nepjua.git}"
+    GIT_BRANCH="${GIT_BRANCH:-main}"
+    FLAKE_PATH="${FLAKE_PATH:-/home/nixos/code/nepjua}"
     HOSTNAME="${HOSTNAME:-kaori}"
-    INSTALL_MNT="/mnt"
 
     # Create directory and clone repository
-    execute mkdir -p "$(dirname "$REPO")"
-    execute git clone https://github.com/yasinuslu/nepjua.git "$REPO"
-    execute git -C "$REPO" checkout "$BRANCH"
+    execute mkdir -p "$(dirname "$FLAKE_PATH")"
+    execute git clone "$GIT_REPO" "$FLAKE_PATH"
+    execute git -C "$FLAKE_PATH" checkout "$GIT_BRANCH"
 
     # Install NixOS using the flake
-    execute nixos-install --root "${INSTALL_MNT}" --flake "$REPO#$HOSTNAME" --no-root-passwd
+    execute nixos-install --root "${INSTALL_MNT}" --flake "$FLAKE_PATH#$HOSTNAME"
 
     log_info "NixOS installation completed!"
     log_info "Please set root password after first boot"
@@ -297,12 +290,12 @@ main() {
                 L2ARC_PART="$2"
                 shift 2
                 ;;
-            --repo)
-                REPO="$2"
+            --git-repo)
+                GIT_REPO="$2"
                 shift 2
                 ;;
-            --branch)
-                BRANCH="$2"
+            --git-branch)
+                GIT_BRANCH="$2"
                 shift 2
                 ;;
             --hostname)
