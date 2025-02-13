@@ -273,7 +273,7 @@ install_nixos() {
     execute git -C "$FLAKE_PATH" checkout "$GIT_BRANCH"
 
     # Install NixOS using the flake
-    execute nixos-install --no-channel-copy --root "${INSTALL_MNT}" --flake "$FLAKE_PATH#$HOSTNAME"
+    execute nixos-install --keep-going --no-channel-copy --root "${INSTALL_MNT}" --flake "$FLAKE_PATH#$HOSTNAME"
 
     log_info "NixOS installation completed!"
     log_info "Please set root password after first boot"
