@@ -298,6 +298,9 @@ install_nixos() {
 # Function to unmount existing mounts on disks
 unmount_existing_mounts() {
     local disks=("$@")
+
+    unmount_filesystems
+
     log_info "Unmounting any existing mounts on disks..."
     for disk in "${disks[@]}"; do
         log_info "Trying to unmount partitions on ${disk}..."
@@ -308,10 +311,6 @@ unmount_existing_mounts() {
         # Add more partitions if you expect more than 4 partitions to be potentially mounted
     done
     log_info "Existing mounts unmounted (if any)."
-
-    log_info "Making sure to destroy existing zfs pools"
-    execute zpool destroy -f tank || true
-    log_info "Existing zfs pools destroyed (if any)."
 }
 
 # Main script starts here
