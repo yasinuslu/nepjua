@@ -22,8 +22,8 @@
 
 ## Installation
 
-The installation process is automated via the `scripts/install/setup-zfs.sh`
-script. This script handles:
+The installation process is automated via the `scripts/install/zfs.sh` script.
+This script handles:
 
 - Disk partitioning
 - ZFS pool creation with optimized settings
@@ -34,7 +34,7 @@ script. This script handles:
 ### Quick Install
 
 ```bash
-curl -L https://raw.githubusercontent.com/yasinuslu/nepjua/main/scripts/install/setup-zfs.sh | sudo bash -s -- \
+curl -L https://raw.githubusercontent.com/yasinuslu/nepjua/main/scripts/install/zfs.sh | sudo bash -s -- \
   --disk1 /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J \
   --disk2 /dev/disk/by-id/nvme-Viper_VP4300L_4TB_VP4300LFDBA234200458
 ```
@@ -52,7 +52,7 @@ curl -L https://raw.githubusercontent.com/yasinuslu/nepjua/main/scripts/install/
 3. Run the installation script:
    ```bash
    cd /home/nixos/code/nepjua
-   ./scripts/install/setup-zfs.sh \
+   ./scripts/install/zfs.sh \
      --disk1 /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J \
      --disk2 /dev/disk/by-id/nvme-Viper_VP4300L_4TB_VP4300LFDBA234200458
    ```
@@ -60,7 +60,7 @@ curl -L https://raw.githubusercontent.com/yasinuslu/nepjua/main/scripts/install/
 For all available options:
 
 ```bash
-./scripts/install/setup-zfs.sh --help
+./scripts/install/zfs.sh --help
 ```
 
 ### Dataset Structure
