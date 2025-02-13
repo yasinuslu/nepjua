@@ -24,25 +24,30 @@ log_cmd() { echo -e "${BLUE}[CMD]${NC} $1"; }
 
 # Function to execute or simulate command
 execute() {
+    local cmd_str
     if [[ $# -eq 1 ]]; then
-        # If single argument, treat as a command string
-        local cmd_str="$1"
+        # If single argument, preserve it exactly as passed
+        cmd_str="$1"
     else
-        # Multiple arguments, format as quoted command
-        local cmd_str
-        cmd_str=$(printf '%q ' "$@")
+        # For multiple arguments, we need to handle special characters
+        cmd_str=""
+        for arg in "$@"; do
+            # Check if arg contains special characters
+            if [[ $arg =~ [\ \|\&\;\$] ]]; then
+                cmd_str+="\"$arg\" "
+            else
+                cmd_str+="$arg "
+            fi
+        done
         cmd_str="${cmd_str% }"  # Remove trailing space
     fi
 
+    # Always use eval for command display and execution
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        log_cmd "$cmd_str"
+        log_cmd "${cmd_str}"
     else
-        log_cmd "$cmd_str"
-        if [[ $# -eq 1 ]]; then
-            eval "$1"
-        else
-            "$@"
-        fi
+        log_cmd "${cmd_str}"
+        eval "${cmd_str}"
     fi
 }
 
