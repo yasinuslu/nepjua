@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash -p util-linux parted dosfstools git nixos-install-tools zfs
+#!nix-shell -i bash -p util-linux parted dosfstools git nixos-install-tools zfs gum
 # shellcheck shell=bash
 
 # Strict error handling
@@ -50,17 +50,39 @@ validate_disks() {
     done
 }
 
+# Print a beautiful summary of what we're going to do
+print_summary() {
+    echo
+    echo -e "${BLUE}╭───────────────────────────────────────────╮${NC}"
+    echo -e "${BLUE}│${NC}           ${GREEN}ZFS Installation Summary${NC}           ${BLUE}│${NC}"
+    echo -e "${BLUE}├───────────────────────────────────────────┤${NC}"
+    echo -e "${BLUE}│${NC} Primary Disk:                              ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   ${YELLOW}$(basename "$DISK1")${NC}   ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC} Secondary Disk:                            ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   ${YELLOW}$(basename "$DISK2")${NC}   ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC} Hostname: ${YELLOW}$HOSTNAME${NC}                         ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC} Mode: ${DRY_RUN:+${YELLOW}DRY RUN${NC}}${DRY_RUN:-${GREEN}LIVE${NC}}                           ${BLUE}│${NC}"
+    echo -e "${BLUE}╰───────────────────────────────────────────╯${NC}"
+    echo
+}
+
 # Function to confirm destructive action
 confirm_destruction() {
     local disks=("$@")
+    print_summary
     log_warn "This will DESTROY ALL DATA on the following disks:"
     printf '%s\n' "${disks[@]}"
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
         log_info "Dry run mode - no changes will be made"
         return
     fi
-    read -p "Are you sure you want to continue? (type 'yes' to confirm) " response
-    if [[ "$response" != "yes" ]]; then
+    
+    if ! command -v gum >/dev/null 2>&1; then
+        log_info "Installing gum for interactive confirmation..."
+        execute curl -fsSL https://gum.charm.sh/install.sh | execute bash 2>/dev/null
+    fi
+
+    if ! gum confirm --prompt.foreground="#FF0000" "Are you absolutely sure you want to proceed?" --affirmative="Yes, destroy all data" --negative="No, abort"; then
         log_info "Aborting..."
         exit 0
     fi
