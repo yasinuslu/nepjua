@@ -101,7 +101,12 @@ wipe_disks() {
     log_info "Wiping disks..."
     execute wipefs -af "$DISK1"
     execute wipefs -af "$DISK2"
-    log_info "Clearing ZFS labels from disks after wipefs..."
+
+    log_info "Forcefully zapping partition tables with sgdisk..."
+    execute sgdisk --zap-all -- "/dev/disk/by-id/$(basename "$DISK1")"  # Use basename to avoid issues with paths
+    execute sgdisk --zap-all -- "/dev/disk/by-id/$(basename "$DISK2")"  # Use basename to avoid issues with paths
+
+    log_info "Clearing ZFS labels from disks after wipefs and sgdisk..."
     execute zpool labelclear -af "$DISK1" || true # || true to ignore errors if no label
     execute zpool labelclear -af "$DISK2" || true # || true to ignore errors if no label
 }
@@ -161,6 +166,10 @@ create_zfs_pool() {
         -O sync=standard \
         -O primarycache=all \
         tank "${DISK1}-part2" "${DISK2}-part1"
+
+    # Explicitly clear ZFS labels from ZIL partition before adding
+    log_info "Explicitly clearing ZFS labels from ZIL partition before adding..."
+    execute zpool labelclear -f "$ZIL_PART" || true # Clear ZIL partition labels
 
     # Add ZIL device
     log_info "Adding ZIL device..."
