@@ -362,6 +362,8 @@ main() {
     unmount_filesystems
     set_runtime_mountpoints
 
+    execute zpool export tank
+
     log_info "Installation completed successfully!"
     log_info "You can now reboot into your new system"
 }
