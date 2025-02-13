@@ -98,8 +98,8 @@ wipe_disks() {
     execute sgdisk --zap-all -- "/dev/disk/by-id/$(basename "$DISK2")"
 
     log_info "Clearing ZFS labels from disks after wipefs and sgdisk..."
-    execute zpool labelclear -f "$DISK1" || true # || true to ignore errors if no label
-    execute zpool labelclear -f "$DISK2" || true # || true to ignore errors if no label
+    execute zpool labelclear -f "/dev/disk/by-id/$(basename "$DISK1")"  # Consistent path and show errors
+    execute zpool labelclear -f "/dev/disk/by-id/$(basename "$DISK2")"  # Consistent path and show errors
 }
 
 # Function to create partitions
