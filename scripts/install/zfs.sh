@@ -22,7 +22,7 @@ log_cmd() { echo -e "${BLUE}[CMD]${NC} $1"; }
 # Function to execute or simulate command
 execute() {
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        log_cmd "$*"
+        log_cmd "${*@Q}"
     else
         log_cmd "$*"
         "$@"
