@@ -358,11 +358,11 @@ main() {
     [[ -n "${ZIL_PART:-}" ]] && validate_disks "$ZIL_PART"
     [[ -n "${L2ARC_PART:-}" ]] && validate_disks "$L2ARC_PART"
 
-    # Unmount any existing mounts on the disks
-    unmount_existing_mounts "$DISK1" "$DISK2"
-
     # Confirm destruction
     confirm_destruction "$DISK1" "$DISK2"
+
+    # Unmount any existing mounts on the disks
+    unmount_existing_mounts "$DISK1" "$DISK2"
 
     log_info "Starting ZFS installation..."
     [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
