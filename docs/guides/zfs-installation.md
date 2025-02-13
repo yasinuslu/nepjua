@@ -124,3 +124,9 @@ If you need to recover or reinstall:
 - [NixOS Manual](https://nixos.org/manual/nixos/stable/)
 - [OpenZFS Documentation](https://openzfs.github.io/openzfs-docs/)
 - [NixOS ZFS Wiki](https://nixos.wiki/wiki/ZFS)
+
+╭───────────────────────────────────────────╮ │ ZFS Installation Summary │
+├───────────────────────────────────────────┤ │ Primary Disk: │ │
+nvme-Samsung_SSD_990_PRO_2TB │ │ Secondary Disk: │ │ nvme-Viper_VP4300L_4TB │ │
+Hostname: kaori │ │ Mode: DRY RUN │
+╰───────────────────────────────────────────╯
