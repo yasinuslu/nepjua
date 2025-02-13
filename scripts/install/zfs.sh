@@ -65,6 +65,7 @@ print_summary() {
     echo -e "${BLUE}│${NC}   ${YELLOW}$(basename "$DISK2")${NC}   ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC} Hostname: ${YELLOW}$HOSTNAME${NC}                         ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC} Mode: ${DRY_RUN:+${YELLOW}DRY RUN${NC}}${DRY_RUN:-${GREEN}LIVE${NC}}                           ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC} Destructive Mode: ${NO_DESTRUCTIVE:+${GREEN}NO${NC}}${NO_DESTRUCTIVE:-${RED}YES${NC}}                     ${BLUE}│${NC}"
     echo -e "${BLUE}╰───────────────────────────────────────────╯${NC}"
     echo
 }
@@ -73,6 +74,10 @@ print_summary() {
 confirm_destruction() {
     local disks=("$@")
     print_summary
+    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
+        log_info "Non-destructive mode - skipping disk destruction confirmation."
+        return
+    fi
     log_warn "This will DESTROY ALL DATA on the following disks:"
     printf '%s\n' "${disks[@]}"
 
@@ -81,14 +86,18 @@ confirm_destruction() {
         return
     fi
 
-    if ! gum confirm --prompt.foreground="#FF0000" "Are you absolutely sure you want to proceed?" --affirmative="Yes, destroy all data" --negative="No, abort"; then
-        log_info "Aborting..."
+    if ! gum confirm --prompt.foreground="#FF0000" "Are you absolutely sure you want to proceed with DESTRUCTIVE actions?" --affirmative="Yes, destroy all data" --negative="No, abort"; then
+        log_info "Aborting destructive actions..."
         exit 0
     fi
 }
 
 # Function to wipe disks
 wipe_disks() {
+    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
+        log_info "Non-destructive mode - skipping disk wiping."
+        return
+    fi
     log_info "Wiping disks..."
     execute wipefs -af "$DISK1"
     execute wipefs -af "$DISK2"
@@ -96,6 +105,10 @@ wipe_disks() {
 
 # Function to create partitions
 create_partitions() {
+    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
+        log_info "Non-destructive mode - skipping partition creation."
+        return
+    fi
     log_info "Creating partitions..."
     
     # Primary disk partitioning
@@ -127,6 +140,10 @@ create_partitions() {
 
 # Function to create and configure ZFS pool
 create_zfs_pool() {
+    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
+        log_info "Non-destructive mode - skipping ZFS pool creation."
+        return
+    fi
     log_info "Creating ZFS pool..."
     
     # Create the pool with base settings that will be inherited by all datasets
@@ -325,19 +342,24 @@ main() {
                 DRY_RUN=true
                 shift
                 ;;
+            --no-destructive)
+                NO_DESTRUCTIVE=true
+                shift
+                ;;
             --help)
                 echo "Usage: $0 [--dry-run] --disk1 /dev/disk/by-id/nvme-Samsung... --disk2 /dev/disk/by-id/nvme-Viper... [--zil /dev/...] [--l2arc /dev/...] [--repo path] [--branch name] [--hostname name]"
                 echo
                 echo "Options:"
-                echo "  --disk1     Primary disk (faster NVMe) for the ZFS pool"
-                echo "  --disk2     Secondary disk for the ZFS pool"
-                echo "  --zil       ZFS Intent Log partition (recommended)"
-                echo "  --l2arc     L2ARC cache partition (optional)"
-                echo "  --repo      Path to flake repository (default: /home/nixos/code/nepjua)"
-                echo "  --branch    Git branch to use (default: main)"
-                echo "  --hostname  NixOS hostname (default: kaori)"
-                echo "  --dry-run   Show commands without executing them"
-                echo "  --help      Show this help message"
+                echo "  --disk1             Primary disk (faster NVMe) for the ZFS pool"
+                echo "  --disk2             Secondary disk for the ZFS pool"
+                echo "  --zil               ZFS Intent Log partition (recommended)"
+                echo "  --l2arc             L2ARC cache partition (optional)"
+                echo "  --repo              Path to flake repository (default: /home/nixos/code/nepjua)"
+                echo "  --branch            Git branch to use (default: main)"
+                echo "  --hostname          NixOS hostname (default: kaori)"
+                echo "  --dry-run           Show commands without executing them"
+                echo "  --no-destructive    Skip disk wiping, partitioning and ZFS pool creation. Assumes existing ZFS setup."
+                echo "  --help              Show this help message"
                 exit 0
                 ;;
             *)
@@ -358,7 +380,7 @@ main() {
     [[ -n "${ZIL_PART:-}" ]] && validate_disks "$ZIL_PART"
     [[ -n "${L2ARC_PART:-}" ]] && validate_disks "$L2ARC_PART"
 
-    # Confirm destruction
+    # Confirm destruction unless --no-destructive is used
     confirm_destruction "$DISK1" "$DISK2"
 
     # Unmount any existing mounts on the disks
@@ -366,6 +388,7 @@ main() {
 
     log_info "Starting ZFS installation..."
     [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
+    [[ "${NO_DESTRUCTIVE:-false}" == "true" ]] && log_info "NON-DESTRUCTIVE MODE - Skipping disk wiping, partitioning and ZFS pool creation."
 
     # Execute installation steps
     wipe_disks
