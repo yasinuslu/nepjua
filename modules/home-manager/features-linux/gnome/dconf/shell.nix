@@ -60,6 +60,9 @@ with lib.hm.gvariant;
 
     "org/gnome/shell/extensions/pano" = {
       global-shortcut = [ "<Control><Alt>v" ];
+      is-in-incognito = false;
+      paste-on-select = false;
+      send-notification-on-copy = false;
     };
 
     "world-clocks" = {
