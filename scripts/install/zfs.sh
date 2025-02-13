@@ -366,6 +366,8 @@ main() {
     execute "zfs list | grep tank"
     execute "command1 && command2"
 
+    exit 0
+
     # Execute installation steps
     wipe_disks
     create_partitions
