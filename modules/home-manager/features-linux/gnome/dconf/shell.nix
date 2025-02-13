@@ -9,7 +9,6 @@ with lib.hm.gvariant;
       command-history = [ "r" ];
       disable-user-extensions = false;
       disabled-extensions = [
-        "extensions-sync@elhan.io"
         "apps-menu@gnome-shell-extensions.gcampax.github.com"
         "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
         "launch-new-instance@gnome-shell-extensions.gcampax.github.com"
@@ -20,6 +19,7 @@ with lib.hm.gvariant;
         "quick-settings-tweaks@qwreey"
         "appindicatorsupport@rgcjonas.gmail.com"
         "advanced-alt-tab@G-dH.github.com"
+        "pano@elhan.io"
       ];
       favorite-apps = [
         "google-chrome.desktop"
@@ -33,7 +33,7 @@ with lib.hm.gvariant;
       welcome-dialog-last-shown-version = "43.2";
     };
 
-    "org/gnome/shell/extensions/advanced-alt-tab-window-switcher" = {
+    "extensions/advanced-alt-tab-window-switcher" = {
       animation-time-factor = 200;
       app-switcher-popup-raise-first-only = true;
       hot-edge-position = 2;
@@ -58,7 +58,7 @@ with lib.hm.gvariant;
       win-switcher-single-prev-size = 192;
     };
 
-    "org/gnome/shell/extensions/pano" = {
+    "extensions/pano" = {
       global-shortcut = [ "<Control><Alt>v" ];
       is-in-incognito = false;
       paste-on-select = false;
