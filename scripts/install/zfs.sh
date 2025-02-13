@@ -73,10 +73,6 @@ print_summary() {
 # Function to confirm destructive action
 confirm_destruction() {
     local disks=("$@")
-    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
-        log_info "Non-destructive mode - skipping disk destruction confirmation."
-        return
-    fi
     log_warn "This will DESTROY ALL DATA on the following disks:"
     printf '%s\n' "${disks[@]}"
 
@@ -93,10 +89,6 @@ confirm_destruction() {
 
 # Function to wipe disks
 wipe_disks() {
-    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
-        log_info "Non-destructive mode - skipping disk wiping."
-        return
-    fi
     log_info "Wiping disks..."
     execute wipefs -af "$DISK1"
     execute wipefs -af "$DISK2"
@@ -112,10 +104,6 @@ wipe_disks() {
 
 # Function to create partitions
 create_partitions() {
-    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
-        log_info "Non-destructive mode - skipping partition creation."
-        return
-    fi
     log_info "Creating partitions..."
     
     # Primary disk partitioning
@@ -147,10 +135,6 @@ create_partitions() {
 
 # Function to create and configure ZFS pool
 create_zfs_pool() {
-    if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
-        log_info "Non-destructive mode - skipping ZFS pool creation."
-        return
-    fi
     log_info "Creating ZFS pool..."
     
     # Create the pool with base settings that will be inherited by all datasets
@@ -412,18 +396,22 @@ main() {
     # Unmount any existing mounts on the disks
     unmount_disks "$DISK1" "$DISK2"
 
-    # Confirm destruction unless --no-destructive is used
-    confirm_destruction "$DISK1" "$DISK2"
-
     log_info "Starting ZFS installation..."
     [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
-    [[ "${NO_DESTRUCTIVE:-false}" == "true" ]] && log_info "NON-DESTRUCTIVE MODE - Skipping disk wiping, partitioning and ZFS pool creation."
 
     # Execute installation steps
-    wipe_disks
-    create_partitions
-    create_zfs_pool
-    create_datasets
+    if [[ "${NO_DESTRUCTIVE:-false}" == "false" ]]; then
+        # Confirm destruction unless --no-destructive is used
+        confirm_destruction "$DISK1" "$DISK2"
+
+        wipe_disks
+        create_partitions
+        create_zfs_pool
+        create_datasets
+    else
+        log_info "NON-DESTRUCTIVE MODE - Skipping disk wiping, partitioning and ZFS pool creation."
+    fi
+
     mount_mnt
     install_nixos
     unmount_mnt
