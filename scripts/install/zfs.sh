@@ -24,13 +24,13 @@ log_cmd() { echo -e "${BLUE}[CMD]${NC} $1"; }
 
 # Function to execute or simulate command
 execute() {
-    local cmd_str
-    cmd_str=$(printf '%q ' "$@")
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        log_cmd "${cmd_str% }"  # Remove trailing space
+        # For dry run, print the command as-is
+        echo -e "${BLUE}[CMD]${NC} $*"
     else
-        log_cmd "${cmd_str% }"  # Remove trailing space
-        "$@"
+        # Print and execute the command
+        echo -e "${BLUE}[CMD]${NC} $*"
+        eval "$*"
     fi
 }
 
