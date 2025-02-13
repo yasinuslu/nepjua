@@ -34,7 +34,7 @@ This script handles:
 ### Quick Install
 
 ```bash
-curl -L https://raw.githubusercontent.com/yasinuslu/nepjua/main/scripts/install/zfs.sh \
+curl -L -H "Cache-Control: no-cache" https://raw.githubusercontent.com/yasinuslu/nepjua/main/scripts/install/zfs.sh \
     | sudo bash -s -- \
         --disk1 /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J \
         --disk2 /dev/disk/by-id/nvme-Viper_VP4300L_4TB_VP4300LFDBA234200458 \
