@@ -303,9 +303,7 @@ export_zfs() {
     log_info "ZFS pool exported successfully!"
 }
 
-print_summary_and_confirm() {
-    print_summary
-
+confirm_installation() {    
     log_info "We will now unmount and start the installation process."
 
     if ! gum confirm --prompt.foreground="#FF0000" "Do you want to proceed with the installation?" --affirmative="Yes, proceed" --negative="No, abort"; then
@@ -389,11 +387,16 @@ main() {
         exit 1
     fi
 
-    print_summary_and_confirm
+    print_summary
+
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        log_info "DRY RUN MODE - Commands will be shown but not executed"
+    else
+        confirm_installation
+    fi
 
     log_info "Starting ZFS installation..."
-    [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
-
+    
     # Validate disks exist
     validate_disks "$DISK1" "$DISK2"
     [[ -n "${ZIL_PART:-}" ]] && validate_disks "$ZIL_PART"
