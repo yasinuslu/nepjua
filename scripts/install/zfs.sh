@@ -256,7 +256,7 @@ install_nixos() {
 
     # Create directory and clone repository
     execute mkdir -p "$(dirname "$FLAKE_PATH")"
-    execute git clone "$GIT_REPO" "$FLAKE_PATH"
+    execute git clone "$GIT_REPO" "$FLAKE_PATH" || true
     execute git -C "$FLAKE_PATH" checkout "$GIT_BRANCH"
 
     # Install NixOS using the flake
