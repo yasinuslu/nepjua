@@ -60,14 +60,4 @@
     # Making legacy nix commands consistent as well, awesome!
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
   };
-
-  # Mount temp directories in RAM
-  fileSystems."/tmp" = {
-    device = "tmpfs";
-    fsType = "tmpfs";
-    options = [
-      "size=16G"
-      "mode=1777"
-    ];
-  };
 }
