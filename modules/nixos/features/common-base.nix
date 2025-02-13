@@ -6,6 +6,12 @@
   ...
 }:
 {
+  boot.supportedFilesystems = [
+    "zfs"
+    "ntfs"
+    "ext4"
+    "exfat"
+  ];
   powerManagement.enable = false;
 
   # Set your time zone.

@@ -1,19 +1,18 @@
 { config, ... }:
 {
   # Enable udisks2 service
-  services.udisks2 = {
-    enable = true;
-    mountOnMedia = true;
-  };
+  # services.udisks2 = {
+  #   enable = true;
+  #   mountOnMedia = true;
+  # };
 
   # Enable polkit for proper permissions
   security.polkit.enable = true;
 
   # Enable GVFS for GNOME virtual file system support
-  services.gvfs = {
-    enable = true;
-    package = config.services.gnome.core-os-services.package;
-  };
+  # services.gvfs = {
+  #   enable = true;
+  # };
 
   # Add user to required groups
   users.users.${config.myNixOS.mainUser}.extraGroups = [

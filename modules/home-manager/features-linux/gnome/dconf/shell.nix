@@ -53,7 +53,7 @@ with lib.hm.gvariant;
       win-switcher-popup-order = 2;
       win-switcher-popup-preview-size = 128;
       win-switcher-popup-scroll-item = 1;
-      win-switcher-popup-sorting = 3;
+      win-switcher-popup-sorting = 1;
       win-switcher-popup-titles = 1;
       win-switcher-single-prev-size = 192;
     };

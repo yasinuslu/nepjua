@@ -37,7 +37,10 @@
             programs.git.userName = "Yasin Uslu";
             programs.git.userEmail = "nepjua@gmail.com";
 
-            myHomeManager.docker.enable = false;
+            myHomeManager = {
+              linux.cloudflare.enable = false;
+              docker.enable = false;
+            };
           };
 
         userSettings = {
