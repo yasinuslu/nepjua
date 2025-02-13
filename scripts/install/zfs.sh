@@ -255,8 +255,8 @@ mount_filesystems() {
 # Function to unmount filesystems
 unmount_filesystems() {
     log_info "Unmounting filesystems..."
-    execute umount -l /mnt/boot/efi
-    execute zfs unmount -fa
+    execute umount -l /mnt/boot/efi || true
+    execute zfs unmount -fa || true
 }
 
 # Function to set runtime mountpoints
