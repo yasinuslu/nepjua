@@ -94,12 +94,12 @@ wipe_disks() {
     execute wipefs -af "$DISK2"
 
     log_info "Forcefully zapping partition tables with sgdisk..."
-    execute sgdisk --zap-all -- "/dev/disk/by-id/$(basename "$DISK1")"  # Use basename to avoid issues with paths
-    execute sgdisk --zap-all -- "/dev/disk/by-id/$(basename "$DISK2")"  # Use basename to avoid issues with paths
+    execute sgdisk --zap-all -- "/dev/disk/by-id/$(basename "$DISK1")"
+    execute sgdisk --zap-all -- "/dev/disk/by-id/$(basename "$DISK2")"
 
     log_info "Clearing ZFS labels from disks after wipefs and sgdisk..."
-    execute zpool labelclear -af "$DISK1" || true # || true to ignore errors if no label
-    execute zpool labelclear -af "$DISK2" || true # || true to ignore errors if no label
+    execute zpool labelclear -f "$DISK1" || true # || true to ignore errors if no label
+    execute zpool labelclear -f "$DISK2" || true # || true to ignore errors if no label
 }
 
 # Function to create partitions
