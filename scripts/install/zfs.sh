@@ -24,13 +24,15 @@ log_cmd() { echo -e "${BLUE}[CMD]${NC} $1"; }
 
 # Function to execute or simulate command
 execute() {
+    # Join all arguments with spaces to create the command string
+    local cmd_str="${*@Q}"
+    cmd_str="${cmd_str//\'\'/\'}"  # Fix double quote artifacts
+
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        # For dry run, print the command as-is
-        echo -e "${BLUE}[CMD]${NC} $*"
+        log_cmd "$cmd_str"
     else
-        # Print and execute the command
-        echo -e "${BLUE}[CMD]${NC} $*"
-        eval "$*"
+        log_cmd "$cmd_str"
+        eval "$cmd_str"
     fi
 }
 
