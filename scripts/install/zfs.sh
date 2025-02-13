@@ -279,6 +279,10 @@ unmount_existing_mounts() {
         # Add more partitions if you expect more than 4 partitions to be potentially mounted
     done
     log_info "Existing mounts unmounted (if any)."
+
+    log_info "Making sure to destroy existing zfs pools"
+    execute zpool destroy -f tank || true
+    log_info "Existing zfs pools destroyed (if any)."
 }
 
 # Main script starts here
