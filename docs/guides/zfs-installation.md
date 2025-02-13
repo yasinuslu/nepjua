@@ -62,6 +62,16 @@ curl -L -H "Cache-Control: no-cache" \
      --dry-run
    ```
 
+### Non-destructive Installation
+
+```bash
+cd /home/nixos/code/nepjua; git pull; sudo ./scripts/install/zfs.sh \
+     --disk1 /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J \
+     --disk2 /dev/disk/by-id/nvme-Viper_VP4300L_4TB_VP4300LFDBA234200458 \
+     --hostname kaori \
+     --no-destructive
+```
+
 For all available options:
 
 ```bash
