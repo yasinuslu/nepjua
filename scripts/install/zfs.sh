@@ -73,7 +73,6 @@ print_summary() {
 # Function to confirm destructive action
 confirm_destruction() {
     local disks=("$@")
-    print_summary
     if [[ "${NO_DESTRUCTIVE:-false}" == "true" ]]; then
         log_info "Non-destructive mode - skipping disk destruction confirmation."
         return
@@ -320,6 +319,18 @@ export_zfs() {
     log_info "ZFS pool exported successfully!"
 }
 
+print_summary_and_confirm() {
+    print_summary
+    log_info "We will now unmount and start the installation process."
+
+    if ! gum confirm --prompt.foreground="#FF0000" "Do you want to proceed with the installation?" --affirmative="Yes, proceed" --negative="No, abort"; then
+        log_info "Aborting installation..."
+        exit 0
+    fi
+
+    log_info "Proceeding with installation..."
+}
+
 # Main script starts here
 main() {
     # Check if running as root
@@ -398,11 +409,11 @@ main() {
     [[ -n "${ZIL_PART:-}" ]] && validate_disks "$ZIL_PART"
     [[ -n "${L2ARC_PART:-}" ]] && validate_disks "$L2ARC_PART"
 
-    # Confirm destruction unless --no-destructive is used
-    confirm_destruction "$DISK1" "$DISK2"
-
     # Unmount any existing mounts on the disks
     unmount_disks "$DISK1" "$DISK2"
+
+    # Confirm destruction unless --no-destructive is used
+    confirm_destruction "$DISK1" "$DISK2"
 
     log_info "Starting ZFS installation..."
     [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
