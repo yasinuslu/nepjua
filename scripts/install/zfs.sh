@@ -305,6 +305,7 @@ export_zfs() {
 
 print_summary_and_confirm() {
     print_summary
+
     log_info "We will now unmount and start the installation process."
 
     if ! gum confirm --prompt.foreground="#FF0000" "Do you want to proceed with the installation?" --affirmative="Yes, proceed" --negative="No, abort"; then
@@ -387,6 +388,8 @@ main() {
         log_error "Both --disk1 and --disk2 are required"
         exit 1
     fi
+
+    print_summary_and_confirm
 
     # Validate disks exist
     validate_disks "$DISK1" "$DISK2"
