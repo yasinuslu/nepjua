@@ -240,7 +240,7 @@ create_datasets() {
 }
 
 # Function to mount filesystems
-mount_filesystems() {
+mount_mnt() {
     log_info "Mounting filesystems..."
 
     # Create EFI mount point and mount
@@ -253,7 +253,7 @@ mount_filesystems() {
 }
 
 # Function to unmount filesystems
-unmount_filesystems() {
+unmount_mnt() {
     log_info "Unmounting filesystems..."
     execute umount -l /mnt/boot/efi || true
     execute zfs unmount -fa || true
@@ -272,6 +272,7 @@ set_runtime_mountpoints() {
     execute zfs set mountpoint=/persist tank/user/persist
     execute zfs set mountpoint=/tank/vm tank/data/vm
     execute zfs set mountpoint=/tank/data tank/data/storage
+    log_info "Runtime mountpoints set successfully!"
 }
 
 # Function to install NixOS
@@ -296,10 +297,10 @@ install_nixos() {
 }
 
 # Function to unmount existing mounts on disks
-unmount_existing_mounts() {
+unmount_disks() {
     local disks=("$@")
 
-    unmount_filesystems
+    unmount_mnt
 
     log_info "Unmounting any existing mounts on disks..."
     for disk in "${disks[@]}"; do
@@ -311,6 +312,12 @@ unmount_existing_mounts() {
         # Add more partitions if you expect more than 4 partitions to be potentially mounted
     done
     log_info "Existing mounts unmounted (if any)."
+}
+
+export_zfs() {
+    log_info "Exporting ZFS pool..."
+    execute zpool export tank
+    log_info "ZFS pool exported successfully!"
 }
 
 # Main script starts here
@@ -395,7 +402,7 @@ main() {
     confirm_destruction "$DISK1" "$DISK2"
 
     # Unmount any existing mounts on the disks
-    unmount_existing_mounts "$DISK1" "$DISK2"
+    unmount_disks "$DISK1" "$DISK2"
 
     log_info "Starting ZFS installation..."
     [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
@@ -406,12 +413,13 @@ main() {
     create_partitions
     create_zfs_pool
     create_datasets
-    mount_filesystems
+    mount_mnt
     install_nixos
-    unmount_filesystems
+    unmount_mnt
+    
     set_runtime_mountpoints
 
-    execute zpool export tank
+    export_zfs
 
     log_info "Installation completed successfully!"
     log_info "You can now reboot into your new system"
