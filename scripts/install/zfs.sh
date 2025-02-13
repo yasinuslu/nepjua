@@ -2,9 +2,6 @@
 #!nix-shell -i bash -p util-linux parted dosfstools git nixos-install-tools zfs
 # shellcheck shell=bash
 
-echo "Hellooo, world!"
-exit 0
-
 # Strict error handling
 set -euo pipefail
 IFS=$'\n\t'
