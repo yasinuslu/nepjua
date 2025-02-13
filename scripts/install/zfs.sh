@@ -391,6 +391,9 @@ main() {
 
     print_summary_and_confirm
 
+    log_info "Starting ZFS installation..."
+    [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
+
     # Validate disks exist
     validate_disks "$DISK1" "$DISK2"
     [[ -n "${ZIL_PART:-}" ]] && validate_disks "$ZIL_PART"
@@ -398,9 +401,6 @@ main() {
 
     # Unmount any existing mounts on the disks
     unmount_disks "$DISK1" "$DISK2"
-
-    log_info "Starting ZFS installation..."
-    [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
 
     # Execute installation steps
     if [[ "${NO_DESTRUCTIVE:-false}" == "false" ]]; then
