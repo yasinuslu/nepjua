@@ -294,10 +294,7 @@ verify_mounts() {
             return 1
         fi
 
-        if [[ "$fs_type" == "zfs" ]] && [[ "$actual_source" != "tank/$source" ]]; then
-            log_error "Mount point ${mnt_point} has incorrect source. Expected: tank/${source}, Actual: ${actual_source}"
-            return 1
-        elif [[ "$fs_type" == "vfat" ]] && [[ "$actual_source" != "${source}" ]]; then
+        if [[ "$actual_source" != "$source" ]]; then
             log_error "Mount point ${mnt_point} has incorrect source. Expected: ${source}, Actual: ${actual_source}"
             return 1
         fi
