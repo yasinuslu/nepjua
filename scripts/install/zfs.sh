@@ -396,8 +396,6 @@ confirm_and_summarize_installation() {
 
     print_summary
 
-    log_info "We will now unmount and start the installation process."
-
     if ! gum confirm --prompt.foreground="#FF0000" "Do you want to proceed with the installation?" --affirmative="Yes, proceed" --negative="No, abort"; then
         log_info "Aborting installation..."
         exit 0
