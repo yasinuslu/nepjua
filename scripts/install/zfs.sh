@@ -150,7 +150,8 @@ create_zfs_pool() {
     log_info "Creating ZFS pool..."
     
     # Create the pool with base settings that will be inherited by all datasets
-    execute zpool create -f -o ashift=12 \
+    execute zpool create -f \
+        -o ashift=12 \
         -O mountpoint=none \
         -O acltype=posixacl \
         -O compression=lz4 \
@@ -160,6 +161,7 @@ create_zfs_pool() {
         -O normalization=formD \
         -O sync=standard \
         -O primarycache=all \
+        -O canmount=noauto \
         tank "${DISK1}-part2" "${DISK2}-part1"
 
     # Explicitly clear ZFS labels from ZIL partition before adding
@@ -228,6 +230,25 @@ create_datasets() {
     execute zfs create -o mountpoint="${INSTALL_MNT}/tank/data" \
         -o recordsize=1M \
         tank/data/storage
+}
+
+# We want to ensure that the datasets are not automounted
+import_pool() {
+    log_info "Importing ZFS pool..."
+    execute zpool import -af -N
+    log_info "ZFS pool imported successfully!"
+
+    log_info "Ensuring no automount..."
+    execute zfs set canmount=noauto tank/system/root || true
+    execute zfs set canmount=noauto tank/system/nix || true
+    execute zfs set canmount=noauto tank/system/nix/store || true
+    execute zfs set canmount=noauto tank/system/boot || true
+    execute zfs set canmount=noauto tank/system/var || true
+    execute zfs set canmount=noauto tank/user/home || true
+    execute zfs set canmount=noauto tank/user/persist || true
+    execute zfs set canmount=noauto tank/data/vm || true
+    execute zfs set canmount=noauto tank/data/storage || true
+    log_info "Ensuring no automount completed successfully!"
 }
 
 # Function to mount filesystems
@@ -485,6 +506,10 @@ main() {
         create_datasets
     else
         log_info "NON-DESTRUCTIVE MODE - Skipping disk wiping, partitioning and ZFS pool creation."
+
+        # This means we are reinstalling on an existing ZFS pool
+        # Let's import the pool and ensure no automount is enabled
+        import_pool
     fi
 
     # First mount the filesystems
