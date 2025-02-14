@@ -289,7 +289,12 @@ install_nixos() {
     export TMPDIR=/tmp.live-cd-install
 
     # Install NixOS using the flake
-    execute TMPDIR=/tmp.live-cd-install nixos-install --keep-going --no-channel-copy --root "${INSTALL_MNT}" --flake "$FLAKE_PATH#$HOSTNAME"
+    execute nixos-install \
+        --keep-going \
+        --no-channel-copy \
+        --root "${INSTALL_MNT}" \
+        --option build-dir /tmp.live-cd-install \
+        --flake "$FLAKE_PATH#$HOSTNAME"
 
     log_info "NixOS installation completed!"
     log_info "Please set root password after first boot"
