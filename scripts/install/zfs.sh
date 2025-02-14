@@ -237,6 +237,9 @@ mount_mnt() {
     execute zfs mount
     execute mount
 
+    # Make sure the dataset is writable
+    execute chmod 777 /tmp.live-cd-install
+
     # Now that we have the dataset, we can set the TMPDIR
     export TMPDIR=/tmp.live-cd-install
 }
@@ -283,8 +286,10 @@ install_nixos() {
     execute git clone "$GIT_REPO" "$FLAKE_PATH" || true
     execute git -C "$FLAKE_PATH" checkout "$GIT_BRANCH"
 
+    export TMPDIR=/tmp.live-cd-install
+
     # Install NixOS using the flake
-    execute nixos-install --keep-going --no-channel-copy --root "${INSTALL_MNT}" --flake "$FLAKE_PATH#$HOSTNAME"
+    execute TMPDIR=/tmp.live-cd-install nixos-install --keep-going --no-channel-copy --root "${INSTALL_MNT}" --flake "$FLAKE_PATH#$HOSTNAME"
 
     log_info "NixOS installation completed!"
     log_info "Please set root password after first boot"
