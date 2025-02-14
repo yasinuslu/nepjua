@@ -232,12 +232,7 @@ create_datasets() {
         tank/data/storage
 }
 
-# We want to ensure that the datasets are not automounted
-import_pool() {
-    log_info "Importing ZFS pool..."
-    execute zpool import -af -N
-    log_info "ZFS pool imported successfully!"
-
+ensure_no_automount() {
     log_info "Ensuring no automount..."
     execute zfs set canmount=noauto tank/system/root || true
     execute zfs set canmount=noauto tank/system/nix || true
@@ -251,17 +246,13 @@ import_pool() {
     log_info "Ensuring no automount completed successfully!"
 }
 
-# Function to mount filesystems
-mount_mnt() {
-    log_info "Mounting filesystems..."
-    
-    # Actually mount the zfs filesystems
-    execute zfs mount -a
-    execute mount
+# We want to ensure that the datasets are not automounted
+import_pool() {
+    log_info "Importing ZFS pool..."
+    execute zpool import -af -N
+    log_info "ZFS pool imported successfully!"
 
-    # Now that we have the zfs filesystems mounted, we can create the EFI mount point and mount it
-    execute mkdir -p "${INSTALL_MNT}/boot/efi"
-    execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
+    ensure_no_automount
 }
 
 # Function to verify mount points
@@ -321,6 +312,39 @@ verify_mounts() {
     return 0
 }
 
+set_install_mountpoints() {
+    ensure_no_automount
+
+    log_info "Setting install mountpoints..."
+
+    execute zfs set mountpoint="${INSTALL_MNT}" tank/system/root
+    execute zfs set mountpoint="${INSTALL_MNT}/nix" tank/system/nix
+    execute zfs set mountpoint="${INSTALL_MNT}/nix/store" tank/system/nix/store
+    execute zfs set mountpoint="${INSTALL_MNT}/boot" tank/system/boot
+    execute zfs set mountpoint="${INSTALL_MNT}/var" tank/system/var
+    execute zfs set mountpoint="${INSTALL_MNT}/home" tank/user/home
+    execute zfs set mountpoint="${INSTALL_MNT}/persist" tank/user/persist
+    execute zfs set mountpoint="${INSTALL_MNT}/tank/vm" tank/data/vm
+    execute zfs set mountpoint="${INSTALL_MNT}/tank/data" tank/data/storage
+
+    log_info "Install mountpoints set successfully!"
+}
+
+# Function to mount filesystems
+mount_mnt() {
+    log_info "Mounting filesystems for installation..."
+    
+    set_install_mountpoints
+
+    # Actually mount the zfs filesystems
+    execute zfs mount -a
+    execute mount
+
+    # Now that we have the zfs filesystems mounted, we can create the EFI mount point and mount it
+    execute mkdir -p "${INSTALL_MNT}/boot/efi"
+    execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
+}
+
 # Function to unmount filesystems
 unmount_mnt() {
     log_info "Unmounting filesystems..."
@@ -330,7 +354,10 @@ unmount_mnt() {
 
 # Function to set runtime mountpoints
 set_runtime_mountpoints() {
+    ensure_no_automount
+
     log_info "Setting runtime mountpoints..."
+
     execute zfs set mountpoint=/ tank/system/root
     execute zfs set mountpoint=/nix tank/system/nix
     execute zfs set mountpoint=/nix/store tank/system/nix/store
@@ -525,8 +552,8 @@ main() {
     fi
 
     install_nixos
+
     unmount_mnt
-    
     set_runtime_mountpoints
 
     export_zfs
