@@ -133,6 +133,15 @@
     neededForBoot = false;
   };
 
+  fileSystems."/tmp" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [
+      "size=4G"
+      "mode=1777"
+    ];
+  };
+
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
