@@ -231,7 +231,10 @@ mount_mnt() {
     execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
     
     # Live CD Temporary Files
-    execute zfs create -o mountpoint=/tmp tank/system/live-cd-tmp || true
+    # Make sure to have this dataset before mounting
+    execute zfs create -o mountpoint=/tmp.my-nixos-install tank/system/live-cd-tmp || true
+
+    export TMPDIR=/tmp.my-nixos-install
 
     # Verify mounts
     execute zfs mount
@@ -243,8 +246,6 @@ unmount_mnt() {
     log_info "Unmounting filesystems..."
     execute umount -l /mnt/boot/efi || true
     execute zfs unmount -fa || true
-
-    execute zfs destroy tank/system/live-cd-tmp || true
 }
 
 # Function to set runtime mountpoints
@@ -260,6 +261,11 @@ set_runtime_mountpoints() {
     execute zfs set mountpoint=/persist tank/user/persist
     execute zfs set mountpoint=/tank/vm tank/data/vm
     execute zfs set mountpoint=/tank/data tank/data/storage
+
+    # Live CD Temporary Files
+    # Only destroy when everything is done
+    execute zfs destroy tank/system/live-cd-tmp || true
+
     log_info "Runtime mountpoints set successfully!"
 }
 
