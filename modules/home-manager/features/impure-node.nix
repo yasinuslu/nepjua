@@ -7,8 +7,8 @@ let
   dag = lib.hm.dag;
   nodeBinDir = "${pkgs.nodejs}/bin";
   npmHome = "$HOME/.npm";
-  pnpmHome = "$HOME/.nix-mutable/pnpm";
-  globalNodeModules = "$HOME/.nix-mutable/npm/node_modules";
+  pnpmHome = "$HOME/.nix-mutable/node/pnpm";
+  globalNodeModules = "$HOME/.nix-mutable/node/npm/node_modules";
 in
 {
   home.packages = with pkgs; [

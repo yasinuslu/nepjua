@@ -100,6 +100,17 @@
     neededForBoot = false;
   };
 
+  fileSystems."/home/nepjua/.nix-mutable" = {
+    device = "tank/user/nepjua-nix-mutable";
+    fsType = "zfs";
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
+    neededForBoot = false;
+  };
+
   fileSystems."/persist" = {
     device = "tank/user/persist";
     fsType = "zfs";
