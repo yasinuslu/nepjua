@@ -230,6 +230,9 @@ mount_mnt() {
     execute mkdir -p "${INSTALL_MNT}/boot/efi"
     execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
     
+    # Live CD Temporary Files
+    execute zfs create -o mountpoint=/tmp tank/system/live-cd-tmp || true
+
     # Verify mounts
     execute zfs mount
     execute mount
@@ -240,6 +243,8 @@ unmount_mnt() {
     log_info "Unmounting filesystems..."
     execute umount -l /mnt/boot/efi || true
     execute zfs unmount -fa || true
+
+    execute zfs destroy tank/system/live-cd-tmp || true
 }
 
 # Function to set runtime mountpoints
