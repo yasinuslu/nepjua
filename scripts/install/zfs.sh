@@ -327,7 +327,7 @@ verify_mounts() {
 }
 
 set_install_mountpoints() {
-    ensure_no_automount
+    automount_off
 
     log_info "Setting install mountpoints..."
 
