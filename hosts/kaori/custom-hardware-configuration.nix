@@ -89,17 +89,6 @@
     neededForBoot = true;
   };
 
-  fileSystems."/tmp" = {
-    device = "tank/system/tmp";
-    fsType = "zfs";
-    options = [
-      "zfsutil"
-      "noatime"
-      "xattr"
-    ];
-    neededForBoot = true;
-  };
-
   fileSystems."/home" = {
     device = "tank/user/home";
     fsType = "zfs";
