@@ -237,18 +237,18 @@ create_datasets() {
 # Function to mount filesystems
 mount_mnt() {
     log_info "Mounting filesystems..."
-
-    # Create EFI mount point and mount
-    execute mkdir -p "${INSTALL_MNT}/boot/efi"
-    execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
     
     # Live CD Temporary Files
     # Make sure to have this dataset before mounting
     execute zfs create -o mountpoint=/tmp.live-cd-install tank/system/tmp-live-cd-install || true
 
-    # Verify mounts
+    # Actually mount the zfs filesystems
     execute zfs mount -a
     execute mount
+
+    # Now that we have the zfs filesystems mounted, we can create the EFI mount point and mount it
+    execute mkdir -p "${INSTALL_MNT}/boot/efi"
+    execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
 
     # Make sure the dataset is writable
     execute chmod 777 /tmp.live-cd-install
