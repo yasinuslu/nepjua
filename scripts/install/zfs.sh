@@ -66,6 +66,19 @@ print_summary() {
     echo -e "${BLUE}│${NC} Hostname: ${YELLOW}$HOSTNAME${NC}                         ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC} Mode: ${DRY_RUN:+${YELLOW}DRY RUN${NC}}${DRY_RUN:-${GREEN}LIVE${NC}}                           ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC} Destructive Mode: ${NO_DESTRUCTIVE:+${GREEN}NO${NC}}${NO_DESTRUCTIVE:-${RED}YES${NC}}                     ${BLUE}│${NC}"
+    echo -e "${BLUE}├───────────────────────────────────────────┤${NC}"
+    echo -e "${BLUE}│${NC} Mount Points:                             ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt:        ${YELLOW}tank/system/root${NC}               ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/boot:   ${YELLOW}tank/system/boot${NC}               ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/boot/efi: ${YELLOW}${DISK1}-part1${NC}                ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/nix:    ${YELLOW}tank/system/nix${NC}                ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/nix/store: ${YELLOW}tank/system/nix/store${NC}          ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/var:    ${YELLOW}tank/system/var${NC}                ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/tmp:    ${YELLOW}tank/system/tmp${NC}                ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/home:   ${YELLOW}tank/user/home${NC}                ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/persist: ${YELLOW}tank/user/persist${NC}             ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/tank/vm: ${YELLOW}tank/data/vm${NC}                 ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC}   /mnt/tank/data: ${YELLOW}tank/data/storage${NC}              ${BLUE}│${NC}"
     echo -e "${BLUE}╰───────────────────────────────────────────╯${NC}"
     echo
 }
@@ -234,7 +247,7 @@ mount_mnt() {
     execute zfs create -o mountpoint=/tmp.live-cd-install tank/system/tmp-live-cd-install || true
 
     # Verify mounts
-    execute zfs mount
+    execute zfs mount -a
     execute mount
 
     # Make sure the dataset is writable
@@ -242,6 +255,56 @@ mount_mnt() {
 
     # Now that we have the dataset, we can set the TMPDIR
     export TMPDIR=/tmp.live-cd-install
+}
+
+# Function to verify mount points
+verify_mounts() {
+    log_info "Verifying mount points..."
+
+    # Define expected mount points and their datasets
+    local expected_mounts=(
+        "/mnt zfs tank/system/root"
+        "/mnt/boot zfs tank/system/boot"
+        "/mnt/boot/efi vfat ${DISK1}-part1"
+        "/mnt/nix zfs tank/system/nix"
+        "/mnt/nix/store zfs tank/system/nix/store"
+        "/mnt/var zfs tank/system/var"
+        "/mnt/tmp zfs tank/system/tmp"
+        "/mnt/home zfs tank/user/home"
+        "/mnt/persist zfs tank/user/persist"
+        "/mnt/tank/vm zfs tank/data/vm"
+        "/mnt/tank/data zfs tank/data/storage"
+    )
+
+    for mount_info in "${expected_mounts[@]}"; do
+        local mnt_point=$(echo "$mount_info" | awk '{print $1}')
+        local fs_type=$(echo "$mount_info" | awk '{print $2}')
+        local source=$(echo "$mount_info" | awk '{print $3}')
+
+        if ! mountpoint -q "$mnt_point"; then
+            log_error "Mount point ${mnt_point} is not mounted!"
+            return 1
+        fi
+
+        local actual_fs_type=$(findmnt -no FSTYPE "$mnt_point")
+        local actual_source=$(findmnt -no SOURCE "$mnt_point")
+
+        if [[ "$actual_fs_type" != "$fs_type" ]]; then
+            log_error "Mount point ${mnt_point} has incorrect filesystem type. Expected: ${fs_type}, Actual: ${actual_fs_type}"
+            return 1
+        fi
+
+        if [[ "$fs_type" == "zfs" ]] && [[ "$actual_source" != "tank/$source" ]]; then
+            log_error "Mount point ${mnt_point} has incorrect source. Expected: tank/${source}, Actual: ${actual_source}"
+            return 1
+        elif [[ "$fs_type" == "vfat" ]] && [[ "$actual_source" != "${source}" ]]; then
+            log_error "Mount point ${mnt_point} has incorrect source. Expected: ${source}, Actual: ${actual_source}"
+            return 1
+        fi
+    done
+
+    log_info "All mount points verified successfully!"
+    return 0
 }
 
 # Function to unmount filesystems
@@ -288,6 +351,9 @@ install_nixos() {
 
     export TMPDIR=/tmp.live-cd-install
 
+    # Ensure ZFS datasets are mounted before nixos-install
+    execute zfs mount -a
+
     # Install NixOS using the flake
     execute nixos-install \
         --keep-going \
@@ -324,7 +390,15 @@ export_zfs() {
     log_info "ZFS pool exported successfully!"
 }
 
-confirm_installation() {    
+confirm_and_summarize_installation() {
+    # Verify mounts before printing summary and asking for confirmation
+    if ! verify_mounts; then
+        log_error "Mount verification failed. Aborting installation."
+        exit 1
+    fi
+
+    print_summary
+
     log_info "We will now unmount and start the installation process."
 
     if ! gum confirm --prompt.foreground="#FF0000" "Do you want to proceed with the installation?" --affirmative="Yes, proceed" --negative="No, abort"; then
@@ -408,12 +482,12 @@ main() {
         exit 1
     fi
 
-    print_summary
-
     if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        print_summary
         log_info "DRY RUN MODE - Commands will be shown but not executed"
     else
-        confirm_installation
+        # Perform mount verification and get confirmation before installation
+        confirm_and_summarize_installation
     fi
 
     log_info "Starting ZFS installation..."
