@@ -74,7 +74,6 @@ print_summary() {
     echo -e "${BLUE}│${NC}   /mnt/nix:    ${YELLOW}tank/system/nix${NC}                ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC}   /mnt/nix/store: ${YELLOW}tank/system/nix/store${NC}          ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC}   /mnt/var:    ${YELLOW}tank/system/var${NC}                ${BLUE}│${NC}"
-    echo -e "${BLUE}│${NC}   /mnt/tmp:    ${YELLOW}tank/system/tmp${NC}                ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC}   /mnt/home:   ${YELLOW}tank/user/home${NC}                ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC}   /mnt/persist: ${YELLOW}tank/user/persist${NC}             ${BLUE}│${NC}"
     echo -e "${BLUE}│${NC}   /mnt/tank/vm: ${YELLOW}tank/data/vm${NC}                 ${BLUE}│${NC}"
@@ -211,9 +210,6 @@ create_datasets() {
     # Var directory
     execute zfs create -o mountpoint="${INSTALL_MNT}/var" tank/system/var
 
-    # Tmp directory
-    execute zfs create -o mountpoint="${INSTALL_MNT}/tmp" tank/system/tmp
-
     # Home directory
     execute zfs create -o mountpoint="${INSTALL_MNT}/home" tank/user/home
 
@@ -238,10 +234,6 @@ create_datasets() {
 mount_mnt() {
     log_info "Mounting filesystems..."
     
-    # Live CD Temporary Files
-    # Make sure to have this dataset before mounting
-    execute zfs create -o mountpoint=/tmp.live-cd-install tank/system/tmp-live-cd-install || true
-
     # Actually mount the zfs filesystems
     execute zfs mount -a
     execute mount
@@ -249,12 +241,6 @@ mount_mnt() {
     # Now that we have the zfs filesystems mounted, we can create the EFI mount point and mount it
     execute mkdir -p "${INSTALL_MNT}/boot/efi"
     execute mount -t vfat -o fmask=0077,dmask=0077 "${DISK1}-part1" "${INSTALL_MNT}/boot/efi"
-
-    # Make sure the dataset is writable
-    execute chmod 777 /tmp.live-cd-install
-
-    # Now that we have the dataset, we can set the TMPDIR
-    export TMPDIR=/tmp.live-cd-install
 }
 
 # Function to verify mount points
@@ -269,12 +255,10 @@ verify_mounts() {
         "/mnt/nix zfs tank/system/nix"
         "/mnt/nix/store zfs tank/system/nix/store"
         "/mnt/var zfs tank/system/var"
-        "/mnt/tmp zfs tank/system/tmp"
         "/mnt/home zfs tank/user/home"
         "/mnt/persist zfs tank/user/persist"
         "/mnt/tank/vm zfs tank/data/vm"
         "/mnt/tank/data zfs tank/data/storage"
-        "/tmp.live-cd-install zfs tank/system/tmp-live-cd-install"
     )
 
     for mount_info in "${expected_mounts[@]}"; do
@@ -331,15 +315,10 @@ set_runtime_mountpoints() {
     execute zfs set mountpoint=/nix/store tank/system/nix/store
     execute zfs set mountpoint=/boot tank/system/boot
     execute zfs set mountpoint=/var tank/system/var
-    execute zfs set mountpoint=/tmp tank/system/tmp
     execute zfs set mountpoint=/home tank/user/home
     execute zfs set mountpoint=/persist tank/user/persist
     execute zfs set mountpoint=/tank/vm tank/data/vm
     execute zfs set mountpoint=/tank/data tank/data/storage
-
-    # Live CD Temporary Files
-    # Only destroy when everything is done
-    execute zfs destroy tank/system/live-cd-tmp || true
 
     log_info "Runtime mountpoints set successfully!"
 }
@@ -358,14 +337,11 @@ install_nixos() {
     execute git clone "$GIT_REPO" "$FLAKE_PATH" || true
     execute git -C "$FLAKE_PATH" checkout "$GIT_BRANCH"
 
-    export TMPDIR=/tmp.live-cd-install
-
     # Install NixOS using the flake
     execute nixos-install \
         --keep-going \
         --no-channel-copy \
         --root "${INSTALL_MNT}" \
-        --option build-dir /tmp.live-cd-install \
         --flake "$FLAKE_PATH#$HOSTNAME"
 
     log_info "NixOS installation completed!"
