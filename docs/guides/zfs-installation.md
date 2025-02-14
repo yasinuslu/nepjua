@@ -45,6 +45,14 @@ curl -L -H "Cache-Control: no-cache" \
 
 ### Manual Installation
 
+Before running the script, it's good to mention that you might want to use tmux
+or screen to run the script. This is because the script will take a while to
+complete and you don't want to interrupt the installation process.
+
+```bash
+nix-shell -p tmux --run 'tmux new -s zfs-install'
+```
+
 1. Boot from NixOS installation media
 
 2. Clone your flake repository:
@@ -53,7 +61,7 @@ curl -L -H "Cache-Control: no-cache" \
    git clone https://github.com/yasinuslu/nepjua.git /home/nixos/code/nepjua
    ```
 
-3. Run the installation script:
+3. Run the installation script in dry-run mode:
    ```bash
    cd /home/nixos/code/nepjua; git pull; sudo ./scripts/install/zfs.sh \
      --disk1 /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J \
@@ -62,7 +70,20 @@ curl -L -H "Cache-Control: no-cache" \
      --dry-run
    ```
 
+4. After verifying the dry-run output, run the installation script without the
+   dry-run flag:
+   ```bash
+   cd /home/nixos/code/nepjua; git pull; sudo ./scripts/install/zfs.sh \
+     --disk1 /dev/disk/by-id/nvme-Samsung_SSD_990_PRO_2TB_S6Z2NJ0W445911J \
+     --disk2 /dev/disk/by-id/nvme-Viper_VP4300L_4TB_VP4300LFDBA234200458 \
+     --hostname kaori
+   ```
+
 ### Non-destructive Installation
+
+If you run into any issues and want to rerun the installation script without
+losing your progress, you can use the `--no-destructive` flag. This will not
+destroy any existing data on the drives.
 
 ```bash
 cd /home/nixos/code/nepjua; git pull; sudo ./scripts/install/zfs.sh \
@@ -128,6 +149,18 @@ If you need to recover or reinstall:
    zfs mount tank/system/root
    mount -t vfat /dev/disk/by-label/BOOT-EFI /boot/efi
    ```
+
+## Troubleshooting
+
+### Unable to inform the kernel about the new pool
+
+If you encounter an error like this:
+
+```plaintext
+Error: Partition(s) 2, 3 on /dev/nvme0n1 have been written, but we have been unable to inform the kernel of the change, probably because it/they are in use.  As a result, the old partition(s) will remain in use.  You should reboot now before making further changes.
+```
+
+In this case, it is best to reboot the system and try again.
 
 ## References
 
