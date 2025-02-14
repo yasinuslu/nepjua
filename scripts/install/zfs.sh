@@ -482,13 +482,7 @@ main() {
         exit 1
     fi
 
-    if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        print_summary
-        log_info "DRY RUN MODE - Commands will be shown but not executed"
-    else
-        # Perform mount verification and get confirmation before installation
-        confirm_and_summarize_installation
-    fi
+    [[ "${DRY_RUN:-false}" == "true" ]] && log_info "DRY RUN MODE - Commands will be shown but not executed"
 
     log_info "Starting ZFS installation..."
     
@@ -513,7 +507,18 @@ main() {
         log_info "NON-DESTRUCTIVE MODE - Skipping disk wiping, partitioning and ZFS pool creation."
     fi
 
+    # First mount the filesystems
     mount_mnt
+
+    # Then verify the mount points and get confirmation before installation
+    if [[ "${DRY_RUN:-false}" == "true" ]]; then
+        print_summary
+        log_info "DRY RUN MODE - Commands will be shown but not executed"
+    else
+        # Perform mount verification and get confirmation before installation
+        confirm_and_summarize_installation
+    fi
+
     install_nixos
     unmount_mnt
     
