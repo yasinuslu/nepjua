@@ -168,12 +168,18 @@ create_datasets() {
     log_info "Creating dataset hierarchy..."
 
     # Create parent datasets for categories
-    execute zfs create -o mountpoint=none tank/system
-    execute zfs create -o mountpoint=none tank/user
-    execute zfs create -o mountpoint=none tank/data
+    execute zfs create -o mountpoint=none \
+        -o recordsize=32K \
+        tank/system
 
-    # System datasets - under tank/system
-    execute zfs set recordsize=32K tank/system
+    execute zfs create -o mountpoint=none \
+        -o recordsize=32K \
+        tank/user
+
+    execute zfs create -o mountpoint=none \
+        -o recordsize=1M \
+        -o logbias=throughput \
+        tank/data
 
     # Root dataset
     execute zfs create -o mountpoint="${INSTALL_MNT}" tank/system/root
@@ -195,18 +201,11 @@ create_datasets() {
     # Tmp directory
     execute zfs create -o mountpoint="${INSTALL_MNT}/tmp" tank/system/tmp
 
-    # User datasets - under tank/user
-    execute zfs set recordsize=32K tank/user # Apply recordsize to user category
-
     # Home directory
     execute zfs create -o mountpoint="${INSTALL_MNT}/home" tank/user/home
 
     # Persist directory
     execute zfs create -o mountpoint="${INSTALL_MNT}/persist" tank/user/persist
-
-    # Data datasets - under tank/data
-    execute zfs set recordsize=1M tank/data
-    execute zfs set logbias=throughput tank/data
 
     # VM dataset - MOUNT UNDER /mnt/tank during installation
     execute zfs create -o mountpoint="${INSTALL_MNT}/tank/vm" \
@@ -232,13 +231,14 @@ mount_mnt() {
     
     # Live CD Temporary Files
     # Make sure to have this dataset before mounting
-    execute zfs create -o mountpoint=/tmp.my-nixos-install tank/system/live-cd-tmp || true
-
-    export TMPDIR=/tmp.my-nixos-install
+    execute zfs create -o mountpoint=/tmp.live-cd-install tank/system/tmp-live-cd-install || true
 
     # Verify mounts
     execute zfs mount
     execute mount
+
+    # Now that we have the dataset, we can set the TMPDIR
+    export TMPDIR=/tmp.live-cd-install
 }
 
 # Function to unmount filesystems
