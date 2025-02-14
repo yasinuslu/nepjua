@@ -232,7 +232,7 @@ create_datasets() {
         tank/data/storage
 }
 
-ensure_no_automount() {
+automount_off() {
     log_info "Ensuring no automount..."
     execute zfs set canmount=noauto tank/system/root || true
     execute zfs set canmount=noauto tank/system/nix || true
@@ -246,13 +246,27 @@ ensure_no_automount() {
     log_info "Ensuring no automount completed successfully!"
 }
 
+automount_on() {
+    log_info "Ensuring automount..."
+    execute zfs set canmount=on tank/system/root || true
+    execute zfs set canmount=on tank/system/nix || true
+    execute zfs set canmount=on tank/system/nix/store || true
+    execute zfs set canmount=on tank/system/boot || true
+    execute zfs set canmount=on tank/system/var || true
+    execute zfs set canmount=on tank/user/home || true
+    execute zfs set canmount=on tank/user/persist || true
+    execute zfs set canmount=on tank/data/vm || true
+    execute zfs set canmount=on tank/data/storage || true
+    log_info "Ensuring automount completed successfully!"
+}
+
 # We want to ensure that the datasets are not automounted
 import_pool() {
     log_info "Importing ZFS pool..."
     execute zpool import -af -N
     log_info "ZFS pool imported successfully!"
 
-    ensure_no_automount
+    automount_off
 }
 
 # Function to verify mount points
@@ -333,8 +347,10 @@ set_install_mountpoints() {
 # Function to mount filesystems
 mount_mnt() {
     log_info "Mounting filesystems for installation..."
-    
+
     set_install_mountpoints
+
+    automount_on
 
     # Actually mount the zfs filesystems
     execute zfs mount -a
@@ -354,7 +370,7 @@ unmount_mnt() {
 
 # Function to set runtime mountpoints
 set_runtime_mountpoints() {
-    ensure_no_automount
+    automount_off
 
     log_info "Setting runtime mountpoints..."
 
