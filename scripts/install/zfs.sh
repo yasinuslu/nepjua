@@ -274,6 +274,7 @@ verify_mounts() {
         "/mnt/persist zfs tank/user/persist"
         "/mnt/tank/vm zfs tank/data/vm"
         "/mnt/tank/data zfs tank/data/storage"
+        "/tmp.live-cd-install zfs tank/system/tmp-live-cd-install"
     )
 
     for mount_info in "${expected_mounts[@]}"; do
@@ -294,9 +295,20 @@ verify_mounts() {
             return 1
         fi
 
-        if [[ "$actual_source" != "$source" ]]; then
+        if [[ "$fs_type" == "zfs" ]] && [[ "$actual_source" != "$source" ]]; then
             log_error "Mount point ${mnt_point} has incorrect source. Expected: ${source}, Actual: ${actual_source}"
             return 1
+        elif [[ "$fs_type" == "vfat" ]] ; then
+            # Resolve /dev/disk/by-id path to canonical /dev/nvme... path for EFI partition
+            local expected_source_resolved
+            expected_source_resolved=$(readlink -f "$source" 2>/dev/null) || true # Resolve symlink, ignore error if not a symlink
+            if [[ -n "$expected_source_resolved" ]]; then
+                source="$expected_source_resolved" # Use resolved path for comparison
+            fi
+            if [[ "$actual_source" != "$source" ]]; then
+                log_error "Mount point ${mnt_point} has incorrect source. Expected: ${source}, Actual: ${actual_source}"
+                return 1
+            fi
         fi
     done
 
@@ -347,9 +359,6 @@ install_nixos() {
     execute git -C "$FLAKE_PATH" checkout "$GIT_BRANCH"
 
     export TMPDIR=/tmp.live-cd-install
-
-    # Ensure ZFS datasets are mounted before nixos-install
-    execute zfs mount -a
 
     # Install NixOS using the flake
     execute nixos-install \
