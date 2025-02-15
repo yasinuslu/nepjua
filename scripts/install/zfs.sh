@@ -215,11 +215,11 @@ create_datasets() {
     # Home directory
     execute zfs create -o mountpoint="${INSTALL_MNT}/home" tank/user/home
 
-    # Nepjua Nix Mutable Directory
+    # Fast Directory
     execute zfs create \
-        -o mountpoint="${INSTALL_MNT}/home/nepjua/.nix-mutable" \
+        -o mountpoint="${INSTALL_MNT}/fast" \
         -o sync=disabled \
-        tank/user/nepjua-nix-mutable
+        tank/system/fast
 
     # Persist directory
     execute zfs create -o mountpoint="${INSTALL_MNT}/persist" tank/user/persist
@@ -245,8 +245,8 @@ automount_off() {
     execute zfs set canmount=noauto tank/system/nix/store || true
     execute zfs set canmount=noauto tank/system/boot || true
     execute zfs set canmount=noauto tank/system/var || true
+    execute zfs set canmount=noauto tank/system/fast || true
     execute zfs set canmount=noauto tank/user/home || true
-    execute zfs set canmount=noauto tank/user/nepjua-nix-mutable || true
     execute zfs set canmount=noauto tank/user/persist || true
     execute zfs set canmount=noauto tank/data/vm || true
     execute zfs set canmount=noauto tank/data/storage || true
@@ -260,8 +260,8 @@ automount_on() {
     execute zfs set canmount=on tank/system/nix/store || true
     execute zfs set canmount=on tank/system/boot || true
     execute zfs set canmount=on tank/system/var || true
+    execute zfs set canmount=on tank/system/fast || true
     execute zfs set canmount=on tank/user/home || true
-    execute zfs set canmount=on tank/user/nepjua-nix-mutable || true
     execute zfs set canmount=on tank/user/persist || true
     execute zfs set canmount=on tank/data/vm || true
     execute zfs set canmount=on tank/data/storage || true
@@ -286,11 +286,11 @@ verify_mounts() {
         "/mnt zfs tank/system/root"
         "/mnt/boot zfs tank/system/boot"
         "/mnt/boot/efi vfat ${DISK1}-part1"
+        "/mnt/fast zfs tank/system/fast"
         "/mnt/nix zfs tank/system/nix"
         "/mnt/nix/store zfs tank/system/nix/store"
         "/mnt/var zfs tank/system/var"
         "/mnt/home zfs tank/user/home"
-        "/mnt/home/nepjua/.nix-mutable zfs tank/user/nepjua-nix-mutable"
         "/mnt/persist zfs tank/user/persist"
         "/mnt/tank/vm zfs tank/data/vm"
         "/mnt/tank/data zfs tank/data/storage"
@@ -346,7 +346,7 @@ set_install_mountpoints() {
     execute zfs set mountpoint="${INSTALL_MNT}/boot" tank/system/boot
     execute zfs set mountpoint="${INSTALL_MNT}/var" tank/system/var
     execute zfs set mountpoint="${INSTALL_MNT}/home" tank/user/home
-    execute zfs set mountpoint="${INSTALL_MNT}/home/nepjua/.nix-mutable" tank/user/nepjua-nix-mutable
+    execute zfs set mountpoint="${INSTALL_MNT}/fast" tank/system/fast
     execute zfs set mountpoint="${INSTALL_MNT}/persist" tank/user/persist
     execute zfs set mountpoint="${INSTALL_MNT}/tank/vm" tank/data/vm
     execute zfs set mountpoint="${INSTALL_MNT}/tank/data" tank/data/storage
@@ -389,8 +389,8 @@ set_runtime_mountpoints() {
     execute zfs set mountpoint=/nix/store tank/system/nix/store
     execute zfs set mountpoint=/boot tank/system/boot
     execute zfs set mountpoint=/var tank/system/var
+    execute zfs set mountpoint=/fast tank/system/fast
     execute zfs set mountpoint=/home tank/user/home
-    execute zfs set mountpoint=/home/nepjua/.nix-mutable tank/user/nepjua-nix-mutable
     execute zfs set mountpoint=/persist tank/user/persist
     execute zfs set mountpoint=/tank/vm tank/data/vm
     execute zfs set mountpoint=/tank/data tank/data/storage
