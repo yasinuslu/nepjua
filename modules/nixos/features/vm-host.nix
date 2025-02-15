@@ -43,8 +43,5 @@
       "nvidiafb"
       "nvidia-gpu"
     ];
-    extraModprobeConfig = ''
-      options vfio-pci ids=0000:01:00.0,0000:01:00.1 # Replace with your GPU PCI IDs
-    '';
   };
 }
