@@ -18,7 +18,7 @@
           ];
         };
         swtpm.enable = true;
-        runAsRoot = false;
+        runAsRoot = true;
       };
       # Logging and socket configuration
       extraConfig = ''
