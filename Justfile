@@ -5,7 +5,7 @@ set shell := ["bash", "-uc"]
 # Determine the OS and set the appropriate rebuild command
 
 os := `uname`
-rebuild_cmd := if os == "Darwin" { "darwin-rebuild" } else { "sudo nixos-rebuild" }
+rebuild_cmd := if os == "Darwin" { "nix run nix-darwin/master#darwin-rebuild --" } else { "sudo nixos-rebuild" }
 rebuild_args := "--impure"
 host := `hostname`
 
