@@ -14,7 +14,7 @@ nix_config := "experimental-features = nix-command flakes\n$(gh auth token | xar
 default:
     @just --list
 
-print-env: _setup
+print-env:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -24,7 +24,7 @@ print-env: _setup
     echo -e "NIX_CONFIG: $NIX_CONFIG\n"
 
 # Clean up and optimize the Nix store
-gc: _setup
+gc:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -38,15 +38,15 @@ gc: _setup
     echo -e "\n✅ Garbage collection completed at $(date)\n"
 
 # Open a Nix REPL with trace
-repl: _setup
+repl:
     nix repl --show-trace
 
 # Open a Nix REPL with nixpkgs
-repl-nixpkgs: _setup
+repl-nixpkgs:
     nix repl -f flake:nixpkgs
 
 # Build with verbose output and no cache
-build-verbose-no-cache: _setup
+build-verbose-no-cache:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -62,7 +62,7 @@ build-verbose-no-cache: _setup
     echo -e "\n✅ Build completed at $(date)\n"
 
 # Build with verbose output
-build-verbose: _setup
+build-verbose:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -76,7 +76,7 @@ build-verbose: _setup
 
     echo -e "\n✅ Build completed at $(date)\n"
 
-build: _setup
+build:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -91,7 +91,7 @@ build: _setup
       {{ rebuild_args }}
 
 # Switch configuration using the detected rebuild command with retries
-switch: _setup
+switch:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -110,7 +110,7 @@ switch: _setup
     echo -e "❌ Switch failed after 3 attempts at $(date)\n"
     exit 1
 
-boot: _setup
+boot:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -130,7 +130,7 @@ boot: _setup
     exit 1
 
 # Update dconf settings
-update-dconf: _setup
+update-dconf:
     #!/usr/bin/env bash
     set -euo pipefail
 
@@ -211,15 +211,15 @@ update-dconf: _setup
     fi
 
 # Update flake
-up: _setup
+up:
     nix flake update
 
 # Fetch submodules
-sub-fetch: _setup
+sub-fetch:
     git submodule update --init --recursive
 
 # Commit all submodules using heredoc syntax and handle no changes
-sub-sync: _setup
+sub-sync:
     #!/usr/bin/env bash
     git submodule foreach --quiet 'git add . && \
       if ! git diff --cached --quiet; then \
