@@ -20,7 +20,7 @@ _setup:
 
     echo -e "\n🔍 Setting up environment variables\n"
 
-    export NIX_CONFIG="$nix_config"
+    export NIX_CONFIG="{{ nix_config }}"
 
 print-env: _setup
     #!/usr/bin/env bash
