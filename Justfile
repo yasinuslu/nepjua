@@ -14,14 +14,13 @@ nix_config := "experimental-features = nix-command flakes\n$(gh auth token | xar
 default:
     @just --list
 
-print-env:
+develop:
     #!/usr/bin/env bash
     set -euo pipefail
-
     export NIX_CONFIG="{{ nix_config }}"
 
-    echo -e "\n🔍 Printing environment variables\n"
-    echo -e "NIX_CONFIG: $NIX_CONFIG\n"
+    echo -e "\n🔍 Launching nix develop\n"
+    nix develop
 
 # Clean up and optimize the Nix store
 gc:
