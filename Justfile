@@ -19,7 +19,7 @@ _setup:
 
     echo -e "\n🔍 Setting up environment variables\n"
 
-    export NIX_CONFIG="experimental-features = nix-command flakes\n$(gh auth token | xargs -I {} echo "extra-access-tokens = github.com={}")"
+    export NIX_CONFIG="experimental-features = nix-command flakes\n$(gh auth token | xargs -I {} echo \"extra-access-tokens = github.com={}\")"
 
 print-env: _setup
     echo -e "\n🔍 Printing environment variables\n"
