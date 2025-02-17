@@ -51,7 +51,7 @@ in
       auto-allocate-uids = true;
       extra-nix-path = "nixpkgs=flake:nixpkgs";
       bash-prompt-prefix = "(nix:$name)\040";
-      build-users-group = "nixbld";
+      # build-users-group = "nixbld";
       extra-platforms = "aarch64-darwin x86_64-darwin";
       keep-outputs = true;
       keep-derivations = true;

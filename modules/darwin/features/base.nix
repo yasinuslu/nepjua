@@ -21,9 +21,6 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
   system.defaults = {
     dock = {
       autohide = true;
