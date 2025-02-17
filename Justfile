@@ -26,6 +26,8 @@ print-env: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
+    export NIX_CONFIG
+
     echo -e "\n🔍 Printing environment variables\n"
     echo -e "NIX_CONFIG: $NIX_CONFIG\n"
 
