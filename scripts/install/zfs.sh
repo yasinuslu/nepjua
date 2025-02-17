@@ -232,6 +232,13 @@ create_datasets() {
         -o secondarycache=none \
         tank/data/vm
 
+    execute zfs create -o mountpoint="${INSTALL_MNT}/var/lib/libvirt/images" \
+        -o recordsize=128K \
+        -o compression=off \
+        -o primarycache=metadata \
+        -o secondarycache=none \
+        tank/data/vm/libvirt-default
+
     # General storage - MOUNT UNDER /mnt/tank during installation
     execute zfs create -o mountpoint="${INSTALL_MNT}/tank/data" \
         -o recordsize=1M \
@@ -250,6 +257,7 @@ automount_off() {
     execute zfs set canmount=noauto tank/user/persist || true
     execute zfs set canmount=noauto tank/data/vm || true
     execute zfs set canmount=noauto tank/data/storage || true
+    execute zfs set canmount=noauto tank/data/vm/libvirt-default || true
     log_info "Ensuring no automount completed successfully!"
 }
 
@@ -265,6 +273,7 @@ automount_on() {
     execute zfs set canmount=on tank/user/persist || true
     execute zfs set canmount=on tank/data/vm || true
     execute zfs set canmount=on tank/data/storage || true
+    execute zfs set canmount=on tank/data/vm/libvirt-default || true
     log_info "Ensuring automount completed successfully!"
 }
 
@@ -294,6 +303,7 @@ verify_mounts() {
         "/mnt/persist zfs tank/user/persist"
         "/mnt/tank/vm zfs tank/data/vm"
         "/mnt/tank/data zfs tank/data/storage"
+        "/mnt/var/lib/libvirt/images zfs tank/data/vm/libvirt-default"
     )
 
     for mount_info in "${expected_mounts[@]}"; do
@@ -350,7 +360,7 @@ set_install_mountpoints() {
     execute zfs set mountpoint="${INSTALL_MNT}/persist" tank/user/persist
     execute zfs set mountpoint="${INSTALL_MNT}/tank/vm" tank/data/vm
     execute zfs set mountpoint="${INSTALL_MNT}/tank/data" tank/data/storage
-
+    execute zfs set mountpoint="${INSTALL_MNT}/var/lib/libvirt/images" tank/data/vm/libvirt-default
     log_info "Install mountpoints set successfully!"
 }
 
@@ -394,7 +404,7 @@ set_runtime_mountpoints() {
     execute zfs set mountpoint=/persist tank/user/persist
     execute zfs set mountpoint=/tank/vm tank/data/vm
     execute zfs set mountpoint=/tank/data tank/data/storage
-
+    execute zfs set mountpoint=/var/lib/libvirt/images tank/data/vm/libvirt-default
     log_info "Runtime mountpoints set successfully!"
 }
 

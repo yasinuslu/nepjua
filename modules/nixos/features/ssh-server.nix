@@ -1,5 +1,17 @@
-{ ... }:
+{ pkgs, ... }:
+let
+  ssh-command-handler = pkgs.writeScriptBin "ssh-command-handler" ''
+    #!/usr/bin/env bash
+    if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
+      exec fish -l
+    else
+      exec bash -c "$SSH_ORIGINAL_COMMAND"
+    fi
+  '';
+in
 {
+  environment.systemPackages = [ ssh-command-handler ];
+
   services.openssh = {
     enable = true;
     allowSFTP = true;
@@ -11,7 +23,7 @@
     extraConfig = ''
       Match All
         PermitTTY yes
-        ForceCommand if [ -z "$SSH_ORIGINAL_COMMAND" ]; then fish -l; else eval "$SSH_ORIGINAL_COMMAND"; fi
+        ForceCommand /run/current-system/sw/bin/ssh-command-handler
     '';
   };
 

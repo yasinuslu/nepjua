@@ -122,6 +122,17 @@
     neededForBoot = false;
   };
 
+  fileSystems."/var/lib/libvirt/images" = {
+    device = "tank/data/vm/libvirt-default";
+    fsType = "zfs";
+    options = [
+      "zfsutil"
+      "noatime"
+      "xattr"
+    ];
+    neededForBoot = false;
+  };
+
   fileSystems."/tank/data/storage" = {
     device = "tank/data/storage";
     fsType = "zfs";
