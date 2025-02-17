@@ -36,7 +36,6 @@
     initrd.kernelModules = [
       "vfio_pci"
       "vfio_iommu_type1"
-      "vfio_virqfd"
     ];
     blacklistedKernelModules = [
       "nouveau"
