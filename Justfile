@@ -14,19 +14,11 @@ nix_config := "experimental-features = nix-command flakes\n$(gh auth token | xar
 default:
     @just --list
 
-_setup:
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    echo -e "\n🔍 Setting up environment variables\n"
-
-    export NIX_CONFIG="{{ nix_config }}"
-
 print-env: _setup
     #!/usr/bin/env bash
     set -euo pipefail
 
-    export NIX_CONFIG
+    export NIX_CONFIG="{{ nix_config }}"
 
     echo -e "\n🔍 Printing environment variables\n"
     echo -e "NIX_CONFIG: $NIX_CONFIG\n"
