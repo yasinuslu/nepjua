@@ -8,7 +8,7 @@ os := `uname`
 rebuild_cmd := if os == "Darwin" { "nix run nix-darwin/master#darwin-rebuild --" } else { "sudo nixos-rebuild" }
 rebuild_args := "--impure"
 host := `hostname`
-nix_config := "experimental-features = nix-command flakes\n$(gh auth token | xargs -I {} echo \"extra-access-tokens = github.com={}\")"
+nix_config := "experimental-features = nix-command flakes$(gh auth token | xargs -I {} echo \"\nextra-access-tokens = github.com={}\")"
 
 # Default recipe to show available commands
 default:
