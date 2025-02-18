@@ -7,8 +7,8 @@
     podman.enable = false;
   };
 
-  # NetworkManager configuration
-  networking.networkmanager.enable = true;
-  systemd.services.NetworkManager-wait-online.enable = false;
-  networking.networkmanager.wifi.powersave = false;
+  # # NetworkManager configuration
+  # networking.networkmanager.enable = false;
+  # systemd.services.NetworkManager-wait-online.enable = false;
+  # networking.networkmanager.wifi.powersave = false;
 }

@@ -232,13 +232,6 @@ create_datasets() {
         -o secondarycache=none \
         tank/data/vm
 
-    execute zfs create -o mountpoint="${INSTALL_MNT}/var/lib/libvirt/images" \
-        -o recordsize=128K \
-        -o compression=off \
-        -o primarycache=metadata \
-        -o secondarycache=none \
-        tank/data/vm/libvirt-default
-
     # General storage - MOUNT UNDER /mnt/tank during installation
     execute zfs create -o mountpoint="${INSTALL_MNT}/tank/data" \
         -o recordsize=1M \

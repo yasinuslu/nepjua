@@ -23,7 +23,7 @@
   ];
 
   systemd.network.networks."10-lan" = {
-    matchConfig.Name = [ "ens18" ];
+    matchConfig.Name = [ "eno1" ];
     networkConfig = {
       Bridge = "vmbr0";
     };
@@ -33,6 +33,7 @@
     netdevConfig = {
       Name = "vmbr0";
       Kind = "bridge";
+      MACAddress = "08:bf:b8:6c:67:2e";
     };
   };
 

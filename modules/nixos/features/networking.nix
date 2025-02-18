@@ -1,5 +1,10 @@
 { ... }:
 {
+  systemd.network.enable = true;
+  networking.networkmanager.enable = false;
+  networking.useNetworkd = true;
+  networking.useDHCP = true;
+
   # Common network settings
   networking.nameservers = [
     "1.1.1.1"

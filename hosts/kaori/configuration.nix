@@ -29,6 +29,9 @@
     xserver-radeon.enable = true;
     tailscale.enable = false;
 
+    # Temporary
+    flatpak.enable = false;
+
     users = {
       nepjua = {
         userConfig =

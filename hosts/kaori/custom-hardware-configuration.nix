@@ -122,8 +122,8 @@
     neededForBoot = false;
   };
 
-  fileSystems."/var/lib/libvirt/images" = {
-    device = "tank/data/vm/libvirt-default";
+  fileSystems."/var/lib/vz" = {
+    device = "tank/data/vm";
     fsType = "zfs";
     options = [
       "zfsutil"
