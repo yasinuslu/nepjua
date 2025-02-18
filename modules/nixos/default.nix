@@ -53,6 +53,16 @@ in
       auto-allocate-uids = true;
     };
 
+    nix.settings.trusted-users = [ "root" ] ++ (builtins.attrNames config.myNixOS.users);
+    nix.settings.trusted-substituters = [
+      "https://cache.nixos.org/"
+      "https://cache.saumon.network/proxmox-nixos"
+    ];
+    nix.settings.trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcD2Jik="
+      "proxmox-nixos:nveXDuVVhFDRFx8Dn19f1WDEaNRJjPrF2CPD2D+m1ys="
+    ];
+
     nix.optimise = {
       automatic = true;
       dates = [ "03:45" ]; # Runs daily at 3:45 AM
