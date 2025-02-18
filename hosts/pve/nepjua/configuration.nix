@@ -39,6 +39,8 @@
     xserver-nvidia.enable = false;
     systemd-boot.enable = false;
 
+    vm-host.enable = false;
+
     users = {
       nepjua = {
         userConfig =
