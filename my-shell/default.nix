@@ -54,7 +54,7 @@
         export PATH=$HOME/.local/bin:$PATH
         export PATH=$HOME/.console-ninja/.bin:$PATH
         export PATH=$HOME/.bun/bin:$PATH
-        export NIX_CONFIG="extra-access-tokens = github.com=$(gh auth token)"
+        export NIX_CONFIG="experimental-features = nix-command flakes$(gh auth token | xargs -I {} echo \"\nextra-access-tokens = github.com={}\")"
 
         alias code="cursor"
       '';
