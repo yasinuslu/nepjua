@@ -12,6 +12,11 @@
         nixpkgs.overlays = [
           inputs.proxmox-nixos.overlays.${myArgs.system}
         ];
+
+        services.proxmox-ve = {
+          enable = true;
+          ipAddress = "192.168.50.50";
+        };
       }
     )
   ];
@@ -19,11 +24,6 @@
   networking.hostName = "kaori";
   networking.hostId = "5bf9bcae";
   networking.firewall.enable = false;
-
-  services.proxmox-ve = {
-    enable = true;
-    ipAddress = "192.168.50.50";
-  };
 
   # networking.interfaces.eno1 = {
   #   useDHCP = true;

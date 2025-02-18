@@ -45,6 +45,18 @@ in
     system.stateVersion = 6;
 
     nix.settings = {
+      substituters = [
+        # "https://cache.nixos.org/"
+        "https://cache.saumon.network/proxmox-nixos"
+      ];
+      trusted-substituters = [
+        # "https://cache.nixos.org/"
+        "https://cache.saumon.network/proxmox-nixos"
+      ];
+      trusted-public-keys = [
+        "proxmox-nixos:nveXDuVVhFDRFx8Dn19f1WDEaNRJjPrF2CPD2D+m1ys="
+      ];
+
       experimental-features = "nix-command flakes auto-allocate-uids";
       extra-experimental-features = "nix-command flakes auto-allocate-uids";
       accept-flake-config = true;
