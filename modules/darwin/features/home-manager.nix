@@ -41,8 +41,9 @@
 
     nix.settings.trusted-users = [ "root" ] ++ (builtins.attrNames config.myDarwin.users);
     nix.settings.trusted-substituters = [
-      "https://nix-community.cachix.org/"
       "https://cache.nixos.org/"
+      "https://cache.saumon.network/proxmox-nixos"
+      "https://nix-community.cachix.org/"
       "https://devenv.cachix.org/"
       "https://nixpkgs-update.cachix.org/"
     ];

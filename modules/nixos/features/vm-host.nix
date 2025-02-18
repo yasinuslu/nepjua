@@ -45,6 +45,7 @@
     "d /tank/vm/iso 0755 root root -"
     "d /tank/vm/backup 0755 root root -"
     "d /tank/vm/templates 0755 root root -"
+    "f /dev/shm/looking-glass 0660 nepjua kvm -"
   ];
 
   # GUI management tools
@@ -60,6 +61,8 @@
     win-virtio # Windows VirtIO drivers
     win-spice # Windows SPICE drivers
     swtpm # Software TPM emulator
+    looking-glass-client
+    guestfs-tools
   ];
 
   # Kernel configuration for virtualization
@@ -76,6 +79,7 @@
       "vfio_iommu_type1"
       "vfio_pci"
       "vfio_virqfd"
+      "kvmfr"
     ];
     blacklistedKernelModules = [
       "nouveau"

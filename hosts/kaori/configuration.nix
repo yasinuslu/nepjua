@@ -1,15 +1,29 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-{ ... }:
+{ inputs, myArgs, ... }:
 {
   imports = [
     ./custom-hardware-configuration.nix
+    inputs.proxmox-nixos.nixosModules.proxmox-ve
+    (
+      { ... }:
+      {
+        nixpkgs.overlays = [
+          inputs.proxmox-nixos.overlays.${myArgs.system}
+        ];
+      }
+    )
   ];
 
   networking.hostName = "kaori";
   networking.hostId = "5bf9bcae";
   networking.firewall.enable = false;
+
+  services.proxmox-ve = {
+    enable = true;
+    ipAddress = "192.168.50.50";
+  };
 
   # networking.interfaces.eno1 = {
   #   useDHCP = true;

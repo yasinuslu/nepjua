@@ -25,6 +25,8 @@
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
   };
 
   outputs =
@@ -36,10 +38,7 @@
     {
       nixosConfigurations = {
         kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
-        pve-sezer = mkSystem "x86_64-linux" ./hosts/pve/sezer/configuration.nix;
-        pve-nepjua = mkSystem "x86_64-linux" ./hosts/pve/nepjua/configuration.nix;
-        pve-abulut = mkSystem "x86_64-linux" ./hosts/pve/abulut/configuration.nix;
-        pve-talha = mkSystem "x86_64-linux" ./hosts/pve/talha/configuration.nix;
+        pve-nepjua = mkSystem defaultSystems.linux ./hosts/pve/nepjua/configuration.nix;
       };
 
       darwinConfigurations = {
