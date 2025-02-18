@@ -5,20 +5,6 @@
 {
   imports = [
     ./custom-hardware-configuration.nix
-    inputs.proxmox-nixos.nixosModules.proxmox-ve
-    (
-      { ... }:
-      {
-        nixpkgs.overlays = [
-          inputs.proxmox-nixos.overlays.${myArgs.system}
-        ];
-
-        services.proxmox-ve = {
-          enable = true;
-          ipAddress = "192.168.50.50";
-        };
-      }
-    )
   ];
 
   networking.hostName = "kaori";
