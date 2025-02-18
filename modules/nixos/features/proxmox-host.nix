@@ -1,7 +1,11 @@
-{ inputs, myArgs, ... }:
+{
+  inputs,
+  myArgs,
+  pkgs,
+  ...
+}:
 {
   imports = [
-    ./custom-hardware-configuration.nix
     inputs.proxmox-nixos.nixosModules.proxmox-ve
     (
       { ... }:
@@ -39,5 +43,41 @@
       DHCP = "ipv4";
     };
     linkConfig.RequiredForOnline = "routable";
+  };
+
+  # Required packages
+  environment.systemPackages = with pkgs; [
+    virt-viewer
+    spice-gtk
+    win-virtio # Windows VirtIO drivers
+    win-spice # Windows SPICE drivers
+    swtpm # Software TPM emulator
+    looking-glass-client
+    guestfs-tools
+  ];
+
+  # Kernel configuration for virtualization
+  boot = {
+    kernelParams = [
+      "amd_iommu=on"
+      "iommu=pt"
+      "kvm.ignore_msrs=1"
+      "kvm.report_ignored_msrs=0"
+    ];
+    kernelModules = [
+      "kvm-amd"
+      "vfio"
+      "vfio_iommu_type1"
+      "vfio_pci"
+      "vfio_virqfd"
+      "kvmfr"
+    ];
+    blacklistedKernelModules = [
+      "nouveau"
+      "nvidia"
+      "nvidia_drm"
+      "nvidia_uvm"
+      "nvidia_modeset"
+    ];
   };
 }
