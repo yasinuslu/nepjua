@@ -89,9 +89,13 @@ rec {
   isLinuxSystem = lib.strings.hasSuffix "-linux";
   isDarwinSystem = lib.strings.hasSuffix "-darwin";
 
-  filesIn = dir: (map (fname: dir + "/${fname}") (builtins.attrNames (builtins.readDir dir)));
+  nonArchived = name: value: name != "archive";
 
-  dirsIn = dir: lib.filterAttrs (name: value: value == "directory") (builtins.readDir dir);
+  filesIn =
+    dir:
+    (map (fname: dir + "/${fname}") (
+      builtins.attrNames (lib.filterAttrs nonArchived (builtins.readDir dir))
+    ));
 
   fileNameOf = path: (builtins.head (builtins.split "\\." (baseNameOf path)));
 

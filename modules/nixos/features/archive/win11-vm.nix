@@ -1,8 +1,5 @@
 { config, pkgs, ... }:
 {
-  # Ensure vm-host feature is enabled
-  config.myNixOS.vm-host.enable = true;
-
   # Define the Windows 11 VM
   virtualisation.libvirtd.qemu.verbatimConfig = ''
     nvram = [ "/var/lib/libvirt/qemu/nvram/win11_VARS.fd:/run/libvirt/nix-ovmf/OVMF_VARS.ms.fd" ]
