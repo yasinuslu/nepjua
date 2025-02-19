@@ -13,7 +13,6 @@
         python312
         python312Packages.pip
         coreutils-full
-        just
         kubectl
         git
         git-lfs

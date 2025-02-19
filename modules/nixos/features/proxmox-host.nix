@@ -4,6 +4,14 @@
   pkgs,
   ...
 }:
+let
+  overridden-proxmox-ve = inputs.proxmox-nixos.packages.${myArgs.system}.proxmox-ve.overrideAttrs (
+    finalAttrs: previousAttrs: {
+      buildInputs = previousAttrs.buildInputs ++ [ pkgs.swtpm ];
+      nativeBuildInputs = previousAttrs.nativeBuildInputs ++ [ pkgs.swtpm ];
+    }
+  );
+in
 {
   imports = [
     inputs.proxmox-nixos.nixosModules.proxmox-ve
@@ -17,6 +25,7 @@
         services.proxmox-ve = {
           enable = true;
           ipAddress = "192.168.50.50";
+          package = overridden-proxmox-ve;
         };
       }
     )
@@ -48,13 +57,21 @@
 
   # Required packages
   environment.systemPackages = with pkgs; [
+    # Required packages
+    looking-glass-client
+
+    # TODO: Put the correct places in the proxmox-ve module
+    swtpm # Software TPM emulator
+    openssl
+    perlPackages.XMLLibXML
+
+    # Optional packages
     virt-viewer
     spice-gtk
     win-virtio # Windows VirtIO drivers
     win-spice # Windows SPICE drivers
-    swtpm # Software TPM emulator
-    looking-glass-client
     guestfs-tools
+
   ];
 
   # Kernel configuration for virtualization

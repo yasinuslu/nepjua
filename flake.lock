@@ -307,17 +307,14 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1735469959,
-        "narHash": "sha256-knX3c5OWE1C5QRDdvup+zqlWvwCLDHiME6+i18WwKsE=",
-        "owner": "SaumonNet",
-        "repo": "proxmox-nixos",
-        "rev": "4ad21ba619d779b229e308b58066bafd65d5153d",
-        "type": "github"
+        "lastModified": 1739917161,
+        "narHash": "sha256-HT0/2FyJNaKCYylil0OjzAXGj0tZ84G9WcSXy++1yLQ=",
+        "path": "/home/nepjua/code/.profile/yasinuslu/github/SaumonNet/proxmox-nixos",
+        "type": "path"
       },
       "original": {
-        "owner": "SaumonNet",
-        "repo": "proxmox-nixos",
-        "type": "github"
+        "path": "/home/nepjua/code/.profile/yasinuslu/github/SaumonNet/proxmox-nixos",
+        "type": "path"
       }
     },
     "root": {
