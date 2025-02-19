@@ -15,6 +15,7 @@
         coreutils-full
         just
         kubectl
+        k9s
         git
         git-lfs
         k3d

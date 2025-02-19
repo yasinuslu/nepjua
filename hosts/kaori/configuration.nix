@@ -30,7 +30,7 @@
     tailscale.enable = false;
 
     # Temporary
-    flatpak.enable = false;
+    flatpak.enable = true;
 
     users = {
       nepjua = {
