@@ -58,6 +58,7 @@
       "zed"
       "zen-browser"
       "ollama"
+      "copyq"
     ];
   };
 }

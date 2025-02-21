@@ -15,6 +15,7 @@
         coreutils-full
         just
         kubectl
+        k9s
         git
         git-lfs
         k3d
@@ -54,7 +55,10 @@
         export PATH=$HOME/.local/bin:$PATH
         export PATH=$HOME/.console-ninja/.bin:$PATH
         export PATH=$HOME/.bun/bin:$PATH
-        export NIX_CONFIG="experimental-features = nix-command flakes$(gh auth token | xargs -I {} echo \"\nextra-access-tokens = github.com={}\")"
+        export NIX_CONFIG="
+        experimental-features = nix-command flakes
+        extra-access-tokens = github.com=$(gh auth token)
+        "
 
         alias code="cursor"
       '';
