@@ -14,6 +14,7 @@
         python312Packages.pip
         coreutils-full
         kubectl
+        k9s
         git
         git-lfs
         k3d
