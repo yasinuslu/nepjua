@@ -30,7 +30,7 @@
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = false;
 
-    xserver.nvidia.enable = true;
+    xserver.nvidia.enable = false;
 
     users = {
       nepjua = {
