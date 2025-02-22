@@ -14,8 +14,6 @@ in
   ];
 
   options.myNixOS.networking = {
-    enable = lib.mkEnableOption "networking features";
-
     qos = {
       enable = lib.mkEnableOption "Quality of Service";
 

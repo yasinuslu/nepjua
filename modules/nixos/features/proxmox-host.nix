@@ -2,6 +2,8 @@
   inputs,
   myArgs,
   pkgs,
+  lib,
+  config,
   ...
 }:
 let
@@ -31,71 +33,77 @@ in
     )
   ];
 
-  systemd.network.networks."10-lan" = {
-    matchConfig.Name = [ "eno1" ];
-    networkConfig = {
-      Bridge = "vmbr0";
-    };
+  options.myNixOS.proxmox-host = {
+    gpuPassthrough.enable = lib.mkEnableOption "GPU passthrough";
   };
 
-  systemd.network.netdevs."vmbr0" = {
-    netdevConfig = {
-      Name = "vmbr0";
-      Kind = "bridge";
-      MACAddress = "08:bf:b8:6c:67:2e";
+  config = {
+    systemd.network.networks."10-lan" = {
+      matchConfig.Name = [ "eno1" ];
+      networkConfig = {
+        Bridge = "vmbr0";
+      };
     };
-  };
 
-  systemd.network.networks."10-lan-bridge" = {
-    matchConfig.Name = "vmbr0";
-    networkConfig = {
-      IPv6AcceptRA = true;
-      DHCP = "ipv4";
+    systemd.network.netdevs."vmbr0" = {
+      netdevConfig = {
+        Name = "vmbr0";
+        Kind = "bridge";
+        MACAddress = "08:bf:b8:6c:67:2e";
+      };
     };
-    linkConfig.RequiredForOnline = "routable";
-  };
 
-  # Required packages
-  environment.systemPackages = with pkgs; [
+    systemd.network.networks."10-lan-bridge" = {
+      matchConfig.Name = "vmbr0";
+      networkConfig = {
+        IPv6AcceptRA = true;
+        DHCP = "ipv4";
+      };
+      linkConfig.RequiredForOnline = "routable";
+    };
+
     # Required packages
-    looking-glass-client
+    environment.systemPackages = with pkgs; [
+      # Required packages
+      looking-glass-client
 
-    # TODO: Put the correct places in the proxmox-ve module
-    swtpm # Software TPM emulator
-    openssl
-    perlPackages.XMLLibXML
+      # TODO: Put the correct places in the proxmox-ve module
+      swtpm # Software TPM emulator
+      openssl
+      perlPackages.XMLLibXML
 
-    # Optional packages
-    virt-viewer
-    spice-gtk
-    win-virtio # Windows VirtIO drivers
-    win-spice # Windows SPICE drivers
-    guestfs-tools
+      # Optional packages
+      virt-viewer
+      spice-gtk
+      win-virtio # Windows VirtIO drivers
+      win-spice # Windows SPICE drivers
+      guestfs-tools
 
-  ];
-
-  # Kernel configuration for virtualization
-  boot = {
-    kernelParams = [
-      "amd_iommu=on"
-      "iommu=pt"
-      "kvm.ignore_msrs=1"
-      "kvm.report_ignored_msrs=0"
     ];
-    kernelModules = [
-      "kvm-amd"
-      "vfio"
-      "vfio_iommu_type1"
-      "vfio_pci"
-      "vfio_virqfd"
-      "kvmfr"
-    ];
-    blacklistedKernelModules = [
-      "nouveau"
-      "nvidia"
-      "nvidia_drm"
-      "nvidia_uvm"
-      "nvidia_modeset"
-    ];
+
+    # Kernel configuration for virtualization
+    boot = {
+      kernelParams = [
+        "amd_iommu=on"
+        "iommu=pt"
+        "kvm.ignore_msrs=1"
+        "kvm.report_ignored_msrs=0"
+      ];
+      kernelModules = [
+        "kvm-amd"
+        "vfio"
+        "vfio_iommu_type1"
+        "vfio_pci"
+        "vfio_virqfd"
+        "kvmfr"
+      ];
+      blacklistedKernelModules = lib.mkIf config.myNixOS.proxmox-host.gpuPassthrough.enable [
+        "nouveau"
+        "nvidia"
+        "nvidia_drm"
+        "nvidia_uvm"
+        "nvidia_modeset"
+      ];
+    };
   };
 }
