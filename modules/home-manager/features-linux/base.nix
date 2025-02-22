@@ -33,6 +33,7 @@
       nixpkgs-review
       lazygit
       git-sync
+      wl-clipboard
     ]
     ++ (
       if pkgs.stdenv.system == "x86_64-linux" then
