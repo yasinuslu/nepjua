@@ -33,10 +33,6 @@ in
     )
   ];
 
-  options.myNixOS.proxmox-host = {
-    gpuPassthrough.enable = lib.mkEnableOption "GPU passthrough";
-  };
-
   config = {
     systemd.network.networks."10-lan" = {
       matchConfig.Name = [ "eno1" ];
@@ -96,13 +92,6 @@ in
         "vfio_pci"
         "vfio_virqfd"
         "kvmfr"
-      ];
-      blacklistedKernelModules = lib.mkIf config.myNixOS.proxmox-host.gpuPassthrough.enable [
-        "nouveau"
-        "nvidia"
-        "nvidia_drm"
-        "nvidia_uvm"
-        "nvidia_modeset"
       ];
     };
   };

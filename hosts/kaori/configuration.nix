@@ -25,12 +25,12 @@
 
     rustdesk.enable = false;
     zoom-us.enable = false;
-    xserver-nvidia.enable = false;
-    xserver-radeon.enable = true;
     tailscale.enable = false;
 
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = false;
+
+    xserver.nvidia.enable = true;
 
     users = {
       nepjua = {
