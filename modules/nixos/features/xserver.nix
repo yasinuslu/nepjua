@@ -16,8 +16,6 @@
         # nixgl.auto.nixGLDefault
       ];
 
-      hardware.bumblebee.connectDisplay = true;
-
       services.xserver.xkb.layout = "us";
       services.xserver.xkb.variant = "";
 
@@ -25,7 +23,6 @@
       services.xserver.enable = true;
       services.xserver.videoDrivers = [
         "amdgpu"
-        "nvidia"
       ];
 
       # Enable touchpad support (enabled default in most desktopManager).
@@ -43,6 +40,10 @@
       hardware.nvidia.powerManagement.enable = true;
       hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
       hardware.nvidia.open = true;
+      services.xserver.videoDrivers = [
+        "amdgpu"
+        "nvidia"
+      ];
     })
     (lib.mkIf (!config.myNixOS.xserver.nvidia.enable) {
       boot.blacklistedKernelModules = [
