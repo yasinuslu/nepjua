@@ -29,8 +29,8 @@
     xserver-radeon.enable = true;
     tailscale.enable = false;
 
-    # Temporary
-    flatpak.enable = true;
+    # FIXME: Find a way to make this work
+    cloudflare-warp.enable = false;
 
     users = {
       nepjua = {
