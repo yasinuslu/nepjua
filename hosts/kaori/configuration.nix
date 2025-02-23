@@ -12,17 +12,17 @@
   networking.firewall.enable = false;
 
   services.xserver.videoDrivers = [
-        "amdgpu"
-        "nvidia"
-      ];
+    "amdgpu"
+    "nvidia"
+  ];
 
-    boot.blacklistedKernelModules = [
-        "nouveau"
-        "nvidia"
-        "nvidia_drm"
-        "nvidia_uvm"
-        "nvidia_modeset"
-      ];
+  boot.blacklistedKernelModules = [
+    "nouveau"
+    "nvidia"
+    "nvidia_drm"
+    "nvidia_uvm"
+    "nvidia_modeset"
+  ];
 
   # networking.interfaces.eno1 = {
   #   useDHCP = true;

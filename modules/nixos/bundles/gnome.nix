@@ -15,5 +15,6 @@
     mullvad-vpn.enable = lib.mkOverride 200 true;
     spice-viewer.enable = lib.mkOverride 200 true;
     xserver.enable = lib.mkOverride 200 true;
+    xserver.nvidia.enable = lib.mkOverride 200 false;
   };
 }
