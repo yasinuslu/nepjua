@@ -35,6 +35,21 @@
 
       hardware.amdgpu.amdvlk.enable = true;
       hardware.amdgpu.amdvlk.support32Bit.enable = true;
+
+      services.printing.enable = true;
+
+      # Enable sound with pipewire.
+      services.pulseaudio.enable = false;
+      security.rtkit.enable = true;
+      services.pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+      };
+
+      # Enable automatic login for the user.
+      services.getty.autologinUser = config.myNixOS.mainUser;
     }
     (lib.mkIf config.myNixOS.xserver.nvidia.enable {
       hardware.nvidia-container-toolkit.enable = true;

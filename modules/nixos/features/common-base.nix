@@ -6,6 +6,8 @@
   ...
 }:
 {
+  zramSwap.enable = true;
+
   # Increase inotify watches
   boot.kernel.sysctl = {
     "fs.inotify.max_user_watches" = 8388608; # 2^23 (~8GB max kernel memory)
