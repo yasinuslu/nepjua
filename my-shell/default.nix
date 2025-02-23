@@ -1,6 +1,5 @@
 {
   pkgs,
-  masterNixpkgs,
   ...
 }:
 {
@@ -9,7 +8,7 @@
     pkgs.mkShell {
       name = "default";
       buildInputs = with pkgs; [
-        masterNixpkgs.deno
+        deno
         python312
         python312Packages.pip
         coreutils-full

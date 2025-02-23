@@ -123,22 +123,6 @@
         "type": "github"
       }
     },
-    "masterNixpkgs": {
-      "locked": {
-        "lastModified": 1740327280,
-        "narHash": "sha256-VNbeWDzePw28cvSr5+4LeU3oVacUuphyiGDELDxCLmA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "6c345787fc49ba7d7e06db1de898b26f5563fefd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nix-alien": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -322,7 +306,6 @@
         "darwin": "darwin",
         "flake-compat": "flake-compat",
         "home-manager": "home-manager",
-        "masterNixpkgs": "masterNixpkgs",
         "nix-alien": "nix-alien",
         "nix-colors": "nix-colors",
         "nix-index-database": "nix-index-database_2",

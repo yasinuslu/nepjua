@@ -4,7 +4,6 @@
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    masterNixpkgs.url = "github:NixOS/nixpkgs/master";
 
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -50,14 +49,12 @@
       devShell = eachSystem (
         pkgs:
         let
-          masterNixpkgs = inputs.masterNixpkgs.legacyPackages.${pkgs.system};
           myShell = import ./my-shell/default.nix {
             inherit
               system
               pkgs
               inputs
               myLib
-              masterNixpkgs
               ;
           };
         in
