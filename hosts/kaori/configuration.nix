@@ -20,7 +20,20 @@
 
   myNixOS = {
     mainUser = "nepjua";
-    bundles.minimal.enable = true;
+    bundles.minimal.enable = lib.mkOverride 200 true;
+
+    services.xserver.videoDrivers = [
+        "amdgpu"
+        "nvidia"
+      ];
+
+    boot.blacklistedKernelModules = [
+        "nouveau"
+        "nvidia"
+        "nvidia_drm"
+        "nvidia_uvm"
+        "nvidia_modeset"
+      ];
 
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = lib.mkOverride 200 false;
