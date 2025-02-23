@@ -11,18 +11,7 @@
   networking.hostId = "5bf9bcae";
   networking.firewall.enable = false;
 
-  # networking.interfaces.eno1 = {
-  #   useDHCP = true;
-  #   mtu = 1500;
-  #   wakeOnLan.enable = true;
-  #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
-  # };
-
-  myNixOS = {
-    mainUser = "nepjua";
-    bundles.minimal.enable = lib.mkOverride 200 true;
-
-    services.xserver.videoDrivers = [
+  services.xserver.videoDrivers = [
         "amdgpu"
         "nvidia"
       ];
@@ -34,6 +23,17 @@
         "nvidia_uvm"
         "nvidia_modeset"
       ];
+
+  # networking.interfaces.eno1 = {
+  #   useDHCP = true;
+  #   mtu = 1500;
+  #   wakeOnLan.enable = true;
+  #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
+  # };
+
+  myNixOS = {
+    mainUser = "nepjua";
+    bundles.minimal.enable = lib.mkOverride 200 true;
 
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = lib.mkOverride 200 false;
