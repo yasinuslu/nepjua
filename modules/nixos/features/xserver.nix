@@ -13,6 +13,8 @@
     {
       environment.systemPackages = with pkgs; [
         mesa-demos
+        wl-clipboard
+        xclip
         # nixgl.auto.nixGLDefault
       ];
 

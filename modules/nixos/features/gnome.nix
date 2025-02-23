@@ -30,7 +30,6 @@
 
   environment.systemPackages = with pkgs; [
     # Wayland utilities
-    wl-clipboard
     xdg-desktop-portal
     xdg-desktop-portal-gtk
     wev

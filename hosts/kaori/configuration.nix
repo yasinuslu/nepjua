@@ -23,7 +23,6 @@
     bundles.general-desktop.enable = true;
     grub.enable = false;
 
-    rustdesk.enable = false;
     zoom-us.enable = false;
     tailscale.enable = false;
 
