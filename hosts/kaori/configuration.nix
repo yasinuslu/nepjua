@@ -20,16 +20,10 @@
 
   myNixOS = {
     mainUser = "nepjua";
-    bundles.general-desktop.enable = true;
-    grub.enable = false;
-
-    zoom-us.enable = false;
-    tailscale.enable = false;
+    bundles.nogui.enable = true;
 
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = false;
-
-    xserver.nvidia.enable = false;
 
     users = {
       nepjua = {

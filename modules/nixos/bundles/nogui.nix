@@ -30,7 +30,6 @@
     lorri.enable = lib.mkDefault true;
     mullvad-vpn.enable = lib.mkForce false;
     nix-index.enable = lib.mkDefault true;
-    nixos-base.enable = lib.mkDefault true;
     ntfs.enable = lib.mkDefault true;
     podman.enable = lib.mkDefault true;
     proxmox-host.enable = lib.mkDefault true;
