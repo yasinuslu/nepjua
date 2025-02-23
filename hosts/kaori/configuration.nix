@@ -33,10 +33,11 @@
 
   myNixOS = {
     mainUser = "nepjua";
-    bundles.minimal.enable = lib.mkOverride 200 true;
+    bundles.minimal.enable = lib.mkOverride 500 true;
+    bundles.gnome.enable = lib.mkOverride 500 true;
 
     # FIXME: Find a way to make this work
-    cloudflare-warp.enable = lib.mkOverride 200 false;
+    cloudflare-warp.enable = lib.mkOverride 500 false;
 
     users = {
       nepjua = {
