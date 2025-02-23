@@ -7,8 +7,6 @@
   networking.computerName = "Musu Mac";
 
   myDarwin = {
-    bundles.general-desktop.enable = true;
-
     darwin-users = {
       nepjua = {
         userConfig =
