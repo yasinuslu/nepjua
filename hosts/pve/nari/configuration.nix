@@ -4,42 +4,27 @@
 { lib, ... }:
 {
   imports = [
-    ./custom-hardware-configuration.nix
+    ./hardware-configuration.nix
   ];
 
-  networking.hostName = "kaori";
-  networking.hostId = "5bf9bcae";
+  networking.hostName = "nari";
+  networking.hostId = "b141a362";
   networking.firewall.enable = false;
 
-  services.xserver.videoDrivers = [
-    "amdgpu"
-    "nvidia"
-  ];
-
-  boot.blacklistedKernelModules = [
-    "nouveau"
-    "nvidia"
-    "nvidia_drm"
-    "nvidia_uvm"
-    "nvidia_modeset"
-  ];
-
-  # networking.interfaces.eno1 = {
-  #   useDHCP = true;
-  #   mtu = 1500;
-  #   wakeOnLan.enable = true;
-  #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
-  # };
+  # Explicitly disable NetworkManager and enable systemd-networkd
+  networking.networkmanager.enable = lib.mkForce false;
+  networking.useNetworkd = true;
 
   myNixOS = {
     mainUser = "nepjua";
+
     bundles.minimal.enable = lib.mkOverride 500 true;
     bundles.gnome.enable = lib.mkOverride 500 true;
 
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = lib.mkOverride 500 false;
 
-    # This is weird
+    # For enabling Gnome features
     _1password.enable = lib.mkForce true;
     appimage.enable = lib.mkForce true;
     gnome-adaptive-theme.enable = lib.mkForce true;
@@ -49,8 +34,12 @@
     mullvad-vpn.enable = lib.mkForce true;
     spice-viewer.enable = lib.mkForce true;
     xserver.enable = lib.mkForce true;
-    xserver.amdgpu.enable = lib.mkForce true;
+    xserver.amdgpu.enable = lib.mkForce false;
     xserver.nvidia.enable = lib.mkForce false;
+
+    # Specific for pve-guests
+    spice-guest.enable = lib.mkForce true;
+    qemu-guest.enable = lib.mkForce true;
 
     users = {
       nepjua = {
@@ -60,13 +49,7 @@
             programs.git.userName = "Yasin Uslu";
             programs.git.userEmail = "nepjua@gmail.com";
 
-            myHomeManager = {
-              linux.cloudflare.enable = false;
-              docker.enable = false;
-
-              # We are in winter, so sun doesn't bother me that much these days
-              linux.darkman.enable = false;
-            };
+            myHomeManager.docker.enable = false;
           };
 
         userSettings = {
@@ -78,6 +61,7 @@
             "lxd"
             "kvm"
             "libvirtd"
+            "spice"
           ];
         };
       };
