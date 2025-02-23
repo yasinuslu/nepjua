@@ -8,6 +8,7 @@
     };
     taps = [
       "hashicorp/tap"
+      "jeffreywildman/homebrew-virt-manager"
     ];
     enable = true;
     brews = [
@@ -23,6 +24,7 @@
       "telnet"
       "tesseract"
       "tig"
+      "jeffreywildman/homebrew-virt-manager/virt-viewer"
     ];
     casks = [
       "1password-cli"
@@ -58,6 +60,8 @@
       "zed"
       "zen-browser"
       "ollama"
+      "crossover"
+      "copyq"
     ];
   };
 }
