@@ -2,6 +2,7 @@
 
 ## Hardware Reference Configuration
 
+- Motherboard: ASUS ROG STRIX X670E-F GAMING WIFI
 - CPU: AMD Ryzen 9 7950X3D (16-Core/32-Thread)
 - Primary NVMe: Samsung 990 PRO 2TB (nvme0n1) - OS, /boot, /nix, /home, ZIL
 - Secondary NVMe: Patriot Viper VP4300L 4TB (nvme1n1) - /tank/vm, /tank/data,

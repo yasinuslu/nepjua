@@ -32,12 +32,24 @@
   # };
 
   myNixOS = {
-    mainUser = "nepjua";
+    mainUser = "nepjua";     
     bundles.minimal.enable = lib.mkOverride 500 true;
     bundles.gnome.enable = lib.mkOverride 500 true;
 
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = lib.mkOverride 500 false;
+
+    # This is weird
+    _1password.enable = lib.mkForce true;
+    appimage.enable = lib.mkForce true;
+    gnome-adaptive-theme.enable = lib.mkForce true;
+    gnome-autologin.enable = lib.mkForce true;
+    gnome.enable = lib.mkForce true;
+    gparted.enable = lib.mkForce true;
+    mullvad-vpn.enable = lib.mkForce true;
+    spice-viewer.enable = lib.mkForce true;
+    xserver.enable = lib.mkForce true;
+    xserver.nvidia.enable = lib.mkForce false;
 
     users = {
       nepjua = {
