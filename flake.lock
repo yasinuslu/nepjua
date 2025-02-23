@@ -291,17 +291,17 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1740346992,
-        "narHash": "sha256-mww7MHyP6thRImnnapaTPk6y82eNv9exIQ+OiQ8QVF0=",
+        "lastModified": 1739917151,
+        "narHash": "sha256-bdeR59KD4jgPukMQNZH7cfXlLhUvgZzrsoxqnoh8JLE=",
         "owner": "yasinuslu",
         "repo": "proxmox-nixos",
-        "rev": "d58543012dca8fba2eacccd430e230f2051c0401",
+        "rev": "a1ec78293b526ed848cc04f2afc5f9079ffaad60",
         "type": "github"
       },
       "original": {
         "owner": "yasinuslu",
-        "ref": "main",
         "repo": "proxmox-nixos",
+        "rev": "a1ec78293b526ed848cc04f2afc5f9079ffaad60",
         "type": "github"
       }
     },

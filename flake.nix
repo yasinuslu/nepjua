@@ -25,7 +25,8 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    proxmox-nixos.url = "github:yasinuslu/proxmox-nixos/main";
+    # proxmox-nixos.url = "github:yasinuslu/proxmox-nixos/main";
+    proxmox-nixos.url = "github:yasinuslu/proxmox-nixos/a1ec78293b526ed848cc04f2afc5f9079ffaad60";
   };
 
   outputs =
