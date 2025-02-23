@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-{ ... }:
+{ lib, ... }:
 {
   imports = [
     ./custom-hardware-configuration.nix
@@ -20,10 +20,10 @@
 
   myNixOS = {
     mainUser = "nepjua";
-    bundles.nogui.enable = true;
+    bundles.minimal.enable = true;
 
     # FIXME: Find a way to make this work
-    cloudflare-warp.enable = false;
+    cloudflare-warp.enable = lib.mkOverride 200 false;
 
     users = {
       nepjua = {
