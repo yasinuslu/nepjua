@@ -16,7 +16,7 @@
     automount.enable = lib.mkOverride 100 true;
     cloudflare-warp.enable = lib.mkOverride 100 true;
     common-base.enable = lib.mkOverride 100 true;
-    docker.enable = lib.mkOverride 100 true;
+    docker.enable = lib.mkOverride 100 false;
     exfat.enable = lib.mkOverride 100 true;
     flatpak.enable = lib.mkOverride 150 false;
     gnome-adaptive-theme.enable = lib.mkOverride 150 false;
