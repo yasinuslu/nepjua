@@ -52,6 +52,9 @@
     xserver.amdgpu.enable = lib.mkForce true;
     xserver.nvidia.enable = lib.mkForce false;
 
+    # VM Host
+    proxmox-host.enable = lib.mkForce true;
+
     users = {
       nepjua = {
         userConfig =
