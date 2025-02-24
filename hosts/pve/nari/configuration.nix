@@ -11,10 +11,6 @@
   networking.hostId = "b141a362";
   networking.firewall.enable = false;
 
-  # Explicitly disable NetworkManager and enable systemd-networkd
-  networking.networkmanager.enable = lib.mkForce false;
-  networking.useNetworkd = true;
-
   myNixOS = {
     mainUser = "nepjua";
 
