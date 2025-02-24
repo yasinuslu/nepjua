@@ -36,10 +36,19 @@
     zfs.enable = lib.mkForce true;
 
     # Enable/Disable GNOME on Host easily
-    bundles.gnome.enable = lib.mkOverride 500 true;
+    # We will have to put up with this until the VM becomes rock-solid
+    _1password.enable = lib.mkForce true;
+    appimage.enable = lib.mkForce true;
+    gnome-adaptive-theme.enable = lib.mkForce true;
+    gnome-autologin.enable = lib.mkForce true;
+    gnome.enable = lib.mkForce true;
+    gparted.enable = lib.mkForce true;
+    mullvad-vpn.enable = lib.mkForce true;
+    spice-viewer.enable = lib.mkForce true;
     xserver.enable = lib.mkForce true;
     xserver.amdgpu.enable = lib.mkForce true;
-
+    xserver.nvidia.enable = lib.mkForce false;
+    
     users = {
       nepjua = {
         userConfig =
