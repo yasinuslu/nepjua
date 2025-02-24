@@ -22,7 +22,7 @@
   boot.kernelModules = [ "virtio_gpu" ];
 
   # Memory optimization for SPICE guest
-  boot.kernel.sysctl = {
-    "vm.swappiness" = 10;
-  };
+  # boot.kernel.sysctl = {
+  #   "vm.swappiness" = 10;
+  # };
 }

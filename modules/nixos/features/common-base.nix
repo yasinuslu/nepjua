@@ -10,8 +10,8 @@
 
   # Increase inotify watches
   boot.kernel.sysctl = {
-    "fs.inotify.max_user_watches" = 8388608; # 2^23 (~8GB max kernel memory)
-    "fs.inotify.max_user_instances" = 8388608; # 2^23
+    "fs.inotify.max_user_watches" = 4194304; # 2^22 (~4GB max kernel memory)
+    "fs.inotify.max_user_instances" = 4194304; # 2^22 (~4GB max kernel memory)
   };
 
   boot.supportedFilesystems = [
@@ -44,8 +44,8 @@
     config = {
       allowUnfree = true;
 
-      cores = lib.mkDefault 8;
-      max-jobs = lib.mkDefault 6;
+      cores = lib.mkDefault 4;
+      max-jobs = lib.mkDefault 4;
 
       permittedInsecurePackages = [
         "electron-27.3.11"

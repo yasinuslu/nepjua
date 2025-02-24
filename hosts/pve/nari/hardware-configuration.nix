@@ -33,9 +33,9 @@
     fsType = "ext4";
   };
 
-  swapDevices = [
-    { device = "/dev/disk/by-label/swap"; }
-  ];
+  # swapDevices = [
+  #   { device = "/dev/disk/by-label/swap"; }
+  # ];
 
   fileSystems."/boot/efi" = {
     device = "/dev/disk/by-label/EFI";
