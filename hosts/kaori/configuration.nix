@@ -54,6 +54,7 @@
 
     # VM Host
     proxmox-host.enable = lib.mkForce true;
+    zfs.enable = lib.mkForce true;
 
     users = {
       nepjua = {
