@@ -54,11 +54,11 @@
       hardware.amdgpu.amdvlk.support32Bit.enable = true;
     })
     (lib.mkIf config.myNixOS.xserver.nvidia.enable {
-      hardware.nvidia-container-toolkit.enable = true;
-      hardware.nvidia.modesetting.enable = true;
-      hardware.nvidia.powerManagement.enable = true;
+      hardware.nvidia-container-toolkit.enable = lib.mkForce true;
+      hardware.nvidia.modesetting.enable = lib.mkForce true;
+      hardware.nvidia.powerManagement.enable = lib.mkForce true;
       hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-      hardware.nvidia.open = true;
+      hardware.nvidia.open = lib.mkForce true;
       services.xserver.videoDrivers = [
         "amdgpu"
         "nvidia"
