@@ -16,25 +16,21 @@ let
   cfg = config.myNixOS.proxmox-host;
 in
 {
-  imports = [
-    inputs.proxmox-nixos.nixosModules.proxmox-ve
-    (
-      { ... }:
-      {
-        nixpkgs.overlays = [
-          inputs.proxmox-nixos.overlays.${myArgs.system}
-        ];
-
-        services.proxmox-ve = {
-          enable = true;
-          ipAddress = "192.168.50.50";
-          package = overridden-proxmox-ve;
-        };
-      }
-    )
-  ];
-
   config = lib.mkIf cfg.enable {
+    imports = [
+      inputs.proxmox-nixos.nixosModules.proxmox-ve
+    ];
+
+    nixpkgs.overlays = [
+      inputs.proxmox-nixos.overlays.${myArgs.system}
+    ];
+
+    services.proxmox-ve = {
+      enable = true;
+      ipAddress = "192.168.50.50";
+      package = overridden-proxmox-ve;
+    };
+
     systemd.network.networks."10-lan" = {
       matchConfig.Name = [ "eno1" ];
       networkConfig = {
