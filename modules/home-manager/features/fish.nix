@@ -144,6 +144,10 @@
     if type -q gpg
       set -xg GPG_TTY (tty)
     end
+
+    if command -v google-chrome-stable >/dev/null
+      abbr --add google-chrome google-chrome-stable
+    end
   '';
 
   programs.fish.interactiveShellInit = ''

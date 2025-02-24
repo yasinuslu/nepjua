@@ -55,7 +55,7 @@
         export PATH=$HOME/.bun/bin:$PATH
         export NIX_CONFIG="
         experimental-features = nix-command flakes
-        extra-access-tokens = github.com=$(gh auth token)
+        extra-access-tokens = github.com=$(gh auth token -u yasinuslu)
         "
 
         alias code="cursor"
