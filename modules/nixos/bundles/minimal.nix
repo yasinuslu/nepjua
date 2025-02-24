@@ -9,6 +9,7 @@
     gaming.enable = lib.mkOverride 150 false;
     hoppscotch.enable = lib.mkOverride 150 false;
     networking.enable = lib.mkOverride 100 true;
+    networking.qos.enable = lib.mkOverride 100 true;
     nix-ld.enable = lib.mkOverride 100 true;
 
     _1password.enable = lib.mkOverride 150 false;

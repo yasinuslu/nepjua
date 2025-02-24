@@ -24,13 +24,6 @@
     "nvidia_modeset"
   ];
 
-  # networking.interfaces.eno1 = {
-  #   useDHCP = true;
-  #   mtu = 1500;
-  #   wakeOnLan.enable = true;
-  #   # linkSpeed = "1000";  # This sets the link speed to 1Gbps
-  # };
-
   myNixOS = {
     mainUser = "nepjua";
     bundles.minimal.enable = lib.mkOverride 500 true;

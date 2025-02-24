@@ -15,7 +15,7 @@ let
     };
 
     extraConfig = {
-      myNixOS.${name}.enable = lib.mkDefault true;
+      myNixOS.${name}.enable = lib.mkDefault false;
     };
 
     configExtension = config: (lib.mkIf cfg.${name}.enable config);
