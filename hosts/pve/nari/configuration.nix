@@ -41,9 +41,6 @@
     spice-guest.enable = lib.mkForce true;
     qemu-guest.enable = lib.mkForce true;
 
-    # Explicitly disable Proxmox host features
-    proxmox-host.enable = lib.mkForce false;
-
     users = {
       nepjua = {
         userConfig =
