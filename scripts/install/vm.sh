@@ -194,7 +194,6 @@ install_nixos() {
     execute nixos-install \
         --keep-going \
         --no-channel-copy \
-        --no-bootloader \
         --root "${INSTALL_MNT}" \
         --flake "$FLAKE_PATH#$HOSTNAME"
 
