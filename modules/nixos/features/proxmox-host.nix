@@ -16,11 +16,11 @@ let
   cfg = config.myNixOS.proxmox-host;
 in
 {
-  config = lib.mkIf cfg.enable {
-    imports = [
-      inputs.proxmox-nixos.nixosModules.proxmox-ve
-    ];
+  imports = [
+    inputs.proxmox-nixos.nixosModules.proxmox-ve
+  ];
 
+  config = lib.mkIf cfg.enable {
     nixpkgs.overlays = [
       inputs.proxmox-nixos.overlays.${myArgs.system}
     ];
