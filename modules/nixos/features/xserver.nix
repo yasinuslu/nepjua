@@ -7,6 +7,7 @@
 {
   options.myNixOS.xserver = {
     nvidia.enable = lib.mkEnableOption "NVIDIA GPU";
+    amdgpu.enable = lib.mkEnableOption "AMD GPU";
   };
 
   config = lib.mkMerge [
