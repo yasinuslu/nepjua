@@ -27,7 +27,6 @@
   myNixOS = {
     mainUser = "nepjua";
     bundles.minimal.enable = lib.mkOverride 500 true;
-    bundles.gnome.enable = lib.mkOverride 500 false;
 
     # FIXME: Find a way to make this work
     cloudflare-warp.enable = lib.mkOverride 500 false;
@@ -35,6 +34,11 @@
     # VM Host
     proxmox-host.enable = lib.mkForce true;
     zfs.enable = lib.mkForce true;
+
+    # Enable/Disable GNOME on Host easily
+    bundles.gnome.enable = lib.mkOverride 500 true;
+    xserver.enable = lib.mkForce true;
+    xserver.amdgpu.enable = lib.mkForce true;
 
     users = {
       nepjua = {
