@@ -13,6 +13,7 @@ let
       nativeBuildInputs = previousAttrs.nativeBuildInputs ++ [ pkgs.swtpm ];
     }
   );
+  cfg = config.myNixOS.proxmox-host;
 in
 {
   imports = [
@@ -33,7 +34,7 @@ in
     )
   ];
 
-  config = {
+  config = lib.mkIf cfg.enable {
     systemd.network.networks."10-lan" = {
       matchConfig.Name = [ "eno1" ];
       networkConfig = {
