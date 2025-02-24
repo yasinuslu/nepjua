@@ -4,15 +4,24 @@
 
 This guide is intended for virtual machine installations with:
 
-- Single virtual disk (e.g., /dev/vda)
+- Single virtual disk (e.g., /dev/sda)
 - At least 2GB RAM
 - Network connectivity
-- UEFI boot support
+- UEFI boot support with Q35 machine type
+
+### Recommended QEMU/KVM Settings
+
+For optimal performance, use these VM settings:
+
+- Machine Type: `q35` (modern PCIe-based machine type)
+- BIOS: UEFI (OVMF)
+- CPU Type: `host-passthrough` (if using KVM)
+- VirtIO devices where possible
 
 ## Prerequisites
 
 - NixOS installation media (ISO image)
-- Virtual machine with UEFI support
+- Virtual machine with UEFI support and Q35 machine type
 - Stable internet connection
 - At least 20GB disk space
 
@@ -30,7 +39,7 @@ This script handles:
 ```bash
 curl -L https://raw.githubusercontent.com/yasinuslu/nepjua/main/scripts/install/vm.sh \
     | sudo bash -s -- \
-        --disk /dev/vda \
+        --disk /dev/sda \
         --hostname nari \
         --dry-run
 ```
@@ -55,7 +64,7 @@ nix-shell -p tmux --run 'tmux new -s vm-install'
 3. Run the installation script in dry-run mode:
    ```bash
    cd /home/nixos/code/nepjua; git pull; sudo ./scripts/install/vm.sh \
-     --disk /dev/vda \
+     --disk /dev/sda \
      --hostname nari \
      --dry-run
    ```
@@ -64,7 +73,7 @@ nix-shell -p tmux --run 'tmux new -s vm-install'
    dry-run flag:
    ```bash
    cd /home/nixos/code/nepjua; git pull; sudo ./scripts/install/vm.sh \
-     --disk /dev/vda \
+     --disk /dev/sda \
      --hostname nari
    ```
 
@@ -75,7 +84,7 @@ If you need to rerun the installation script without wiping the disk, use the
 
 ```bash
 cd /home/nixos/code/nepjua; git pull; sudo ./scripts/install/vm.sh \
-     --disk /dev/vda \
+     --disk /dev/sda \
      --hostname nari \
      --no-destructive
 ```
@@ -91,10 +100,10 @@ For all available options:
 The script creates a standard partition layout:
 
 ```plaintext
-/dev/vda
-├── vda1 (512MB)   # EFI System Partition (FAT32)
-├── vda2 (4GB)     # Swap partition
-└── vda3 (rest)    # Root filesystem (ext4)
+/dev/sda
+├── sda1 (512MB)   # EFI System Partition (FAT32)
+├── sda2 (4GB)     # Swap partition
+└── sda3 (rest)    # Root filesystem (ext4)
 ```
 
 Mount points:
@@ -135,7 +144,7 @@ If you encounter an error about being unable to inform the kernel of partition
 changes:
 
 ```plaintext
-Error: Partition(s) on /dev/vda have been written, but we have been unable to
+Error: Partition(s) on /dev/sda have been written, but we have been unable to
 inform the kernel of the change, probably because it/they are in use.
 ```
 
@@ -148,6 +157,6 @@ Reboot the system and try again.
 
 Example Installation Summary: ╭───────────────────────────────────────────╮ │ VM
 Installation Summary │ ├───────────────────────────────────────────┤ │ Disk: │ │
-vda │ │ Hostname: nari │ │ Mode: LIVE │ │ Destructive Mode: YES │
+sda │ │ Hostname: nari │ │ Mode: LIVE │ │ Destructive Mode: YES │
 ├───────────────────────────────────────────┤ │ Mount Points: │ │ /: nixos │ │
 /boot/efi: EFI │ ╰───────────────────────────────────────────╯
