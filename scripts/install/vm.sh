@@ -98,26 +98,76 @@ wipe_disk() {
 create_partitions() {
     log_info "Creating partitions..."
     
+    # Check if we're in UEFI mode
+    local is_uefi=false
+    if [ -d "/sys/firmware/efi" ]; then
+        is_uefi=true
+        log_info "Detected UEFI system"
+    else
+        log_info "Detected BIOS system"
+    fi
+    
     # Create partitions
     execute parted -s "$DISK" -- mklabel gpt
-    execute parted -s "$DISK" -- mkpart ESP fat32 1MiB 512MiB
-    execute parted -s "$DISK" -- set 1 esp on
-    execute parted -s "$DISK" -- mkpart primary 512MiB 4.5GiB
-    execute parted -s "$DISK" -- mkpart primary 4.5GiB 100%
+    
+    if [ "$is_uefi" = true ]; then
+        # UEFI partitioning
+        execute parted -s "$DISK" -- mkpart ESP fat32 1MiB 512MiB
+        execute parted -s "$DISK" -- set 1 esp on
+        execute parted -s "$DISK" -- mkpart primary 512MiB 4.5GiB
+        execute parted -s "$DISK" -- mkpart primary 4.5GiB 100%
+    else
+        # BIOS partitioning
+        execute parted -s "$DISK" -- mkpart primary 1MiB 2MiB  # BIOS boot partition
+        execute parted -s "$DISK" -- set 1 bios_grub on
+        execute parted -s "$DISK" -- mkpart primary 2MiB 4.5GiB  # Swap partition
+        execute parted -s "$DISK" -- mkpart primary 4.5GiB 100%  # Root partition
+    fi
+    
+    # Wait a moment for the kernel to recognize the new partitions
+    sleep 2
     
     # Format partitions
-    execute mkfs.fat -F 32 -n EFI "${DISK}1"
-    execute mkswap -L swap "${DISK}2"
-    execute mkfs.ext4 -L nixos "${DISK}3"
+    if [ "$is_uefi" = true ]; then
+        execute mkfs.fat -F 32 -n "EFI" "${DISK}1"
+        execute mkswap -L "swap" "${DISK}2"
+        execute mkfs.ext4 -F -L "nixos" "${DISK}3"
+    else
+        # First partition is BIOS boot, no formatting needed
+        execute mkswap -L "swap" "${DISK}2"
+        execute mkfs.ext4 -F -L "nixos" "${DISK}3"
+    fi
 }
 
 # Function to mount filesystems
 mount_filesystems() {
     log_info "Mounting filesystems..."
-    execute mount /dev/disk/by-label/nixos "$INSTALL_MNT"
-    execute mkdir -p "$INSTALL_MNT/boot/efi"
-    execute mount /dev/disk/by-label/EFI "$INSTALL_MNT/boot/efi"
-    execute swapon /dev/disk/by-label/swap
+    local is_uefi=false
+    if [ -d "/sys/firmware/efi" ]; then
+        is_uefi=true
+    fi
+
+    # Try mounting by label first, fall back to device names if labels don't exist
+    if [[ -e /dev/disk/by-label/nixos ]]; then
+        execute mount /dev/disk/by-label/nixos "$INSTALL_MNT"
+    else
+        execute mount "${DISK}3" "$INSTALL_MNT"
+    fi
+
+    if [ "$is_uefi" = true ]; then
+        execute mkdir -p "$INSTALL_MNT/boot/efi"
+        if [[ -e /dev/disk/by-label/EFI ]]; then
+            execute mount /dev/disk/by-label/EFI "$INSTALL_MNT/boot/efi"
+        else
+            execute mount "${DISK}1" "$INSTALL_MNT/boot/efi"
+        fi
+    fi
+
+    if [[ -e /dev/disk/by-label/swap ]]; then
+        execute swapon /dev/disk/by-label/swap
+    else
+        execute swapon "${DISK}2"
+    fi
 }
 
 # Function to unmount filesystems
