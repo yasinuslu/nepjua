@@ -37,6 +37,15 @@
     { device = "/dev/disk/by-label/swap"; }
   ];
 
+  fileSystems."/boot/efi" = {
+    device = "/dev/disk/by-label/EFI";
+    fsType = "vfat";
+    options = [
+      "fmask=0077"
+      "dmask=0077"
+    ];
+  };
+
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
