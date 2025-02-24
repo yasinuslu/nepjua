@@ -10,7 +10,7 @@ let
   calcRate = percentage: toString (percentage * config.myNixOS.networking.qos.totalBandwidth * 10000);
 in
 {
-  config = lib.mkIf (config.myNixOS.networking.enable && cfg.enable) {
+  config = lib.mkIf cfg.enable {
     systemd.services.network-qos = {
       description = "Setup Network QoS";
       after = [ "network.target" ];

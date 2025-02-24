@@ -19,7 +19,10 @@
 
     # X11 configuration
     xserver = {
-      videoDrivers = [ "virtio" ];
+      videoDrivers = [
+        "virtio"
+        "qxl"
+      ];
     };
   };
 
