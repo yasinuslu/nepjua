@@ -31,7 +31,7 @@
     spice-viewer.enable = lib.mkForce true;
     xserver.enable = lib.mkForce true;
     xserver.amdgpu.enable = lib.mkForce false;
-    xserver.nvidia.enable = lib.mkForce false;
+    xserver.nvidia.enable = lib.mkForce true;
 
     # Specific for pve-guests
     spice-guest.enable = lib.mkForce true;
