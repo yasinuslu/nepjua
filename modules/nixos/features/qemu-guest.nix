@@ -6,13 +6,6 @@
     virtualbox.guest.enable = false;
   };
 
-  # Specifically disable NVIDIA features
-  hardware.nvidia = {
-    modesetting.enable = false;
-    powerManagement.enable = false;
-    open = false;
-  };
-
   services = {
     # Enable QEMU guest agent
     qemuGuest.enable = true;
