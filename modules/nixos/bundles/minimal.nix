@@ -26,7 +26,7 @@
     gnome-autologin.enable = lib.mkOverride 150 false;
     gnome.enable = lib.mkOverride 150 false;
     gparted.enable = lib.mkOverride 150 false;
-    grub.enable = lib.mkOverride 150 false;
+    # grub.enable = lib.mkOverride 150 false;
     home-manager.enable = lib.mkOverride 100 true;
     lorri.enable = lib.mkOverride 100 true;
     mullvad-vpn.enable = lib.mkOverride 150 false;

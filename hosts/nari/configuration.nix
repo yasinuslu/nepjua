@@ -38,10 +38,6 @@
     qemu-guest.enable = lib.mkForce false;
     vmware-guest.enable = lib.mkForce true;
 
-    # Using GRUB because the environment is non-UEFI
-    grub.enable = lib.mkForce true;
-    systemd-boot.enable = lib.mkForce false;
-
     users = {
       nepjua = {
         userConfig =
