@@ -38,7 +38,7 @@
     {
       nixosConfigurations = {
         kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
-        nari = mkSystem defaultSystems.linux ./hosts/pve/nari/configuration.nix;
+        nari = mkSystem defaultSystems.linux ./hosts/nari/configuration.nix;
       };
 
       darwinConfigurations = {
