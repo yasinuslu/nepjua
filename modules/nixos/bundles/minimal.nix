@@ -41,6 +41,7 @@
     systemd-boot.enable = lib.mkOverride 100 true;
     tailscale.enable = lib.mkOverride 100 false;
     xserver.enable = lib.mkOverride 150 false;
+    vmware-guest.enable = lib.mkOverride 100 false;
     zfs.enable = lib.mkOverride 100 false;
     zoom-us.enable = lib.mkOverride 150 false;
   };

@@ -36,6 +36,7 @@
     # Specific for pve-guests
     spice-guest.enable = lib.mkForce false;
     qemu-guest.enable = lib.mkForce false;
+    vmware-guest.enable = lib.mkForce true;
 
     users = {
       nepjua = {
