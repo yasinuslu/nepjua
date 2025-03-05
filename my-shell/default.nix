@@ -53,10 +53,20 @@
         export PATH=$HOME/.local/bin:$PATH
         export PATH=$HOME/.console-ninja/.bin:$PATH
         export PATH=$HOME/.bun/bin:$PATH
-        export NIX_CONFIG="
-        experimental-features = nix-command flakes
-        extra-access-tokens = github.com=$(gh auth token -u yasinuslu)
-        "
+        
+        # Use command substitution in a shell-agnostic way
+        gh_token=$(gh auth token -u yasinuslu 2>/dev/null || echo "")
+        
+        if [ -n "$gh_token" ]; then
+          export NIX_CONFIG="
+          experimental-features = nix-command flakes
+          extra-access-tokens = github.com=$gh_token
+          "
+        else
+          export NIX_CONFIG="
+          experimental-features = nix-command flakes
+          "
+        fi
 
         alias code="cursor"
       '';
