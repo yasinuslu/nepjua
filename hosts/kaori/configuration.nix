@@ -8,7 +8,7 @@
   ];
 
   networking.hostName = "kaori";
-  networking.hostId = "e5fda3f2";
+  networking.hostId = "5bf9bcae";
   networking.firewall.enable = false;
 
   services.xserver.videoDrivers = [

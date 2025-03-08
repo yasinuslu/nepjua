@@ -4,7 +4,7 @@
 { lib, ... }:
 {
   networking.hostName = "nika";
-  networking.hostId = "5f52d94";
+  networking.hostId = "e5fda3f2";
   networking.firewall.enable = false;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
