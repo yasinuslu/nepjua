@@ -6,5 +6,8 @@
   wsl = {
     enable = true;
     defaultUser = config.myNixOS.mainUser;
+    interop = {
+      register = true;
+    };
   };
 }

@@ -22,18 +22,22 @@
 
             myHomeManager = {
               linux = {
-                desktop.enable = false;
-                cloudflare.enable = false;
-                darkman.enable = false;
-                terminal.enable = false;
-                _1password.enable = false;
-                gnome.enable = false;
-                jetbrains.enable = false;
-                linux-editor.enable = false;
+                desktop.enable = lib.mkForce false;
+                cloudflare.enable = lib.mkForce false;
+                darkman.enable = lib.mkForce false;
+                terminal.enable = lib.mkForce false;
+                _1password.enable = lib.mkForce false;
+                gnome.enable = lib.mkForce false;
+                jetbrains.enable = lib.mkForce false;
+                linux-editor.enable = lib.mkForce false;
               };
 
-              docker.enable = false;
+              docker.enable = lib.mkForce false;
             };
+            
+            # FIXME: Don't know why this fixes dconf errors in WSL
+            # But let's keep it here for now
+            dconf.enable = lib.mkForce false;
           };
 
         userSettings = {
