@@ -58,11 +58,12 @@
             programs.git.userEmail = "nepjua@gmail.com";
 
             myHomeManager = {
-              linux.cloudflare.enable = false;
-              docker.enable = false;
-
-              # We are in winter, so sun doesn't bother me that much these days
-              linux.darkman.enable = false;
+              docker.enable = lib.mkForce false;
+              linux = {
+                cloudflare.enable = lib.mkForce false;
+                darkman.enable = lib.mkForce false;
+                wsl-home.enable = lib.mkForce false;
+              };
             };
           };
 

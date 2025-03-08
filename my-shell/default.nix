@@ -39,7 +39,6 @@
         postgresql_16
         redis
         openssl
-        openssh
         bun
         skaffold
         kustomize

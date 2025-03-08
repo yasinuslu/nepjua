@@ -30,6 +30,7 @@
                 gnome.enable = lib.mkForce false;
                 jetbrains.enable = lib.mkForce false;
                 linux-editor.enable = lib.mkForce false;
+                wsl-home.enable = lib.mkForce true;
               };
 
               docker.enable = lib.mkForce false;
