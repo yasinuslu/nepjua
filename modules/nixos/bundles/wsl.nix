@@ -2,18 +2,12 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 {
-  imports = [
-    inputs.nixos-wsl.nixosModules.wsl
-    {
-      wsl.enable = true;
-    }
-  ];
-
   myNixOS = {
+    wsl.enable = lib.mkOverride 100 true;
+
     networking.enable = lib.mkOverride 100 true;
     nix-ld.enable = lib.mkOverride 100 true;
     common-base.enable = lib.mkOverride 100 true;

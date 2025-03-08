@@ -7,7 +7,6 @@
   networking.hostId = "5f52d94";
   networking.firewall.enable = false;
 
-
   myNixOS = {
     mainUser = "nepjua";
     bundles.wsl.enable = lib.mkOverride 500 true;
