@@ -18,8 +18,8 @@
     cachix
     nixd
 
-    nil
-    nixpkgs-fmt
+    nixfmt-rfc-style
+    nixpkgs-review
 
     wget
     tldr

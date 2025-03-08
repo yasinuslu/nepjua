@@ -21,11 +21,18 @@
             programs.git.userEmail = "nepjua@gmail.com";
 
             myHomeManager = {
-              linux.cloudflare.enable = false;
-              docker.enable = false;
+              linux = {
+                desktop.enable = false;
+                cloudflare.enable = false;
+                darkman.enable = false;
+                terminal.enable = false;
+                _1password.enable = false;
+                gnome.enable = false;
+                jetbrains.enable = false;
+                linux-editor.enable = false;
+              };
 
-              # We are in winter, so sun doesn't bother me that much these days
-              linux.darkman.enable = false;
+              docker.enable = false;
             };
           };
 
