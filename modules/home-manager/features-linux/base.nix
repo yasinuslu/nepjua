@@ -24,7 +24,6 @@
       qbittorrent
       htop
       vesktop
-      electron_27
       lens
       mullvad-vpn
       tailscale

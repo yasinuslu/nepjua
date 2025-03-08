@@ -46,10 +46,6 @@
 
       cores = lib.mkDefault 4;
       max-jobs = lib.mkDefault 4;
-
-      permittedInsecurePackages = [
-        "electron-27.3.11"
-      ];
     };
   };
 
