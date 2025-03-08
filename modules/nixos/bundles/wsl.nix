@@ -8,12 +8,12 @@
   myNixOS = {
     wsl.enable = lib.mkOverride 100 true;
 
-    networking.enable = lib.mkOverride 100 true;
     nix-ld.enable = lib.mkOverride 100 true;
     common-base.enable = lib.mkOverride 100 true;
     home-manager.enable = lib.mkOverride 100 true;
     nix-index.enable = lib.mkOverride 100 true;
 
+    networking.enable = lib.mkOverride 100 false;
     hoppscotch.enable = lib.mkOverride 150 false;
     gaming.enable = lib.mkOverride 150 false;
     networking.qos.enable = lib.mkOverride 100 false;
