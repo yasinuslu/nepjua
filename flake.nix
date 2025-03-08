@@ -42,6 +42,7 @@
       nixosConfigurations = {
         kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
         nari = mkSystem defaultSystems.linux ./hosts/nari/configuration.nix;
+        nika = mkSystem defaultSystems.linux ./hosts/nika/configuration.nix;
       };
 
       darwinConfigurations = {
@@ -54,7 +55,7 @@
         pkgs:
         let
           myShell = import ./my-shell/default.nix {
-            inherit
+            inherit  
               system
               pkgs
               inputs
