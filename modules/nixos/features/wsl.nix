@@ -9,5 +9,8 @@
     interop = {
       register = true;
     };
+    docker-desktop = {
+      enable = true;
+    };
   };
 }

@@ -34,6 +34,11 @@
             default = { };
             example = "{}";
           };
+
+          shell = lib.mkOption {
+            default = pkgs.fish;
+            example = "pkgs.zsh";
+          };
         };
       }
     );
@@ -84,7 +89,7 @@
         isNormalUser = true;
         initialPassword = "123456";
         description = "";
-        shell = pkgs.fish;
+        shell = user.shell;
       }
       // user.userSettings
     ) (config.myNixOS.users);
