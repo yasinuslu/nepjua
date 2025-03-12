@@ -2,8 +2,8 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 {...}: {
-  networking.hostName = "MacBook-Pro-Hesen";
-  networking.computerName = "MacBook-Pro-Hesen";
+  networking.hostName = "Hesens-MacBook-Pro";
+  networking.computerName = "Hesens-MacBook-Pro";
 
   myNixOS = {
     bundles.darwin-desktop.enable = true;

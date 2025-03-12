@@ -13,7 +13,7 @@ Execute this every time you make a change to the configuration
 Default config is raiden, yours might change
 
 ```sh
-nix run nix-darwin -- switch --flake .#sezer
+nix run nix-darwin -- switch --flake .#hesen
 ```
 
 ## Linux Configuration
