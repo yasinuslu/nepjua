@@ -26,46 +26,26 @@ let
     VIM_PATH="$(command -v vim)"
     FULL_PWD="$( realpath "$PWD" )"
 
-    HAS_WAIT_ARG=false
-
-    for arg in "$@"; do
-      if [[ "$arg" == "--wait" ]]; then
-        HAS_WAIT_ARG=true
-      fi
-    done
-
     if is_remote_vscode_path "$CODE_PATH"; then
-      if $HAS_WAIT_ARG; then
-        code --wait "$@"
-      else
-        code "$@"
-      fi
+      code "$@"
     elif is_remote_vscode_path "$CURSOR_PATH"; then
-      if $HAS_WAIT_ARG; then
-        cursor --wait "$@"
-      else
-        cursor "$@"
-      fi
+      cursor "$@"
     elif [[ "$FULL_PWD" == */mastercontrol/* ]]; then
-      if $HAS_WAIT_ARG; then
-        code --wait "$@"
-      else
-        code "$@"
-      fi
+      code "$@"
     elif [[ "$FULL_PWD" == */yasinuslu/* ]]; then
-      if $HAS_WAIT_ARG; then
-        cursor --wait "$@"
-      else
-        cursor "$@"
-      fi
+      cursor "$@"
     elif is_available "$CURSOR_PATH"; then
-      if $HAS_WAIT_ARG; then
-        cursor --wait "$@"
-      else
-        cursor "$@"
-      fi
+      cursor "$@"
     elif is_available "$VIM_PATH"; then
-      vim "$@"
+      ARGS_WITHOUT_WAIT=()
+
+      for arg in "$@"; do
+        if [[ "$arg" != "--wait" ]]; then
+          ARGS_WITHOUT_WAIT+=("$arg")
+        fi
+      done
+
+      vim "''${ARGS_WITHOUT_WAIT[@]}"
     fi
   '';
 in
