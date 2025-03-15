@@ -16,7 +16,6 @@
   services.gpg-agent = {
     enable = true;
     enableSshSupport = false; # Set to true if you want to use GPG for SSH authentication
-    pinentryFlavor = "curses"; # Options: curses, tty, gtk2, qt
 
     # Cache settings
     defaultCacheTtl = 3600; # 1 hour
