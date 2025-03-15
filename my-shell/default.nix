@@ -45,6 +45,8 @@
         git-filter-repo
         kubefwd
         kubevirt
+        sops
+        age
       ];
       shellHook = ''
         echo "Welcome in $name"
@@ -52,10 +54,10 @@
         export PATH=$HOME/.local/bin:$PATH
         export PATH=$HOME/.console-ninja/.bin:$PATH
         export PATH=$HOME/.bun/bin:$PATH
-        
+
         # Use command substitution in a shell-agnostic way
         gh_token=$(gh auth token -u yasinuslu 2>/dev/null || echo "")
-        
+
         if [ -n "$gh_token" ]; then
           export NIX_CONFIG="
           experimental-features = nix-command flakes
