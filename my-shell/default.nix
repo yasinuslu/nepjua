@@ -2,52 +2,15 @@
   pkgs,
   ...
 }:
+let
+  packages = import ./packages.nix { inherit pkgs; };
+in
 {
   mkShell =
     { version }:
     pkgs.mkShell {
       name = "default";
-      buildInputs = with pkgs; [
-        deno
-        python312
-        python312Packages.pip
-        coreutils-full
-        kubectl
-        k9s
-        git
-        git-lfs
-        k3d
-        kubernetes-helm
-        nodejs_20
-        fish
-        rsync
-        alejandra
-        tree
-        kubectx
-        gh
-        transcrypt
-        awscli2
-        argocd
-        yq-go
-        jq
-        just
-        expect
-        watchexec
-        rclone
-        mongosh
-        tmux
-        postgresql_16
-        redis
-        openssl
-        bun
-        skaffold
-        kustomize
-        git-filter-repo
-        kubefwd
-        kubevirt
-        sops
-        age
-      ];
+      buildInputs = packages;
       shellHook = ''
         echo "Welcome in $name"
         export HF_HUB_ENABLE_HF_TRANSFER=1
