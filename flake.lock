@@ -154,22 +154,6 @@
         "type": "github"
       }
     },
-    "masterNixpkgs": {
-      "locked": {
-        "lastModified": 1742091044,
-        "narHash": "sha256-uygocyOFl9KlzpUbQrYn0/D0eE5rc+jRp+5qqm+0L3Q=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "fb6ff3988cc0f68d23b6db9cd70b87f2f88e1a32",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nix-alien": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -249,6 +233,21 @@
       "original": {
         "owner": "Mic92",
         "repo": "nix-index-database",
+        "type": "github"
+      }
+    },
+    "nixos-unified": {
+      "locked": {
+        "lastModified": 1739631166,
+        "narHash": "sha256-BvGPP1MwuRZMK+4RLvMOQYUs15n5JA7BDH6TsXlsAU0=",
+        "owner": "srid",
+        "repo": "nixos-unified",
+        "rev": "f9598ba02ad38df238a5987ad78ffac4845b7f3a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "srid",
+        "repo": "nixos-unified",
         "type": "github"
       }
     },
@@ -395,10 +394,10 @@
         "flake-parts": "flake-parts",
         "flake-root": "flake-root",
         "home-manager": "home-manager",
-        "masterNixpkgs": "masterNixpkgs",
         "nix-alien": "nix-alien",
         "nix-colors": "nix-colors",
         "nix-index-database": "nix-index-database_2",
+        "nixos-unified": "nixos-unified",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "proxmos-nixos": "proxmos-nixos",

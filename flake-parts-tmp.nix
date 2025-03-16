@@ -6,13 +6,13 @@
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
 
+    masterNixpkgs = {
+      url = "github:NixOS/nixpkgs/master";
+    };
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixos-unified = {
-      url = "github:srid/nixos-unified";
     };
 
     flake-root = {
@@ -61,11 +61,48 @@
 
   };
 
-  # Wired using https://nixos-unified.org/autowiring.html
   outputs =
-    inputs:
-    inputs.nixos-unified.lib.mkFlake {
-      inherit inputs;
-      root = ./.;
-    };
+    inputs@{
+      flake-parts,
+      nixpkgs,
+      ...
+    }:
+    flake-parts.lib.mkFlake { inherit inputs; } (
+      {
+        withSystem,
+        flake-parts-lib,
+        gitignore,
+        flake-root,
+        ...
+      }:
+      {
+        imports = [
+          inputs.flake-root.flakeModule
+        ];
+        systems = [
+          "x86_64-linux"
+          "aarch64-linux"
+          "aarch64-darwin"
+          "x86_64-darwin"
+        ];
+        perSystem =
+          {
+            config,
+            pkgs,
+            system,
+            ...
+          }:
+          {
+            # This sets `pkgs` to a nixpkgs with allowUnfree option set.
+            _module.args.pkgs = import nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          };
+        flake = {
+          # those are more easily expressed in perSystem.
+          # Define flake-wide options
+        };
+      }
+    );
 }
