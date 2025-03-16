@@ -9,26 +9,30 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    nix.settings = {
-      # Enable flakes and new 'nix' command
-      experimental-features = "nix-command flakes auto-allocate-uids";
-      accept-flake-config = true;
-      auto-allocate-uids = true;
-      substituters = [ ];
-      trusted-substituters = [ ];
-      trusted-public-keys = [ ];
-    };
+  config = lib.mkMerge [
+    {
+      my.nixos.enable = lib.mkDefault true;
+    }
+    (lib.mkIf cfg.enable {
+      nix.settings = {
+        # Enable flakes and new 'nix' command
+        experimental-features = "nix-command flakes auto-allocate-uids";
+        accept-flake-config = true;
+        auto-allocate-uids = true;
+        substituters = [ ];
+        trusted-substituters = [ ];
+        trusted-public-keys = [ ];
+      };
 
-    nix.optimise = {
-      automatic = true;
-      dates = [ "03:45" ]; # Runs daily at 3:45 AM
-    };
+      nix.optimise = {
+        automatic = true;
+        dates = [ "03:45" ]; # Runs daily at 3:45 AM
+      };
 
-    nixpkgs.config.allowUnfree = true;
-    nixpkgs.config.allowUnsupportedSystem = false;
+      nixpkgs.config.allowUnfree = true;
+      nixpkgs.config.allowUnsupportedSystem = false;
 
-    # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-    system.stateVersion = "24.11";
-  };
+      system.stateVersion = lib.mkDefault "24.11";
+    })
+  ];
 }

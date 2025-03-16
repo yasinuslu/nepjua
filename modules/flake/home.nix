@@ -69,6 +69,7 @@ in
         users.users = builtins.mapAttrs (
           name: user:
           {
+            isNormalUser = lib.mkDefault true;
             home = lib.mkDefault "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${name}";
             shell = lib.mkDefault user.shell;
           }
