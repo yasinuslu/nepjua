@@ -1,3 +1,7 @@
+# The importApply argument
+localFlake:
+
+# Regular module arguments
 { lib, ... }:
 let
   userSubmodule = lib.types.submodule {

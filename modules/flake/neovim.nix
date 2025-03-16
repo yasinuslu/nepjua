@@ -1,6 +1,11 @@
+# The importApply argument
+localFlake:
+
+# Regular module arguments
 { inputs, ... }:
 {
-  perSystem = { pkgs, system, ... }:
+  perSystem =
+    { pkgs, system, ... }:
     let
       neovimWithConfig = inputs.nixvim.legacyPackages.${system}.makeNixvimWithModule {
         inherit pkgs;

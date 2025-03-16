@@ -1,4 +1,8 @@
 # Top-level flake glue to get our configuration working
+# The importApply argument
+localFlake:
+
+# Regular module arguments
 { inputs, ... }:
 
 {
