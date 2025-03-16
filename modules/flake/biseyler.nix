@@ -1,5 +1,0 @@
-{
-  yasin = {
-    selam = "aleykum selam";
-  };
-}
