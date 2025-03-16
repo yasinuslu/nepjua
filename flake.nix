@@ -8,7 +8,6 @@
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixos-unified = {
@@ -17,7 +16,6 @@
 
     flake-root = {
       url = "github:srid/flake-root";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     treefmt-nix = {
@@ -37,7 +35,6 @@
 
     nix-colors = {
       url = "github:misterio77/nix-colors";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-index-database = {
