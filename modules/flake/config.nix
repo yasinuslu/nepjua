@@ -4,6 +4,7 @@
 {
   me = {
     username = "nepjua";
+    githubUsername = "yasinuslu";
     fullname = "Yasin Uslu";
     email = "nepjua@gmail.com";
   };
