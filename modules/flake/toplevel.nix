@@ -10,7 +10,6 @@ localFlake:
     inputs.flake-root.flakeModule
     inputs.nixos-unified.flakeModules.default
     inputs.nixos-unified.flakeModules.autoWire
-
   ];
   perSystem =
     {
@@ -25,6 +24,7 @@ localFlake:
         inherit system;
         config.allowUnfree = true;
       };
+
       # For 'nix fmt'
       formatter = pkgs.nixpkgs-fmt;
 
