@@ -5,34 +5,34 @@ in
 {
   options = {
     my.nixos = {
-      enable = lib.mkEnableOption "nixos";
+      enable = lib.mkOption {
+        default = true;
+        example = true;
+        description = "Whether to enable nixos.";
+        type = lib.types.bool;
+      };
     };
   };
 
-  config = lib.mkMerge [
-    {
-      my.nixos.enable = lib.mkDefault true;
-    }
-    (lib.mkIf cfg.enable {
-      nix.settings = {
-        # Enable flakes and new 'nix' command
-        experimental-features = "nix-command flakes auto-allocate-uids";
-        accept-flake-config = true;
-        auto-allocate-uids = true;
-        substituters = [ ];
-        trusted-substituters = [ ];
-        trusted-public-keys = [ ];
-      };
+  config = lib.mkIf cfg.enable {
+    nix.settings = {
+      # Enable flakes and new 'nix' command
+      experimental-features = "nix-command flakes auto-allocate-uids";
+      accept-flake-config = true;
+      auto-allocate-uids = true;
+      substituters = [ ];
+      trusted-substituters = [ ];
+      trusted-public-keys = [ ];
+    };
 
-      nix.optimise = {
-        automatic = true;
-        dates = [ "03:45" ]; # Runs daily at 3:45 AM
-      };
+    nix.optimise = {
+      automatic = true;
+      dates = [ "03:45" ]; # Runs daily at 3:45 AM
+    };
 
-      nixpkgs.config.allowUnfree = true;
-      nixpkgs.config.allowUnsupportedSystem = false;
+    nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowUnsupportedSystem = false;
 
-      system.stateVersion = lib.mkDefault "24.11";
-    })
-  ];
+    system.stateVersion = "24.11";
+  };
 }

@@ -3,10 +3,12 @@
     mkOption =
       { lib, ... }:
       {
-        enable = lib.mkEnableOption "common";
-        defaultUser = lib.mkOption {
-          type = lib.types.str;
-          default = "nepjua";
+        my.common = {
+          enable = lib.mkEnableOption "common";
+          defaultUser = lib.mkOption {
+            type = lib.types.str;
+            default = "nepjua";
+          };
         };
       };
   };

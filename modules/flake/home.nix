@@ -1,36 +1,38 @@
-{ config, ... }:
+{ root, ... }:
 let
-  defaultHomeModules = config.flake.homeModules.default;
+  defaultHomeModules = root + /modules/home;
 in
 {
   flake.my.home = {
     mkOption =
       { lib, pkgs, ... }:
       {
-        enable = lib.mkEnableOption "home";
-        users = lib.mkOption {
-          type = lib.types.attrsOf (
-            lib.types.submodule {
-              options = {
-                extraConfig = lib.mkOption {
-                  default = null;
-                  example = "";
-                };
+        my.home = {
+          enable = lib.mkEnableOption "home";
+          users = lib.mkOption {
+            type = lib.types.attrsOf (
+              lib.types.submodule {
+                options = {
+                  extraConfig = lib.mkOption {
+                    default = null;
+                    example = "";
+                  };
 
-                extraSettings = lib.mkOption {
-                  default = { };
-                  example = "{}";
-                };
+                  extraSettings = lib.mkOption {
+                    default = { };
+                    example = "{}";
+                  };
 
-                shell = lib.mkOption {
-                  default = pkgs.fish;
-                  example = "pkgs.zsh";
+                  shell = lib.mkOption {
+                    default = pkgs.fish;
+                    example = "pkgs.zsh";
+                  };
                 };
-              };
-            }
-          );
+              }
+            );
 
-          default = { };
+            default = { };
+          };
         };
       };
 

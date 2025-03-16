@@ -10,7 +10,13 @@ in
 {
   options = {
     my.home = {
-      enable = lib.mkEnableOption "home";
+      enable = lib.mkOption {
+        default = true;
+        example = true;
+        description = "Whether to enable home.";
+        type = lib.types.bool;
+      };
+
       username = lib.mkOption {
         type = lib.types.str;
         default = "nepjua";
@@ -18,16 +24,11 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    {
-      my.home.enable = lib.mkDefault true;
-    }
-    (lib.mkIf cfg.enable {
-      home.username = cfg.username;
-      home.homeDirectory = lib.mkDefault "/${
-        if pkgs.stdenv.isDarwin then "Users" else "home"
-      }/${cfg.username}";
-      home.stateVersion = "24.11";
-    })
-  ];
+  config = lib.mkIf cfg.enable {
+    home.username = cfg.username;
+    home.homeDirectory = lib.mkDefault "/${
+      if pkgs.stdenv.isDarwin then "Users" else "home"
+    }/${cfg.username}";
+    home.stateVersion = "24.11";
+  };
 }
