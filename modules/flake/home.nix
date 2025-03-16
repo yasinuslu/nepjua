@@ -1,3 +1,7 @@
+{ config, ... }:
+let
+  defaultHomeModules = config.flake.homeModules.default;
+in
 {
   flake.my.home = {
     mkOption =
@@ -8,19 +12,12 @@
           type = lib.types.attrsOf (
             lib.types.submodule {
               options = {
-                userName = lib.mkOption {
-                  default = "nepjua";
-                  description = ''
-                    username
-                  '';
-                };
-
-                userConfig = lib.mkOption {
+                extraConfig = lib.mkOption {
                   default = null;
                   example = "";
                 };
 
-                userSettings = lib.mkOption {
+                extraSettings = lib.mkOption {
                   default = { };
                   example = "{}";
                 };
@@ -58,19 +55,25 @@
             { ... }:
             {
               imports = [
-                user.userConfig
-                (
-                  { ... }:
-                  {
-                    home.username = name;
-                    home.homeDirectory = lib.mkDefault "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${name}";
-                    home.stateVersion = "24.11";
-                  }
-                )
+                user.extraConfig
+                defaultHomeModules
+                {
+                  my.home.username = lib.mkDefault name;
+                  my.home.shell = lib.mkDefault user.shell;
+                }
               ];
             }
           ) cfg.users;
         };
+
+        users.users = builtins.mapAttrs (
+          name: user:
+          {
+            home = lib.mkDefault "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${name}";
+            shell = lib.mkDefault user.shell;
+          }
+          // user.extraSettings
+        ) cfg.users;
 
         nix.settings.trusted-users = [ "root" ] ++ (builtins.attrNames cfg.users);
       };
