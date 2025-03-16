@@ -9,8 +9,18 @@
 
   ];
   perSystem =
-    { self', pkgs, ... }:
     {
+      self',
+      pkgs,
+      system,
+      ...
+    }:
+    {
+      # This sets `pkgs` to a nixpkgs with allowUnfree option set.
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
       # For 'nix fmt'
       formatter = pkgs.nixpkgs-fmt;
 
