@@ -1,7 +1,5 @@
-{ root, ... }:
-let
-  defaultHomeModules = root + /modules/home;
-in
+localFlake:
+{ ... }:
 {
   flake.my.home = {
     mkOption =
@@ -58,7 +56,7 @@ in
             {
               imports = [
                 user.extraConfig
-                defaultHomeModules
+                localFlake.homeModules.default
                 {
                   my.home.username = lib.mkDefault name;
                   my.home.shell = lib.mkDefault user.shell;

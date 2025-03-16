@@ -1,3 +1,5 @@
+localFlake:
+{ ... }:
 {
   flake.my.common = {
     mkOption =

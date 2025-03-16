@@ -73,33 +73,15 @@
         ...
       }:
       let
-        # Dynamically load all flake modules from modules/flake directory
-        flakeModules =
-          let
-            # Get the directory contents
-            flakeModulesDir = ./modules/flake;
-            dirContents = builtins.readDir flakeModulesDir;
+        inherit (flake-parts-lib) importApply;
 
-            # Filter for .nix files
-            nixFiles = builtins.filter (name: builtins.match ".*\\.nix" name != null) (
-              builtins.attrNames dirContents
-            );
+        flakeModules.common = importApply ./modules/flake/common.nix { inherit withSystem; };
+        flakeModules.home = importApply ./modules/flake/home.nix { inherit withSystem; };
+        flakeModules.devshell = importApply ./modules/flake/devshell.nix { inherit withSystem; };
 
-            # Create an attrset of modules where:
-            # - key is the filename without .nix extension
-            # - value is a function that takes localFlake and returns the module
-            mkModule =
-              name:
-              let
-                modulePath = flakeModulesDir + "/${name}";
-                moduleName = builtins.replaceStrings [ ".nix" ] [ "" ] name;
-              in
-              {
-                name = moduleName;
-                value = flake-parts-lib.importApply modulePath { inherit withSystem; };
-              };
-          in
-          builtins.listToAttrs (map mkModule nixFiles);
+        homeModules.default = importApply ./modules/home;
+        nixosModules.default = importApply ./modules/nixos;
+        darwinModules.default = importApply ./modules/darwin;
       in
       {
         imports = [
@@ -124,12 +106,16 @@
               inherit system;
               config.allowUnfree = true;
             };
+
+            # For 'nix fmt'
+            formatter = pkgs.nixpkgs-fmt;
           };
         flake = {
           # Export the flake modules for others to use
           inherit flakeModules;
-          # those are more easily expressed in perSystem.
-          # Define flake-wide options
+          inherit homeModules;
+          inherit nixosModules;
+          inherit darwinModules;
         };
       }
     );

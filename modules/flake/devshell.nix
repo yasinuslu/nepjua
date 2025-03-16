@@ -2,6 +2,7 @@
 localFlake:
 
 # Regular module arguments
+{ lib, ... }:
 {
   perSystem =
     { pkgs, config, ... }:
