@@ -69,8 +69,16 @@ in
       dates = [ "03:45" ]; # Runs daily at 3:45 AM
     };
 
-    nixpkgs.config.allowUnfree = true;
-    nixpkgs.config.allowUnsupportedSystem = false;
+    nixpkgs = {
+      config = {
+        allowUnfree = true;
+        allowUnsupportedSystem = false;
+
+        permittedInsecurePackages = [
+          "electron-32.3.3"
+        ];
+      };
+    };
 
     # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
     system.stateVersion = "24.11";

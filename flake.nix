@@ -75,9 +75,9 @@
         imports = [ inputs.flake-root.flakeModule ];
         systems = [
           "x86_64-linux"
-          "aarch64-linux"
+          # "aarch64-linux"
           "aarch64-darwin"
-          "x86_64-darwin"
+          # "x86_64-darwin"
         ];
         perSystem =
           {
@@ -90,7 +90,13 @@
             # This sets `pkgs` to a nixpkgs with allowUnfree option set.
             _module.args.pkgs = import inputs.nixpkgs {
               inherit system;
-              config.allowUnfree = true;
+              config = {
+                allowUnfree = true;
+                allowUnsupportedSystem = false;
+                permittedInsecurePackages = [
+                  "electron-32.3.3"
+                ];
+              };
             };
 
             # For 'nix fmt'
@@ -122,7 +128,6 @@
 
           darwinConfigurations = {
             joyboy = mkDarwinSystem defaultSystems.darwin ./hosts/joyboy/configuration.nix;
-            sezer = mkDarwinSystem "x86_64-darwin" ./hosts/sezer/configuration.nix;
             chained = mkDarwinSystem defaultSystems.darwin ./hosts/chained/configuration.nix;
           };
 
