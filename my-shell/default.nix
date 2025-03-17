@@ -4,7 +4,7 @@
 }:
 {
   mkShell =
-    { version }:
+    { version, inputsFrom }:
     pkgs.mkShell {
       name = "default";
       buildInputs = with pkgs; [
@@ -71,5 +71,6 @@
 
         alias code="cursor"
       '';
+      inherit inputsFrom;
     };
 }
