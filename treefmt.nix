@@ -1,3 +1,5 @@
+# IMPORTANT: This file is currently not used.
+# FIXME: Figure out a reliable way to run treefmt on all systems.
 # treefmt.nix
 { ... }:
 {
