@@ -11,14 +11,6 @@ rec {
     darwin = "aarch64-darwin";
   };
 
-  systems = [
-    "aarch64-linux"
-    "i686-linux"
-    "x86_64-linux"
-    "aarch64-darwin"
-    "x86_64-darwin"
-  ];
-
   # ================================================================ #
   # =                            My Lib                            = #
   # ================================================================ #
@@ -53,6 +45,7 @@ rec {
 
       specialArgs = {
         inherit inputs outputs myLib;
+        # FIXME: These are here because I didn't have enough nix experience to know that we can actually access these
         myArgs = {
           system = sys;
           isCurrentSystemLinux = isLinuxSystem sys;
@@ -63,24 +56,6 @@ rec {
       modules = [
         config
         outputs.darwinModules.default
-      ];
-    };
-
-  mkHome =
-    sys: config:
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = pkgsFor sys;
-      extraSpecialArgs = {
-        inherit inputs myLib outputs;
-        myArgs = {
-          system = sys;
-          isCurrentSystemLinux = isLinuxSystem sys;
-          isCurrentSystemDarwin = isDarwinSystem sys;
-        };
-      };
-      modules = [
-        config
-        outputs.homeManagerModules.default
       ];
     };
 
@@ -154,12 +129,4 @@ rec {
       in
       (extendModule ((extension name) // { path = f; }))
     ) modules;
-
-  # ============================ Shell ============================= #
-  # Small tool to iterate over each systems
-  eachSystem =
-    f: inputs.nixpkgs.lib.genAttrs systems (system: f inputs.nixpkgs.legacyPackages.${system});
-
-  # Eval the treefmt modules from ./treefmt.nix
-  treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ../treefmt.nix);
 }

@@ -51,10 +51,19 @@
       ];
       shellHook = ''
         echo "Welcome in $name"
+
+        # Enable Hugging Face's Rust-based transfer implementation for faster downloads/uploads of large models
+        # Only takes effect when huggingface_hub is installed with [hf_transfer] extra
+        # Most beneficial on high-bandwidth connections; may cause high CPU usage
         export HF_HUB_ENABLE_HF_TRANSFER=1
-        export PATH=$HOME/.local/bin:$PATH
-        export PATH=$HOME/.console-ninja/.bin:$PATH
-        export PATH=$HOME/.bun/bin:$PATH
+
+        chmod +x $FLAKE_ROOT/bin/*
+
+        export PATH="$HOME/.local/bin:$PATH"
+        export PATH="$HOME/.console-ninja/.bin:$PATH"
+        export PATH="$HOME/.bun/bin:$PATH"
+        export PATH="$FLAKE_ROOT/bin:$PATH"
+
 
         # Use command substitution in a shell-agnostic way
         gh_token=$(gh auth token -u yasinuslu 2>/dev/null || echo "")
