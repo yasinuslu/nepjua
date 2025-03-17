@@ -94,7 +94,7 @@
             };
 
             # For 'nix fmt'
-            formatter = pkgs.nixpkgs-fmt;
+            formatter = pkgs.nixfmt-rfc-style;
 
             devShells.default =
               let

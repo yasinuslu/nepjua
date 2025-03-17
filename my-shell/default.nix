@@ -47,6 +47,7 @@
         kubevirt
         sops
         age
+        nixfmt-rfc-style
       ];
       shellHook = ''
         echo "Welcome in $name"

@@ -33,7 +33,7 @@
     nix-index.enable = lib.mkOverride 100 true;
     ntfs.enable = lib.mkOverride 100 true;
     podman.enable = lib.mkOverride 100 true;
-    proxmox-host.enable = lib.mkOverride 100 false;
+    # proxmox-host.enable = lib.mkOverride 100 false;
     qemu-guest.enable = lib.mkOverride 100 false;
     spice-guest.enable = lib.mkOverride 100 false;
     spice-viewer.enable = lib.mkOverride 100 false;

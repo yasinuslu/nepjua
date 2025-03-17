@@ -32,7 +32,7 @@
     cloudflare-warp.enable = lib.mkOverride 500 false;
 
     # VM Host
-    proxmox-host.enable = lib.mkForce true;
+    # proxmox-host.enable = lib.mkForce true;
     zfs.enable = lib.mkForce true;
 
     # Enable/Disable GNOME on Host easily
@@ -48,7 +48,7 @@
     xserver.enable = lib.mkForce true;
     xserver.amdgpu.enable = lib.mkForce true;
     xserver.nvidia.enable = lib.mkForce false;
-    
+
     users = {
       nepjua = {
         userConfig =
