@@ -1,13 +1,11 @@
 { ... }:
 {
   homebrew.taps = [
-    "gromgit/fuse"
     "metalbear-co/mirrord"
   ];
 
   homebrew.brews = [
     "cloudflared"
-    "gromgit/fuse/sshfs-mac"
     "metalbear-co/mirrord/mirrord"
   ];
 
