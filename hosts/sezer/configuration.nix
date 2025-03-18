@@ -16,6 +16,8 @@
           {
             programs.git.userName = "Dev-Sezer";
             programs.git.userEmail = "stogantemur8@gmail.com";
+            myHomeManager.darwin.colima.enable = true;
+            myHomeManager.deno.enable = false;
           };
         userSettings = { };
       };
