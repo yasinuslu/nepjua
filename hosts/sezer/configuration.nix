@@ -3,8 +3,8 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 { ... }:
 {
-  networking.hostName = "Sezer-MBP";
-  networking.computerName = "Sezer-MBP";
+  networking.hostName = "sezer";
+  networking.computerName = "sezer";
 
   myDarwin = {
     bundles.darwin-desktop.enable = true;
