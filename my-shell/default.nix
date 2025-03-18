@@ -36,7 +36,7 @@
         rclone
         mongosh
         tmux
-        postgresql_16
+        postgresql
         redis
         openssl
         bun
