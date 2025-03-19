@@ -57,12 +57,27 @@
         # Most beneficial on high-bandwidth connections; may cause high CPU usage
         export HF_HUB_ENABLE_HF_TRANSFER=1
 
-        chmod +x $FLAKE_ROOT/bin/*
 
         export PATH="$HOME/.local/bin:$PATH"
         export PATH="$HOME/.console-ninja/.bin:$PATH"
         export PATH="$HOME/.bun/bin:$PATH"
-        export PATH="$FLAKE_ROOT/bin:$PATH"
+
+        # Find FLAKE_ROOT and exit early if not found
+        if [ -z "$FLAKE_ROOT" ]; then
+          if [ -f "$HOME/code/nepjua/flake.nix" ]; then
+            export FLAKE_ROOT="$HOME/code/nepjua"
+          else
+            echo "ERROR: Unable to find FLAKE_ROOT. Skipping bin scripts setup."
+            # Don't exit, just skip the bin setup
+          fi
+        fi
+
+        # Only execute if FLAKE_ROOT is set and valid
+        if [ -n "$FLAKE_ROOT" ] && [ -d "$FLAKE_ROOT/bin" ]; then
+          # Use find to safely identify script files in $FLAKE_ROOT/bin
+          find "$FLAKE_ROOT/bin" -type f -exec chmod +x {} \; 2>/dev/null || echo "Warning: Could not set executable permissions on bin scripts"
+          export PATH="$FLAKE_ROOT/bin:$PATH"
+        fi
 
 
         # Use command substitution in a shell-agnostic way
