@@ -39,6 +39,7 @@ in
       libevdev.out
       libevent.out
       libffi_3_3.out
+      libgbm.out
       libgcc.lib
       libgcrypt.lib
       libgcrypt.out
