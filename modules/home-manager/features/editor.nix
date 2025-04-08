@@ -92,11 +92,16 @@ let
       vim "''${ARGS_WITHOUT_WAIT[@]}"
     fi
   '';
+
+  editorRealPath = pkgs.writeShellScriptBin "er" ''
+    ${editorPackage}/bin/e $(realpath "$1")
+  '';
 in
 {
   home.packages = [
     editorPackage
     editorBetaPackage
+    editorRealPath
   ];
 
   home.sessionVariables = {
