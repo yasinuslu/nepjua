@@ -36,8 +36,8 @@
           };
 
           shell = lib.mkOption {
-            default = pkgs.fish;
-            example = "pkgs.zsh";
+            default = pkgs.zsh;
+            example = "pkgs.fish";
           };
         };
       }
