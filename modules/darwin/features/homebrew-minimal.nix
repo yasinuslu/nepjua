@@ -46,7 +46,7 @@
       "warp"
       "whatsapp"
       "zed"
-      "zen-browser"
+      "zen"
       "copyq"
     ];
   };

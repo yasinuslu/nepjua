@@ -1,6 +1,6 @@
 import { Command } from "@cliffy/command";
 import { CompletionsCommand } from "@cliffy/command/completions";
-import { sopsCmd } from "./sops.ts";
+import { sopsCmd } from "./commands/sops.ts";
 
 const cmd = new Command()
   .name("nep")
