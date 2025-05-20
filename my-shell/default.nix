@@ -5,50 +5,61 @@
 {
   mkShell =
     { version, inputsFrom }:
+    let
+      op = pkgs.writeShellScriptBin "op" ''
+        if [[ $(command -v op.exe) ]]; then
+          op.exe "$@"
+        else
+          ${pkgs._1password-cli}/bin/op "$@"
+        fi
+      '';
+    in
     pkgs.mkShell {
       name = "default";
-      buildInputs = with pkgs; [
-        deno
-        python312
-        python312Packages.pip
-        coreutils-full
-        kubectl
-        k9s
-        git
-        git-lfs
-        k3d
-        kubernetes-helm
-        nodejs_20
-        fish
-        rsync
-        alejandra
-        tree
-        kubectx
-        gh
-        transcrypt
-        awscli2
-        argocd
-        yq-go
-        jq
-        just
-        expect
-        watchexec
-        rclone
-        mongosh
-        tmux
-        postgresql
-        redis
-        openssl
-        bun
-        skaffold
-        kustomize
-        git-filter-repo
-        kubefwd
-        kubevirt
-        sops
-        age
-        nixfmt-rfc-style
-      ];
+      buildInputs =
+        [ op ]
+        ++ (with pkgs; [
+          deno
+          python312
+          python312Packages.pip
+          coreutils-full
+          kubectl
+          k9s
+          git
+          git-lfs
+          k3d
+          kubernetes-helm
+          nodejs_20
+          fish
+          rsync
+          alejandra
+          tree
+          kubectx
+          gh
+          transcrypt
+          awscli2
+          argocd
+          yq-go
+          jq
+          just
+          expect
+          watchexec
+          rclone
+          mongosh
+          tmux
+          postgresql
+          redis
+          openssl
+          bun
+          skaffold
+          kustomize
+          git-filter-repo
+          kubefwd
+          kubevirt
+          sops
+          age
+          nixfmt-rfc-style
+        ]);
       shellHook = ''
         echo "Welcome in $name"
 
