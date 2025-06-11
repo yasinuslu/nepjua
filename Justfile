@@ -2,7 +2,7 @@
 
 set shell := ["bash", "-uc"]
 
-# Determine the OS and set the appropriate rebuild command
+# Determine the OS and set the appropriate rebuild ommand
 
 os := `uname`
 rebuild_cmd := if os == "Darwin" { "sudo nix run nix-darwin/master#darwin-rebuild --" } else { "sudo nixos-rebuild" }
@@ -99,6 +99,9 @@ switch:
   for i in {1..3}; do
       if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
           echo -e "✅ Switch successful on attempt $i at $(date)\n"
+          echo -e "Installing nep-cli completions\n"
+          mkdir -p "$HOME/.config/fish/completions"
+          deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
           exit 0
       else
           echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
