@@ -56,6 +56,7 @@ in
       libpulseaudio
       libsecret.out
       libtasn1.out
+      libudev-zero.out
       libunwind
       libusb1
       libuuid
@@ -70,6 +71,7 @@ in
       nss_latest.out
       openssl
       pango.out
+      pcre2.out
       pipewire
       sqlite.out
       stdenv.cc.cc
