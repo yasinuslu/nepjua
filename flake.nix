@@ -52,9 +52,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    proxmos-nixos = {
-      url = "github:yasinuslu/proxmox-nixos/a1ec78293b526ed848cc04f2afc5f9079ffaad60";
-    };
+    # proxmos-nixos = {
+    #   url = "github:yasinuslu/proxmox-nixos/a1ec78293b526ed848cc04f2afc5f9079ffaad60";
+    # };
 
   };
 

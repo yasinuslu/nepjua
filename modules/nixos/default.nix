@@ -51,17 +51,17 @@ in
       experimental-features = "nix-command flakes auto-allocate-uids";
       accept-flake-config = true;
       auto-allocate-uids = true;
-      substituters = [
-        # "https://cache.nixos.org/"
-        "https://cache.saumon.network/proxmox-nixos"
-      ];
-      trusted-substituters = [
-        # "https://cache.nixos.org/"
-        "https://cache.saumon.network/proxmox-nixos"
-      ];
-      trusted-public-keys = [
-        "proxmox-nixos:nveXDuVVhFDRFx8Dn19f1WDEaNRJjPrF2CPD2D+m1ys="
-      ];
+      # substituters = [
+      #   # "https://cache.nixos.org/"
+      #   # "https://cache.saumon.network/proxmox-nixos"
+      # ];
+      # trusted-substituters = [
+      #   # "https://cache.nixos.org/"
+      #   # "https://cache.saumon.network/proxmox-nixos"
+      # ];
+      # trusted-public-keys = [
+      #   "proxmox-nixos:nveXDuVVhFDRFx8Dn19f1WDEaNRJjPrF2CPD2D+m1ys="
+      # ];
     };
 
     nix.optimise = {
