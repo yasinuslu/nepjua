@@ -94,15 +94,26 @@ async function writeCertFile(certFile: string, content: string): Promise<void> {
   }
 }
 
-async function checkAndUpdateCerts(host: string = "cache.nixos.org") {
+async function checkAndUpdateCerts(
+  hosts: string[] = ["cache.nixos.org", "registry.npmjs.org"]
+) {
   try {
-    // Extract certificates from the host
-    const certificates = await extractCertificates(host);
+    // Extract certificates from all hosts
+    const allCertificates = new Set<string>();
 
-    if (certificates.length === 0) {
-      console.log("❌ No certificates found");
+    for (const host of hosts) {
+      const certificates = await extractCertificates(host);
+      certificates.forEach((cert) => allCertificates.add(cert.trim()));
+    }
+
+    if (allCertificates.size === 0) {
+      console.log("❌ No certificates found from any host");
       return;
     }
+
+    console.log(
+      `🔍 Total unique certificates found across all hosts: ${allCertificates.size}`
+    );
 
     // Get certificate file path
     const certFile = await getCertFile();
@@ -113,8 +124,9 @@ async function checkAndUpdateCerts(host: string = "cache.nixos.org") {
 
     // Check which certificates are missing
     const missingCerts: string[] = [];
-    for (const cert of certificates) {
-      if (!currentContent.includes(cert.trim())) {
+
+    for (const cert of allCertificates) {
+      if (!currentContent.includes(cert)) {
         missingCerts.push(cert);
       }
     }
@@ -162,17 +174,29 @@ This can cause issues in environments with custom certificate authorities
 or intermediate certificates that aren't included in the default bundle.
 
 This command helps maintain certificate compatibility by extracting current
-certificates from the target host, comparing with the local certificate bundle,
+certificates from the target hosts, comparing with the local certificate bundle,
 and adding any missing certificates to ensure proper SSL verification.
 
 The certificate bundle may be reset during system updates or package reinstalls,
-making this automation useful for maintaining consistent Nix functionality.`
+making this automation useful for maintaining consistent Nix functionality.
+
+Default hosts checked: cache.nixos.org, registry.npmjs.org`
       )
-      .option("-h, --host <host>", "Host to check certificates for", {
-        default: "cache.nixos.org",
-      })
-      .action(async (options: { host: string }) => {
-        await checkAndUpdateCerts(options.host);
+      .option(
+        "-h, --hosts <hosts...>",
+        "Additional hosts to check certificates for"
+      )
+      .action(async (options: { hosts?: string[] }) => {
+        const defaultHosts = ["cache.nixos.org", "registry.npmjs.org"];
+        const userHosts = options.hosts || [];
+
+        // Merge default hosts with user-provided hosts, removing duplicates
+        const allHosts = [...new Set([...defaultHosts, ...userHosts])];
+
+        console.log(
+          `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
+        );
+        await checkAndUpdateCerts(allHosts);
       })
   )
   .reset()
