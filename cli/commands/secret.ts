@@ -1,5 +1,5 @@
 import { Command } from "@cliffy/command";
-import { getGitHubNamespace, isGitRepository } from "../lib/git.ts";
+import { gitGetGitHubNamespace, gitIsRepository } from "../lib/git.ts";
 import {
   opCreateItem,
   opGetField,
@@ -21,12 +21,12 @@ async function getNamespace(isGlobal: boolean): Promise<string> {
     return ""; // Global secrets have no namespace
   }
 
-  if (!(await isGitRepository())) {
+  if (!(await gitIsRepository())) {
     throw new Error(
       "Not in a git repository. Use --global flag for global secrets."
     );
   }
-  const namespace = await getGitHubNamespace();
+  const namespace = await gitGetGitHubNamespace();
   return namespace.full;
 }
 

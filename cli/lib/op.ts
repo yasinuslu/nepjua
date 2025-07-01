@@ -1,15 +1,15 @@
 import $ from "@david/dax";
 
-type OpVault = {
+export interface OpVault {
   id: string;
   name: string;
   content_version: number;
   created_at: string;
   updated_at: string;
   items: number;
-};
+}
 
-type OpItem = {
+export interface OpItem {
   id: string;
   title: string;
   version: number;
@@ -20,21 +20,21 @@ type OpItem = {
   category: string;
   sections?: OpSection[];
   fields?: OpField[];
-};
+}
 
-type OpSection = {
+export interface OpSection {
   id: string;
   label: string;
-};
+}
 
-type OpField = {
+export interface OpField {
   id: string;
   type: string;
   purpose?: string;
   label: string;
   value?: string;
   reference?: string;
-};
+}
 
 export async function opListVaults() {
   const vaults: OpVault[] = await $`op vault list --format=json`
@@ -133,7 +133,7 @@ export async function opCreateItem(
   }
 }
 
-export async function vaultOptionComplete() {
+export async function opVaultOptionComplete() {
   const vaults = await opListVaults();
   return vaults.map((v) => v.name);
 }

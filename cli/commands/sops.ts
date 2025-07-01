@@ -1,5 +1,5 @@
 import { Command } from "@cliffy/command";
-import { vaultOptionComplete } from "../lib/op.ts";
+import { opVaultOptionComplete } from "../lib/op.ts";
 
 async function setupSopsKey() {
   console.log();
@@ -12,14 +12,14 @@ const keyCommand = new Command()
   .description("SOPS key related tasks")
   .command("setup", "Setup SOPS key")
   .option("-v, --vault <vault:vault>", "Vault to use")
-  .complete("vault", vaultOptionComplete)
+  .complete("vault", opVaultOptionComplete)
   .action(async (a, b) => {
     console.log(a, b);
   })
   .reset()
   .command("generate", "Generate a new SOPS key")
   .option("-v, --vault <vault:vault>", "Vault to use")
-  .complete("vault", vaultOptionComplete)
+  .complete("vault", opVaultOptionComplete)
   .action(generateSopsKey)
   .action(() => keyCommand.showHelp());
 

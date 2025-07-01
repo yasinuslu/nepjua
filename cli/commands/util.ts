@@ -1,9 +1,9 @@
 import { Command } from "@cliffy/command";
 import {
-  findGitRoot,
-  getGitHubNamespace,
-  getGitRemotes,
-  isGitRepository,
+  gitFindRoot,
+  gitGetGitHubNamespace,
+  gitGetRemotes,
+  gitIsRepository,
 } from "../lib/git.ts";
 
 export const utilCmd = new Command()
@@ -18,24 +18,24 @@ export const utilCmd = new Command()
       .option("-v, --verbose", "Show detailed information about git remotes")
       .action(async (options: { verbose?: boolean }) => {
         try {
-          if (!(await isGitRepository())) {
+          if (!(await gitIsRepository())) {
             console.error("❌ Not in a git repository");
             Deno.exit(1);
           }
 
           if (options.verbose) {
             console.log("📂 Repository information:");
-            console.log(`   Root: ${await findGitRoot()}`);
+            console.log(`   Root: ${await gitFindRoot()}`);
             console.log("\n🔗 Git remotes:");
 
-            const remotes = await getGitRemotes();
+            const remotes = await gitGetRemotes();
             for (const remote of remotes) {
               console.log(`   ${remote.name} (${remote.type}): ${remote.url}`);
             }
             console.log();
           }
 
-          const namespace = await getGitHubNamespace();
+          const namespace = await gitGetGitHubNamespace();
 
           if (options.verbose) {
             console.log("🎯 GitHub namespace:");

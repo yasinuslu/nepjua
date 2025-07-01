@@ -1,5 +1,3 @@
-import { runCommand } from "./shell.ts";
-
 export interface GitRemote {
   name: string;
   url: string;
@@ -12,12 +10,38 @@ export interface GitNamespace {
   full: string; // owner/repo
 }
 
+interface CommandResult {
+  stdout: string;
+  stderr: string;
+  code: number;
+}
+
+async function shellRunCommand(cmd: string[]): Promise<CommandResult> {
+  const process = new Deno.Command(cmd[0], {
+    args: cmd.slice(1),
+    stdout: "piped",
+    stderr: "piped",
+  });
+
+  const { code, stdout, stderr } = await process.output();
+
+  return {
+    stdout: new TextDecoder().decode(stdout),
+    stderr: new TextDecoder().decode(stderr),
+    code,
+  };
+}
+
 /**
  * Find the git repository root directory
  */
-export async function findGitRoot(): Promise<string> {
+export async function gitFindRoot(): Promise<string> {
   try {
-    const result = await runCommand(["git", "rev-parse", "--show-toplevel"]);
+    const result = await shellRunCommand([
+      "git",
+      "rev-parse",
+      "--show-toplevel",
+    ]);
     if (result.code !== 0) {
       throw new Error("Not in a git repository");
     }
@@ -34,9 +58,9 @@ export async function findGitRoot(): Promise<string> {
 /**
  * Get all git remotes
  */
-export async function getGitRemotes(): Promise<GitRemote[]> {
+export async function gitGetRemotes(): Promise<GitRemote[]> {
   try {
-    const result = await runCommand(["git", "remote", "-v"]);
+    const result = await shellRunCommand(["git", "remote", "-v"]);
     if (result.code !== 0) {
       throw new Error("Failed to get git remotes");
     }
@@ -71,7 +95,7 @@ export async function getGitRemotes(): Promise<GitRemote[]> {
 /**
  * Parse GitHub URL to extract owner/repo
  */
-export function parseGitHubUrl(url: string): GitNamespace | null {
+function gitParseGitHubUrl(url: string): GitNamespace | null {
   // Handle different GitHub URL formats:
   // - https://github.com/owner/repo.git
   // - https://github.com/owner/repo
@@ -107,8 +131,8 @@ export function parseGitHubUrl(url: string): GitNamespace | null {
  * Get the primary GitHub namespace for the current repository
  * Prioritizes 'origin' remote, falls back to first available
  */
-export async function getGitHubNamespace(): Promise<GitNamespace> {
-  const remotes = await getGitRemotes();
+export async function gitGetGitHubNamespace(): Promise<GitNamespace> {
+  const remotes = await gitGetRemotes();
 
   if (remotes.length === 0) {
     throw new Error("No git remotes found");
@@ -119,7 +143,7 @@ export async function getGitHubNamespace(): Promise<GitNamespace> {
     .filter((remote) => remote.type === "fetch")
     .map((remote) => ({
       ...remote,
-      namespace: parseGitHubUrl(remote.url),
+      namespace: gitParseGitHubUrl(remote.url),
     }))
     .filter((remote) => remote.namespace !== null);
 
@@ -140,9 +164,9 @@ export async function getGitHubNamespace(): Promise<GitNamespace> {
 /**
  * Get repository name from current directory or git remote
  */
-export async function getRepoName(): Promise<string> {
+async function gitGetRepoName(): Promise<string> {
   try {
-    const namespace = await getGitHubNamespace();
+    const namespace = await gitGetGitHubNamespace();
     return namespace.repo;
   } catch {
     // Fallback to directory name
@@ -154,9 +178,9 @@ export async function getRepoName(): Promise<string> {
 /**
  * Check if current directory is a git repository
  */
-export async function isGitRepository(): Promise<boolean> {
+export async function gitIsRepository(): Promise<boolean> {
   try {
-    await findGitRoot();
+    await gitFindRoot();
     return true;
   } catch {
     return false;
