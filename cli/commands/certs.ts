@@ -153,11 +153,25 @@ export const certsCmd = new Command()
   .command(
     "check",
     new Command()
-      .description("Check and update SSL certificates for Nix cache")
+      .description(
+        `Check and update SSL certificates for Nix cache.
+
+Unlike most macOS applications that integrate with the system keychain,
+Nix relies on a static certificate bundle file for SSL verification.
+This can cause issues in environments with custom certificate authorities
+or intermediate certificates that aren't included in the default bundle.
+
+This command helps maintain certificate compatibility by extracting current
+certificates from the target host, comparing with the local certificate bundle,
+and adding any missing certificates to ensure proper SSL verification.
+
+The certificate bundle may be reset during system updates or package reinstalls,
+making this automation useful for maintaining consistent Nix functionality.`
+      )
       .option("-h, --host <host>", "Host to check certificates for", {
         default: "cache.nixos.org",
       })
-      .action(async (options) => {
+      .action(async (options: { host: string }) => {
         await checkAndUpdateCerts(options.host);
       })
   )
