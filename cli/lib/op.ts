@@ -120,7 +120,7 @@ export async function opCreateItem(
 ): Promise<void> {
   try {
     const fieldArgs = Object.entries(fields).flatMap(([key, value]) => [
-      `${key}[text]=${value}`,
+      `${key}[password]=${value}`,
     ]);
 
     await $`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldArgs}`;

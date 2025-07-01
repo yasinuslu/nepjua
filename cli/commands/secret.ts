@@ -77,41 +77,47 @@ function parseFullSecretName(
   return null;
 }
 
-async function listAllSecretPaths(isGlobal: boolean): Promise<string[]> {
+async function listSecretNames(isGlobal: boolean): Promise<string[]> {
   const namespace = await getNamespace(isGlobal);
   const vaultName = getVaultName(isGlobal);
+
+  // Fast: Only get item titles, no field access
   const items = await opListItems(vaultName);
 
-  const paths: string[] = [];
+  const secretNames: string[] = [];
 
   for (const item of items) {
     const secretName = parseFullSecretName(item.title, namespace);
-    if (secretName === null) continue;
-
-    try {
-      // Get the full item details to see all fields
-      const fullItem = await opGetItem(item.title, vaultName);
-
-      if (fullItem.fields) {
-        for (const field of fullItem.fields) {
-          if (field.label && field.value !== undefined) {
-            if (secretName === "main") {
-              // main[field] → just show field
-              paths.push(field.label);
-            } else {
-              // secret[field] → show secret/field
-              paths.push(`${secretName}/${field.label}`);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      // Skip items we can't read
-      console.error(`Warning: Could not read fields from ${item.title}`);
+    if (secretName !== null) {
+      secretNames.push(secretName);
     }
   }
 
-  return paths.sort();
+  return secretNames.sort();
+}
+
+async function listSecretFields(
+  secretName: string,
+  isGlobal: boolean
+): Promise<string[]> {
+  const namespace = await getNamespace(isGlobal);
+  const vaultName = getVaultName(isGlobal);
+  const fullSecretName = getFullSecretName(secretName, namespace);
+
+  // Targeted: Get specific item fields
+  const item = await opGetItem(fullSecretName, vaultName);
+
+  const fieldNames: string[] = [];
+
+  if (item.fields) {
+    for (const field of item.fields) {
+      if (field.label && field.value !== undefined) {
+        fieldNames.push(field.label);
+      }
+    }
+  }
+
+  return fieldNames.sort();
 }
 
 export const secretCmd = new Command()
@@ -120,21 +126,43 @@ export const secretCmd = new Command()
   .command(
     "ls",
     new Command()
-      .description("List all secret paths (recursive, shows all fields)")
+      .description("List secret names, or fields for a specific secret")
+      .arguments("[secret-name:string]")
       .option(
         "-g, --global",
         "List global secrets instead of repository secrets"
       )
-      .action(async (options: { global?: boolean }) => {
+      .action(async (options: { global?: boolean }, secretName?: string) => {
         try {
           const isGlobal = options.global || false;
-          const paths = await listAllSecretPaths(isGlobal);
 
-          if (paths.length === 0) {
-            const scope = isGlobal ? "global" : await getNamespace(false);
-            console.log(`No secrets found for ${scope}`);
+          if (secretName) {
+            // Show fields for specific secret
+            const fields = await listSecretFields(secretName, isGlobal);
+
+            if (fields.length === 0) {
+              console.log(`No fields found in secret: ${secretName}`);
+            } else {
+              fields.forEach((field) => {
+                if (secretName === "main") {
+                  // main[field] → show as just field name
+                  console.log(field);
+                } else {
+                  // secret[field] → show as secret/field
+                  console.log(`${secretName}/${field}`);
+                }
+              });
+            }
           } else {
-            paths.forEach((path) => console.log(path));
+            // Show all secret names only
+            const secrets = await listSecretNames(isGlobal);
+
+            if (secrets.length === 0) {
+              const scope = isGlobal ? "global" : await getNamespace(false);
+              console.log(`No secrets found for ${scope}`);
+            } else {
+              secrets.forEach((secret) => console.log(secret));
+            }
           }
         } catch (error) {
           console.error(
