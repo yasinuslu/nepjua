@@ -1,3 +1,4 @@
+# This is where we setup our impure (but very flexible) nodejs environment
 {
   pkgs,
   lib,
@@ -9,6 +10,7 @@ let
   npmHome = "$HOME/.npm";
   pnpmHome = "$HOME/.nix-mutable/node/pnpm";
   globalNodeModules = "$HOME/.nix-mutable/node/npm/node_modules";
+  extraCaCerts = "/etc/ssl/certs/ca-certificates.crt";
 in
 {
   home.packages = with pkgs; [
@@ -27,6 +29,7 @@ in
       echo "Done"
       export PATH="${pnpmHome}:${nodeBinDir}:${globalNodeModules}/bin:$PATH"
       export PNPM_HOME="${pnpmHome}"
+      export NODE_EXTRA_CA_CERTS="${extraCaCerts}"
       npm config set prefix ${globalNodeModules}
       npm uninstall -g pnpm yarn
       npm i -g corepack
@@ -44,6 +47,6 @@ in
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = globalNodeModules;
     PNPM_HOME = pnpmHome;
-    # PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+    NODE_EXTRA_CA_CERTS = extraCaCerts;
   };
 }
