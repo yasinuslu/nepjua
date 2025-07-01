@@ -2,6 +2,7 @@ import { Command } from "@cliffy/command";
 import { CompletionsCommand } from "@cliffy/command/completions";
 import { certsCmd } from "./commands/certs.ts";
 import { sopsCmd } from "./commands/sops.ts";
+import { utilCmd } from "./commands/util.ts";
 
 const cmd = new Command()
   .name("nep")
@@ -10,6 +11,7 @@ const cmd = new Command()
   .command("completions", new CompletionsCommand())
   .command("sops", sopsCmd)
   .command("certs", certsCmd)
+  .command("util", utilCmd)
   .reset()
   .action(() => cmd.showHelp());
 

@@ -1,5 +1,7 @@
 import { Command } from "@cliffy/command";
 
+const DEFAULT_HOSTS = ["cache.nixos.org", "registry.npmjs.org"];
+
 async function runCommand(
   cmd: string[]
 ): Promise<{ stdout: string; stderr: string; code: number }> {
@@ -94,9 +96,7 @@ async function writeCertFile(certFile: string, content: string): Promise<void> {
   }
 }
 
-async function checkAndUpdateCerts(
-  hosts: string[] = ["cache.nixos.org", "registry.npmjs.org"]
-) {
+async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
   try {
     // Extract certificates from all hosts
     const allCertificates = new Set<string>();
@@ -187,11 +187,9 @@ Default hosts checked: cache.nixos.org, registry.npmjs.org`
         "Additional hosts to check certificates for"
       )
       .action(async (options: { hosts?: string[] }) => {
-        const defaultHosts = ["cache.nixos.org", "registry.npmjs.org"];
         const userHosts = options.hosts || [];
 
-        // Merge default hosts with user-provided hosts, removing duplicates
-        const allHosts = [...new Set([...defaultHosts, ...userHosts])];
+        const allHosts = [...new Set([...DEFAULT_HOSTS, ...userHosts])];
 
         console.log(
           `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
