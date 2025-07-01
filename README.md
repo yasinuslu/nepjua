@@ -105,3 +105,17 @@ export NIX_CONFIG="extra-access-tokens = github.com=$(gh auth token -u yasinuslu
 - Structure based on
   [this excellent guide](https://www.youtube.com/watch?v=vYc6IzKvAJQ) by
   @vimjoyer
+
+## FAQ
+
+### How can I run CopyQ on Mac ?
+
+CopyQ have codesigning issues for a very long time. More info in
+[this github issue](https://github.com/hluk/CopyQ/issues/2662).
+
+The simplest, easiest solution is to manual signing:
+
+```sh
+xattr -rd com.apple.quarantine /Applications/CopyQ.app
+codesign -f --deep -s - /Applications/CopyQ.app
+```
