@@ -1,124 +1,13 @@
 import { Command } from "@cliffy/command";
-import { gitGetGitHubNamespace, gitIsRepository } from "../lib/git.ts";
 import {
-  opCreateItem,
-  opGetField,
-  opGetItem,
-  opListItems,
-  opSetField,
-} from "../lib/op.ts";
-
-const REPO_VAULT_NAME = "Nepjua Automation";
-const GLOBAL_VAULT_NAME = "Nepjua Automation Global";
-
-interface SecretPath {
-  secretName: string;
-  fieldName: string;
-}
-
-async function getNamespace(isGlobal: boolean): Promise<string> {
-  if (isGlobal) {
-    return ""; // Global secrets have no namespace
-  }
-
-  if (!(await gitIsRepository())) {
-    throw new Error(
-      "Not in a git repository. Use --global flag for global secrets."
-    );
-  }
-  const namespace = await gitGetGitHubNamespace();
-  return namespace.full;
-}
-
-function getVaultName(isGlobal: boolean): string {
-  return isGlobal ? GLOBAL_VAULT_NAME : REPO_VAULT_NAME;
-}
-
-function parseSecretPath(path: string): SecretPath {
-  const parts = path.split("/");
-  if (parts.length === 1) {
-    // Simple key like "github-token" → main[github-token]
-    return {
-      secretName: "main",
-      fieldName: parts[0],
-    };
-  } else {
-    // Path like "db/host" → db[host]
-    const fieldName = parts.pop()!;
-    const secretName = parts.join("/");
-    return {
-      secretName,
-      fieldName,
-    };
-  }
-}
-
-function getFullSecretName(secretName: string, namespace: string): string {
-  if (namespace === "") {
-    // Global secrets
-    return secretName;
-  }
-  return `${namespace}/${secretName}`;
-}
-
-function parseFullSecretName(
-  fullName: string,
-  namespace: string
-): string | null {
-  if (namespace === "") {
-    // Global secrets have no namespace prefix
-    return fullName;
-  }
-
-  const prefix = `${namespace}/`;
-  if (fullName.startsWith(prefix)) {
-    return fullName.slice(prefix.length);
-  }
-  return null;
-}
-
-async function listSecretNames(isGlobal: boolean): Promise<string[]> {
-  const namespace = await getNamespace(isGlobal);
-  const vaultName = getVaultName(isGlobal);
-
-  // Fast: Only get item titles, no field access
-  const items = await opListItems(vaultName);
-
-  const secretNames: string[] = [];
-
-  for (const item of items) {
-    const secretName = parseFullSecretName(item.title, namespace);
-    if (secretName !== null) {
-      secretNames.push(secretName);
-    }
-  }
-
-  return secretNames.sort();
-}
-
-async function listSecretFields(
-  secretName: string,
-  isGlobal: boolean
-): Promise<string[]> {
-  const namespace = await getNamespace(isGlobal);
-  const vaultName = getVaultName(isGlobal);
-  const fullSecretName = getFullSecretName(secretName, namespace);
-
-  // Targeted: Get specific item fields
-  const item = await opGetItem(fullSecretName, vaultName);
-
-  const fieldNames: string[] = [];
-
-  if (item.fields) {
-    for (const field of item.fields) {
-      if (field.label && field.value !== undefined) {
-        fieldNames.push(field.label);
-      }
-    }
-  }
-
-  return fieldNames.sort();
-}
+  archiveSecret,
+  getSecret,
+  listArchives,
+  listSecretFields,
+  listSecretNames,
+  restoreSecret,
+  setSecret,
+} from "../lib/secret.ts";
 
 export const secretCmd = new Command()
   .name("secret")
@@ -158,7 +47,7 @@ export const secretCmd = new Command()
             const secrets = await listSecretNames(isGlobal);
 
             if (secrets.length === 0) {
-              const scope = isGlobal ? "global" : await getNamespace(false);
+              const scope = isGlobal ? "global" : "repository";
               console.log(`No secrets found for ${scope}`);
             } else {
               secrets.forEach((secret) => console.log(secret));
@@ -186,12 +75,7 @@ export const secretCmd = new Command()
       .action(async (options: { global?: boolean }, path: string) => {
         try {
           const isGlobal = options.global || false;
-          const namespace = await getNamespace(isGlobal);
-          const vaultName = getVaultName(isGlobal);
-          const { secretName, fieldName } = parseSecretPath(path);
-          const fullSecretName = getFullSecretName(secretName, namespace);
-
-          const value = await opGetField(fullSecretName, fieldName, vaultName);
+          const value = await getSecret(path, isGlobal);
           console.log(value);
         } catch (error) {
           console.error(
@@ -216,30 +100,8 @@ export const secretCmd = new Command()
         async (options: { global?: boolean }, path: string, value: string) => {
           try {
             const isGlobal = options.global || false;
-            const namespace = await getNamespace(isGlobal);
-            const vaultName = getVaultName(isGlobal);
-            const { secretName, fieldName } = parseSecretPath(path);
-            const fullSecretName = getFullSecretName(secretName, namespace);
-
-            try {
-              // Try to set the field (this will fail if item doesn't exist)
-              await opSetField(fullSecretName, fieldName, value, vaultName);
-              console.log(`✅ Set ${path}`);
-            } catch (error) {
-              // If item doesn't exist, create it
-              if (
-                error instanceof Error &&
-                error.message.includes("ITEM_OPERATION_FAILED:")
-              ) {
-                console.log(`Creating new secret: ${secretName}`);
-                await opCreateItem(fullSecretName, vaultName, {
-                  [fieldName]: value,
-                });
-                console.log(`✅ Created ${path}`);
-              } else {
-                throw error;
-              }
-            }
+            await setSecret(path, value, isGlobal);
+            console.log(`✅ Set ${path}`);
           } catch (error) {
             console.error(
               `❌ Error: ${
@@ -250,6 +112,101 @@ export const secretCmd = new Command()
           }
         }
       )
+  )
+  .command(
+    "archive",
+    new Command()
+      .description("Archive a secret (move to timestamped archive)")
+      .arguments("<path:string>")
+      .option(
+        "-g, --global",
+        "Archive from global secrets instead of repository secrets"
+      )
+      .option("-r, --reason <reason:string>", "Reason for archiving", {
+        default: "manual",
+      })
+      .action(
+        async (
+          options: { global?: boolean; reason?: string },
+          path: string
+        ) => {
+          try {
+            const isGlobal = options.global || false;
+            const reason = options.reason || "manual";
+
+            const result = await archiveSecret(path, reason, isGlobal);
+            console.log(`✅ Archived ${path}`);
+            console.log(`   Original: ${result.originalPath}`);
+            console.log(`   Archive:  ${result.archivePath}`);
+          } catch (error) {
+            console.error(
+              `❌ Error: ${
+                error instanceof Error ? error.message : String(error)
+              }`
+            );
+            Deno.exit(1);
+          }
+        }
+      )
+  )
+  .command(
+    "restore",
+    new Command()
+      .description("Restore a secret from archive")
+      .arguments("<archive-path:string>")
+      .option(
+        "-g, --global",
+        "Restore from global archives instead of repository archives"
+      )
+      .action(async (options: { global?: boolean }, archivePath: string) => {
+        try {
+          const isGlobal = options.global || false;
+
+          const restoredPath = await restoreSecret(archivePath, isGlobal);
+          console.log(`✅ Restored from archive`);
+          console.log(`   Archive:  ${archivePath}`);
+          console.log(`   Restored: ${restoredPath}`);
+        } catch (error) {
+          console.error(
+            `❌ Error: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          );
+          Deno.exit(1);
+        }
+      })
+  )
+  .command(
+    "list-archives",
+    new Command()
+      .description("List archived secrets")
+      .arguments("[path-prefix:string]")
+      .option(
+        "-g, --global",
+        "List global archives instead of repository archives"
+      )
+      .action(async (options: { global?: boolean }, pathPrefix?: string) => {
+        try {
+          const isGlobal = options.global || false;
+
+          const archives = await listArchives(pathPrefix, isGlobal);
+
+          if (archives.length === 0) {
+            const scope = isGlobal ? "global" : "repository";
+            const prefix = pathPrefix ? ` matching "${pathPrefix}"` : "";
+            console.log(`No archived secrets found for ${scope}${prefix}`);
+          } else {
+            archives.forEach((archive) => console.log(archive));
+          }
+        } catch (error) {
+          console.error(
+            `❌ Error: ${
+              error instanceof Error ? error.message : String(error)
+            }`
+          );
+          Deno.exit(1);
+        }
+      })
   )
   .reset()
   .action(() => secretCmd.showHelp());

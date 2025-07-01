@@ -133,6 +133,21 @@ export async function opCreateItem(
   }
 }
 
+export async function opDeleteItem(
+  itemName: string,
+  vault: string
+): Promise<void> {
+  try {
+    await $`op item delete ${itemName} --vault=${vault}`;
+  } catch (error) {
+    throw new Error(
+      `Failed to delete item "${itemName}": ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+}
+
 export async function opVaultOptionComplete() {
   const vaults = await opListVaults();
   return vaults.map((v) => v.name);
