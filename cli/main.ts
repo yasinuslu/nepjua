@@ -1,6 +1,7 @@
 import { Command } from "@cliffy/command";
 import { CompletionsCommand } from "@cliffy/command/completions";
 import { certsCmd } from "./commands/certs.ts";
+import { secretCmd } from "./commands/secret.ts";
 import { sopsCmd } from "./commands/sops.ts";
 import { utilCmd } from "./commands/util.ts";
 
@@ -12,6 +13,7 @@ const cmd = new Command()
   .command("sops", sopsCmd)
   .command("certs", certsCmd)
   .command("util", utilCmd)
+  .command("secret", secretCmd)
   .reset()
   .action(() => cmd.showHelp());
 
