@@ -43,7 +43,6 @@
       "spotify"
       "visual-studio-code"
       "vlc"
-      "warp"
       "whatsapp"
       "zed"
       "zen"
