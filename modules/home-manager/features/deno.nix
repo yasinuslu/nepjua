@@ -5,4 +5,8 @@
   ];
 
   myHomeManager.paths = [ "$HOME/.deno/bin" ];
+
+  home.sessionVariables = {
+    DENO_TLS_CA_STORE = "system";
+  };
 }
