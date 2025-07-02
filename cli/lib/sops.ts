@@ -100,9 +100,6 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
 
   const gitRoot = await gitFindRoot();
 
-  // Create .sops directory
-  await Deno.mkdir(path.join(gitRoot, ".sops"), { recursive: true });
-
   // Extract only the private key line for the identity file
   const privateKeyMatch = keyData.match(/AGE-SECRET-KEY-[A-Z0-9]+/);
   if (!privateKeyMatch) {
@@ -110,9 +107,12 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   }
   const privateKey = privateKeyMatch[0];
 
+  // Create .sops directory
+  await Deno.mkdir(path.join(gitRoot, ".sops"), { recursive: true });
+
   // Write key to file
   const keyPath = path.join(gitRoot, ".sops/age-key.txt");
-  await Deno.writeTextFile(keyPath, privateKey + "\n");
+  await Deno.writeTextFile(keyPath, privateKey);
   await Deno.chmod(keyPath, 0o600);
 
   await ensureLinesInFile(path.join(gitRoot, ".gitignore"), [

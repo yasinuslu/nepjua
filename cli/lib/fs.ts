@@ -1,9 +1,16 @@
+import path from "node:path";
+
 export async function ensureLinesInFile(
-  path: string,
+  filePath: string,
   lines: string[],
   { mode = "append" }: { mode?: "append" | "prepend" } = {}
 ): Promise<void> {
-  const originalContent = await Deno.readTextFile(path);
+  if (!(await Deno.stat(filePath).catch(() => false))) {
+    await Deno.mkdir(path.dirname(filePath), { recursive: true });
+    await Deno.writeTextFile(filePath, "");
+  }
+
+  const originalContent = await Deno.readTextFile(filePath);
   const existingLines = lines.filter((line) => originalContent.includes(line));
   if (existingLines.length === lines.length) {
     return;
@@ -23,5 +30,5 @@ export async function ensureLinesInFile(
     newContent = lines.join("\n") + "\n" + newContent;
   }
 
-  await Deno.writeTextFile(path, newContent);
+  await Deno.writeTextFile(filePath, newContent);
 }
