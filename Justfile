@@ -237,10 +237,3 @@ sub-sync:
 cli-create-completions-file:
   mkdir -p "$HOME/.config/fish/completions"
   nep completions fish > "$HOME/.config/fish/completions/nep.fish"
-
-cli-install:
-  deno install -g -A -f -n nep -c deno.jsonc cli/main.ts
-  just cli-create-completions-file
-
-cli-debug-install:
-  deno install --inspect-wait -g -A -f -n nepd -c deno.jsonc cli/main.ts

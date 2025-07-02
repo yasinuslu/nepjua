@@ -3,9 +3,7 @@ import {
   archiveSecret,
   getSecret,
   listArchives,
-  listSecretFields,
   listSecretNames,
-  restoreSecret,
   setSecret,
 } from "../lib/secret.ts";
 
@@ -15,43 +13,21 @@ export const secretCmd = new Command()
   .command(
     "ls",
     new Command()
-      .description("List secret names, or fields for a specific secret")
-      .arguments("[secret-name:string]")
+      .description("List secret names")
       .option(
         "-g, --global",
         "List global secrets instead of repository secrets"
       )
-      .action(async (options: { global?: boolean }, secretName?: string) => {
+      .action(async (options: { global?: boolean }) => {
         try {
           const isGlobal = options.global || false;
+          const secrets = await listSecretNames(isGlobal);
 
-          if (secretName) {
-            // Show fields for specific secret
-            const fields = await listSecretFields(secretName, isGlobal);
-
-            if (fields.length === 0) {
-              console.log(`No fields found in secret: ${secretName}`);
-            } else {
-              fields.forEach((field) => {
-                if (secretName === "main") {
-                  // main[field] → show as just field name
-                  console.log(field);
-                } else {
-                  // secret[field] → show as secret/field
-                  console.log(`${secretName}/${field}`);
-                }
-              });
-            }
+          if (secrets.length === 0) {
+            const scope = isGlobal ? "global" : "repository";
+            console.log(`No secrets found for ${scope}`);
           } else {
-            // Show all secret names only
-            const secrets = await listSecretNames(isGlobal);
-
-            if (secrets.length === 0) {
-              const scope = isGlobal ? "global" : "repository";
-              console.log(`No secrets found for ${scope}`);
-            } else {
-              secrets.forEach((secret) => console.log(secret));
-            }
+            secrets.forEach((secret) => console.log(secret));
           }
         } catch (error) {
           console.error(
@@ -116,56 +92,14 @@ export const secretCmd = new Command()
   .command(
     "archive",
     new Command()
-      .description("Archive a secret (move to timestamped archive)")
+      .description("Archive a secret using 1Password's native archiving")
       .arguments("<path:string>")
-      .option(
-        "-g, --global",
-        "Archive from global secrets instead of repository secrets"
-      )
-      .option("-r, --reason <reason:string>", "Reason for archiving", {
-        default: "manual",
-      })
-      .action(
-        async (
-          options: { global?: boolean; reason?: string },
-          path: string
-        ) => {
-          try {
-            const isGlobal = options.global || false;
-            const reason = options.reason || "manual";
-
-            const result = await archiveSecret(path, reason, isGlobal);
-            console.log(`✅ Archived ${path}`);
-            console.log(`   Original: ${result.originalPath}`);
-            console.log(`   Archive:  ${result.archivePath}`);
-          } catch (error) {
-            console.error(
-              `❌ Error: ${
-                error instanceof Error ? error.message : String(error)
-              }`
-            );
-            Deno.exit(1);
-          }
-        }
-      )
-  )
-  .command(
-    "restore",
-    new Command()
-      .description("Restore a secret from archive")
-      .arguments("<archive-path:string>")
-      .option(
-        "-g, --global",
-        "Restore from global archives instead of repository archives"
-      )
-      .action(async (options: { global?: boolean }, archivePath: string) => {
+      .option("-g, --global", "Use the global vault", { default: false })
+      .action(async (options: { global?: boolean }, path: string) => {
         try {
           const isGlobal = options.global || false;
-
-          const restoredPath = await restoreSecret(archivePath, isGlobal);
-          console.log(`✅ Restored from archive`);
-          console.log(`   Archive:  ${archivePath}`);
-          console.log(`   Restored: ${restoredPath}`);
+          await archiveSecret(path, isGlobal);
+          console.log(`✅ Archived ${path}`);
         } catch (error) {
           console.error(
             `❌ Error: ${
@@ -177,24 +111,19 @@ export const secretCmd = new Command()
       })
   )
   .command(
-    "list-archives",
+    "archives",
     new Command()
       .description("List archived secrets")
-      .arguments("[path-prefix:string]")
-      .option(
-        "-g, --global",
-        "List global archives instead of repository archives"
-      )
-      .action(async (options: { global?: boolean }, pathPrefix?: string) => {
+      .option("-g, --global", "Use the global vault", { default: false })
+      .action(async (options: { global?: boolean }) => {
         try {
           const isGlobal = options.global || false;
 
-          const archives = await listArchives(pathPrefix, isGlobal);
+          const archives = await listArchives(isGlobal);
 
           if (archives.length === 0) {
             const scope = isGlobal ? "global" : "repository";
-            const prefix = pathPrefix ? ` matching "${pathPrefix}"` : "";
-            console.log(`No archived secrets found for ${scope}${prefix}`);
+            console.log(`No archived secrets found for ${scope}`);
           } else {
             archives.forEach((archive) => console.log(archive));
           }

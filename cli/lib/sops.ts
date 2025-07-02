@@ -48,7 +48,7 @@ export async function sopsBootstrap(
     if (!force) {
       throw new Error("SOPS AGE key already exists. Use --force to override.");
     }
-    // Archive existing key
+    // Archive existing key before creating new one
     await archiveSecret(SOPS_KEY_PATH, "Replaced by new bootstrap", false);
     keyArchived = true;
   } catch (error) {
@@ -71,7 +71,7 @@ export async function sopsBootstrap(
   }
   const publicKey = publicKeyMatch[1];
 
-  // Store private key
+  // Store private key (this will create the new key)
   await setSecret(SOPS_KEY_PATH, keyOutput.trim(), false);
 
   // Create .sops.yaml
@@ -110,9 +110,16 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   // Create .sops directory
   await Deno.mkdir(".sops", { recursive: true });
 
+  // Extract only the private key line for the identity file
+  const privateKeyMatch = keyData.match(/AGE-SECRET-KEY-[A-Z0-9]+/);
+  if (!privateKeyMatch) {
+    throw new Error("Failed to extract AGE private key from stored data");
+  }
+  const privateKey = privateKeyMatch[0];
+
   // Write key to file
   const keyPath = ".sops/age-key.txt";
-  await Deno.writeTextFile(keyPath, keyData);
+  await Deno.writeTextFile(keyPath, privateKey + "\n");
   await Deno.chmod(keyPath, 0o600);
 
   await ensureLinesInFile(".gitignore", [

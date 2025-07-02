@@ -1,7 +1,7 @@
 import { afterEach, vi } from "vitest";
 
 // Mock the $ module
-vi.mock("./lib/$.ts", () => {
+vi.mock("zx", () => {
   const mock$ = vi.fn();
 
   return {
