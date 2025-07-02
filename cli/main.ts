@@ -2,7 +2,7 @@ import { Command } from "@cliffy/command";
 import { CompletionsCommand } from "@cliffy/command/completions";
 import { certsCmd } from "./commands/certs.ts";
 import { secretCmd } from "./commands/secret.ts";
-import { sopsCmd } from "./commands/sops.ts";
+import { sopsCommand } from "./commands/sops.ts";
 import { utilCmd } from "./commands/util.ts";
 
 const cmd = new Command()
@@ -10,7 +10,7 @@ const cmd = new Command()
   .version("0.0.1")
   .description("A Command Line Tool for Automating my tasks")
   .command("completions", new CompletionsCommand())
-  .command("sops", sopsCmd)
+  .command("sops", sopsCommand)
   .command("certs", certsCmd)
   .command("util", utilCmd)
   .command("secret", secretCmd)
