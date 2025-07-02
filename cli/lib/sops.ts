@@ -123,12 +123,18 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
     "*.enc.tmp.*",
   ]);
 
-  await ensureLinesInFile(path.join(gitRoot, ".envrc"), [
-    "watch_file .env",
-    "set -a",
-    "source .env",
-    "set +a",
-  ]);
+  await ensureLinesInFile(
+    path.join(gitRoot, ".envrc"),
+    [
+      "watch_file .env",
+      "if [ -f .env ]; then",
+      "  set -a",
+      "  source .env",
+      "  set +a",
+      "fi",
+    ],
+    { mode: "prepend" }
+  );
 
   await ensureLinesInFile(path.join(gitRoot, ".env"), [
     `SOPS_AGE_KEY_FILE="${keyPath}"`,
