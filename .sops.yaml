@@ -1,2 +1,7 @@
+stores:
+  yaml:
+    indent: 2
 creation_rules:
-  - age: age133nxuczyd4xqyc3gjlglckzdma0qdxtxej4a0m6nx9rqchpzmflqqmxgzj
+  - path_regex: .*\.enc\.(yaml|yml|json|env)$
+    unencrypted_regex: ^(apiVersion|metadata|kind|type|immutable)$
+    age: age13vymj4l47exa2cdlt4hqantfgger5yqvj5pgrc4tud8ylrht4yjqkhh3ld
