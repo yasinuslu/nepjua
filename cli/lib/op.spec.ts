@@ -20,6 +20,8 @@ import {
 // Mock data storage
 let mockData: any = null;
 let mockText: string | null = null;
+let mockShouldThrow: boolean = false;
+let mockErrorMessage: string = "";
 
 describe("op.ts", () => {
   let commandMock: any;
@@ -28,6 +30,8 @@ describe("op.ts", () => {
     // Reset mock data
     mockData = null;
     mockText = null;
+    mockShouldThrow = false;
+    mockErrorMessage = "";
 
     // Import and mock the command utility
     const commandModule = await import("./command.ts");
@@ -37,21 +41,43 @@ describe("op.ts", () => {
     commandMock.mockReturnValue({
       stdout: () => ({
         then: (callback: (result: { stdoutJson: any }) => any) => {
+          if (mockShouldThrow) {
+            return Promise.reject(new Error(mockErrorMessage));
+          }
           return Promise.resolve(callback({ stdoutJson: mockData }));
         },
       }),
       then: (callback: (result: { stdoutJson: any }) => any) => {
+        if (mockShouldThrow) {
+          return Promise.reject(new Error(mockErrorMessage));
+        }
         return Promise.resolve(callback({ stdoutJson: mockData }));
       },
-      text: () => Promise.resolve(mockText || ""),
+      text: () => {
+        if (mockShouldThrow) {
+          return Promise.reject(new Error(mockErrorMessage));
+        }
+        return Promise.resolve(mockText || "");
+      },
+      exec: () => {
+        if (mockShouldThrow) {
+          return Promise.reject(new Error(mockErrorMessage));
+        }
+        return Promise.resolve();
+      },
     });
   });
 
   // Helper function to set up error throwing
   function setupErrorThrow(errorMessage: string) {
-    commandMock.mockImplementation(() => {
-      throw new Error(errorMessage);
-    });
+    mockShouldThrow = true;
+    mockErrorMessage = errorMessage;
+  }
+
+  // Helper function to set up success
+  function setupSuccess() {
+    mockShouldThrow = false;
+    mockErrorMessage = "";
   }
 
   afterEach(() => {
@@ -181,11 +207,11 @@ describe("op.ts", () => {
 
   describe("opSetField", () => {
     it("should set field successfully", async () => {
-      // Mock successful command (no exception thrown)
-      commandMock.mockReturnValue(Promise.resolve());
+      setupSuccess();
 
       await opSetField("GitHub Token", "token", "new-value", "Personal");
       // Should not throw
+      expect(commandMock).toHaveBeenCalled();
     });
 
     it("should throw error when set operation fails", async () => {
@@ -199,20 +225,22 @@ describe("op.ts", () => {
 
   describe("opCreateItem", () => {
     it("should create item successfully with no fields", async () => {
-      commandMock.mockReturnValue(Promise.resolve());
+      setupSuccess();
 
       await opCreateItem("New Item", "Personal");
       // Should not throw
+      expect(commandMock).toHaveBeenCalled();
     });
 
     it("should create item successfully with fields", async () => {
-      commandMock.mockReturnValue(Promise.resolve());
+      setupSuccess();
 
       await opCreateItem("New Item", "Personal", {
         username: "testuser",
         password: "testpass",
       });
       // Should not throw
+      expect(commandMock).toHaveBeenCalled();
     });
 
     it("should throw error when create operation fails", async () => {
@@ -226,10 +254,11 @@ describe("op.ts", () => {
 
   describe("opDeleteItem", () => {
     it("should delete item successfully", async () => {
-      commandMock.mockReturnValue(Promise.resolve());
+      setupSuccess();
 
       await opDeleteItem("Old Item", "Personal");
       // Should not throw
+      expect(commandMock).toHaveBeenCalled();
     });
 
     it("should throw error when delete operation fails", async () => {

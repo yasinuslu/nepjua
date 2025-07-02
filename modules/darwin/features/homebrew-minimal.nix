@@ -31,6 +31,7 @@
       "1password"
       "alt-tab"
       "mos"
+      "warp"
       # "background-music"
       "bettermouse"
       "gitkraken-cli"

@@ -254,7 +254,13 @@ export async function restoreSecret(
 ): Promise<string> {
   const namespace = await getNamespace(isGlobal);
   const vaultName = getVaultName(isGlobal);
-  const fullArchivePath = getFullSecretName(archivePath, namespace);
+
+  // Add "archive/" prefix if not already present
+  const prefixedArchivePath = archivePath.startsWith("archive/")
+    ? archivePath
+    : `archive/${archivePath}`;
+
+  const fullArchivePath = getFullSecretName(prefixedArchivePath, namespace);
 
   // Get the archived item
   const archivedItem = await opGetItem(fullArchivePath, vaultName);

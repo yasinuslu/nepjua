@@ -104,7 +104,7 @@ export async function opSetField(
   vault: string
 ): Promise<void> {
   try {
-    await command`op item edit ${itemName} --vault=${vault} ${fieldName}=${value}`;
+    await command`op item edit ${itemName} --vault=${vault} ${fieldName}=${value}`.exec();
   } catch (error) {
     // For 1Password CLI errors, we just need to check the exit code
     // The actual error message goes to stderr which we see in console
@@ -122,7 +122,7 @@ export async function opCreateItem(
       `${key}[password]=${value}`,
     ]);
 
-    await command`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldArgs}`;
+    await command`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldArgs}`.exec();
   } catch (error) {
     throw new Error(
       `Failed to create item "${itemName}": ${
@@ -137,7 +137,7 @@ export async function opDeleteItem(
   vault: string
 ): Promise<void> {
   try {
-    await command`op item delete ${itemName} --vault=${vault}`;
+    await command`op item delete ${itemName} --vault=${vault}`.exec();
   } catch (error) {
     throw new Error(
       `Failed to delete item "${itemName}": ${

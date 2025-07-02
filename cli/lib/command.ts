@@ -9,6 +9,7 @@ export interface CommandBuilder {
   stdout(type: string): CommandBuilder;
   then<T>(callback: (result: CommandResult) => T): Promise<T>;
   text(): Promise<string>;
+  exec(): Promise<void>;
 }
 
 class DaxCommandBuilder implements CommandBuilder {
@@ -28,6 +29,10 @@ class DaxCommandBuilder implements CommandBuilder {
 
   async text(): Promise<string> {
     return await this.command.text();
+  }
+
+  async exec(): Promise<void> {
+    await this.command;
   }
 }
 
