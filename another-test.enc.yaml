@@ -1,0 +1,25 @@
+hello: ENC[AES256_GCM,data:g21aFyKmktqhM6itZHc37uaflxdve+x7jAAWWT2L2Nm4zN3jKwL9xW04ciJC9jyP6w==,iv:pfZj2sa80PL1wQ3G7qwJG7722363c8IgBuKR10WTmS8=,tag:6oj0WPv/DT6vJ1WSxe0VRg==,type:str]
+example_key: ENC[AES256_GCM,data:V7LXmtqLLhRv43P6Iw==,iv:z6h7aiJx1KEiooqcpEWT/K3BGyZ6ByRf7srJgK9W+3Y=,tag:JIXGtHKhFR0WWbOy5zFWZg==,type:str]
+#ENC[AES256_GCM,data:8f62SSRL3U0sDuJUWDMVFQ==,iv:cGdsrefk0SEUIfF5mb6NKNb0DEcliJ8ogeA3xIYPEHA=,tag:OjU2mIp3VbXlpGTmWU10vw==,type:comment]
+example_array:
+  - ENC[AES256_GCM,data:UU9xZ11Udi5OvTya2SY=,iv:Yv+JXEEDN1G1bhyCeyVBkRU/wJh1gFWw90LtyGjTID0=,tag:fGbu+FBOG8EMmu2vC3tMIg==,type:str]
+  - ENC[AES256_GCM,data:CLn392ZjCr1kTF9z5F4=,iv:yI3dIPKnlVGzePxQhzO7Z7iyTawA157cSapJgaj/BSQ=,tag:w9yZ3oZwNM1BmFhi5bY+mw==,type:str]
+example_number: ENC[AES256_GCM,data:Nxjft9vFYYLc0Q==,iv:R5+1Y5W4xCEzNa5/0fxUppOxRA7PHeCE1f7KAuNWBsc=,tag:KyrcdNo2/RFnTBRDW9Gd/A==,type:float]
+example_booleans:
+  - ENC[AES256_GCM,data:JEytRw==,iv:JXUTPsMn5uAReL4EaXtfCipJmX3tfgOzjL4vzQ4uq+c=,tag:mf+29mkpoE1MbHPdH3LhBQ==,type:bool]
+  - ENC[AES256_GCM,data:tJy6dqQ=,iv:aTxl4D5j81sEv9z4e6pMM1P0UvOCnu2UQRRrV4WfOsI=,tag:H/RG4TjPzZWOM68aJytsaQ==,type:bool]
+sops:
+  age:
+    - recipient: age13vymj4l47exa2cdlt4hqantfgger5yqvj5pgrc4tud8ylrht4yjqkhh3ld
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4eW4vLzNTeUtZWTBSS3pP
+        Z01IV0lrcVB2RytKYkRsTjdMa21aOGErRVdjClFrbjhYQ2V5OWpTZCtjN3ZiMXZZ
+        dmp6L3VNWjJxZitrMWs1WHB5VHFoMzgKLS0tIFJhc01Xa29JMkFXLzZWVEYrazQw
+        MWo5RmJrdzJCTFFmcWxJeWZCbHhMYUkKYE+X/W7IKxbVteW97R/cPM6pU6422AJA
+        bA4TKQdi4api3wrRVU9E3TX5h1pNq39Ti7V6n/K8AKe6vMY7ToLk8A==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-07-02T21:43:50Z"
+  mac: ENC[AES256_GCM,data:FSwPwEu2rArMNbnR39EB3z94AflRX4XWejseaOObRVQPW8d0V3OrKOWi1x2zvjzYoEZZax+aOFwBPgPgelCKTJCsIszR+r09Ok7VJ1geTCe5iABUYB22FkTRnxlZlUtbgK+/FklJ52SA5xlblPHh00puAamRv+ll7NcVWm6Kq+Y=,iv:krJzQpy9/tTBxmFerjc2q5e+0+NpKHZMeoU2gXwe4oc=,tag:SxaKuz0rUyI+kHLxJ/XcEw==,type:str]
+  unencrypted_regex: ^(apiVersion|metadata|kind|type|immutable)$
+  version: 3.10.2
