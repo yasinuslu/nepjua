@@ -130,6 +130,11 @@ function gitParseGitHubUrl(url: string): GitNamespace | null {
 /**
  * Get the primary GitHub namespace for the current repository
  * Prioritizes 'origin' remote, falls back to first available
+ *
+ * TODO: It would be better to before accepting any remote, we should try to be picky with priorities
+ * - if a remote named upstream exists, take that one
+ * - if a remote named origin exists, take that one
+ * - otherwise, take the first remote
  */
 export async function gitGetGitHubNamespace(): Promise<GitNamespace> {
   const remotes = await gitGetRemotes();
@@ -159,20 +164,6 @@ export async function gitGetGitHubNamespace(): Promise<GitNamespace> {
 
   // Fall back to first GitHub remote
   return githubRemotes[0].namespace!;
-}
-
-/**
- * Get repository name from current directory or git remote
- */
-async function gitGetRepoName(): Promise<string> {
-  try {
-    const namespace = await gitGetGitHubNamespace();
-    return namespace.repo;
-  } catch {
-    // Fallback to directory name
-    const cwd = Deno.cwd();
-    return cwd.split("/").pop() || "unknown";
-  }
 }
 
 /**
