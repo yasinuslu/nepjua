@@ -1,4 +1,4 @@
-import command from "./command.ts";
+import { $ } from "./command.ts";
 
 export interface OpVault {
   id: string;
@@ -37,7 +37,7 @@ export interface OpField {
 }
 
 export async function opListVaults() {
-  const vaults: OpVault[] = await command`op vault list --format=json`
+  const vaults: OpVault[] = await $`op vault list --format=json`
     .stdout("piped")
     .then((r) => r.stdoutJson);
 
@@ -46,10 +46,9 @@ export async function opListVaults() {
 
 export async function opListItems(vault: string): Promise<OpItem[]> {
   try {
-    const items: OpItem[] =
-      await command`op item list --vault=${vault} --format=json`
-        .stdout("piped")
-        .then((r) => r.stdoutJson);
+    const items: OpItem[] = await $`op item list --vault=${vault} --format=json`
+      .stdout("piped")
+      .then((r) => r.stdoutJson);
     return items;
   } catch (error) {
     throw new Error(
@@ -66,7 +65,7 @@ export async function opGetItem(
 ): Promise<OpItem> {
   try {
     const item: OpItem =
-      await command`op item get ${itemName} --vault=${vault} --format=json`
+      await $`op item get ${itemName} --vault=${vault} --format=json`
         .stdout("piped")
         .then((r) => r.stdoutJson);
     return item;
@@ -86,7 +85,7 @@ export async function opGetField(
 ): Promise<string> {
   try {
     const value: string =
-      await command`op item get ${itemName} --vault=${vault} --fields=${fieldName} --reveal`.text();
+      await $`op item get ${itemName} --vault=${vault} --fields=${fieldName} --reveal`.text();
     return value.trim();
   } catch (error) {
     throw new Error(
@@ -104,7 +103,7 @@ export async function opSetField(
   vault: string
 ): Promise<void> {
   try {
-    await command`op item edit ${itemName} --vault=${vault} ${fieldName}=${value}`.exec();
+    await $`op item edit ${itemName} --vault=${vault} ${fieldName}=${value}`.exec();
   } catch (error) {
     // For 1Password CLI errors, we just need to check the exit code
     // The actual error message goes to stderr which we see in console
@@ -122,7 +121,7 @@ export async function opCreateItem(
       `${key}[password]=${value}`,
     ]);
 
-    await command`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldArgs}`.exec();
+    await $`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldArgs}`.exec();
   } catch (error) {
     throw new Error(
       `Failed to create item "${itemName}": ${
@@ -137,7 +136,7 @@ export async function opDeleteItem(
   vault: string
 ): Promise<void> {
   try {
-    await command`op item delete ${itemName} --vault=${vault}`.exec();
+    await $`op item delete ${itemName} --vault=${vault}`.exec();
   } catch (error) {
     throw new Error(
       `Failed to delete item "${itemName}": ${

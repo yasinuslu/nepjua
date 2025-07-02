@@ -1,4 +1,4 @@
-import $ from "@david/dax";
+import originalDaxDollar from "@david/dax";
 
 export interface CommandResult {
   stdoutJson: any;
@@ -36,12 +36,10 @@ class DaxCommandBuilder implements CommandBuilder {
   }
 }
 
-export function command(
+export function $(
   template: TemplateStringsArray,
   ...values: any[]
 ): CommandBuilder {
-  const daxCommand = $(template, ...values);
+  const daxCommand = originalDaxDollar(template, ...values);
   return new DaxCommandBuilder(daxCommand);
 }
-
-export default command;

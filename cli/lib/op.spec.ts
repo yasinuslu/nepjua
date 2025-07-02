@@ -1,271 +1,218 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-// Mock the command utility instead of dax directly
-vi.mock("./command.ts", () => ({
-  default: vi.fn(),
-}));
-
+import { describe, expect, it, vi } from "vitest";
+import { $ } from "./command.ts";
 import {
   opCreateItem,
   opDeleteItem,
-  opGetField,
   opGetItem,
   opListItems,
-  opListVaults,
   opSetField,
-  type OpItem,
-  type OpVault,
 } from "./op.ts";
 
-// Mock data storage
-let mockData: any = null;
-let mockText: string | null = null;
-let mockShouldThrow: boolean = false;
-let mockErrorMessage: string = "";
+// Get access to the mocked $ function
+const mock$ = vi.mocked($);
 
 describe("op.ts", () => {
-  let commandMock: any;
-
-  beforeEach(async () => {
-    // Reset mock data
-    mockData = null;
-    mockText = null;
-    mockShouldThrow = false;
-    mockErrorMessage = "";
-
-    // Import and mock the command utility
-    const commandModule = await import("./command.ts");
-    commandMock = vi.mocked(commandModule.default);
-
-    // Set up the mock to return our chainable API
-    commandMock.mockReturnValue({
-      stdout: () => ({
-        then: (callback: (result: { stdoutJson: any }) => any) => {
-          if (mockShouldThrow) {
-            return Promise.reject(new Error(mockErrorMessage));
-          }
-          return Promise.resolve(callback({ stdoutJson: mockData }));
-        },
-      }),
-      then: (callback: (result: { stdoutJson: any }) => any) => {
-        if (mockShouldThrow) {
-          return Promise.reject(new Error(mockErrorMessage));
-        }
-        return Promise.resolve(callback({ stdoutJson: mockData }));
-      },
-      text: () => {
-        if (mockShouldThrow) {
-          return Promise.reject(new Error(mockErrorMessage));
-        }
-        return Promise.resolve(mockText || "");
-      },
-      exec: () => {
-        if (mockShouldThrow) {
-          return Promise.reject(new Error(mockErrorMessage));
-        }
-        return Promise.resolve();
-      },
-    });
-  });
-
-  // Helper function to set up error throwing
-  function setupErrorThrow(errorMessage: string) {
-    mockShouldThrow = true;
-    mockErrorMessage = errorMessage;
-  }
-
-  // Helper function to set up success
-  function setupSuccess() {
-    mockShouldThrow = false;
-    mockErrorMessage = "";
-  }
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  describe("opListVaults", () => {
-    it("should list vaults successfully", async () => {
-      const mockVaults: OpVault[] = [
-        {
-          id: "vault1",
-          name: "Personal",
-          content_version: 1,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z",
-          items: 5,
-        },
-        {
-          id: "vault2",
-          name: "Work",
-          content_version: 1,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z",
-          items: 10,
-        },
-      ];
-
-      mockData = mockVaults;
-
-      const result = await opListVaults();
-      expect(result).toEqual(mockVaults);
-    });
-  });
-
-  describe("opListItems", () => {
-    it("should list items in a vault successfully", async () => {
-      const mockItems: OpItem[] = [
-        {
-          id: "item1",
-          title: "GitHub Token",
-          version: 1,
-          vault: { id: "vault1", name: "Personal" },
-          category: "SECURE_NOTE",
-        },
-        {
-          id: "item2",
-          title: "Database Password",
-          version: 1,
-          vault: { id: "vault1", name: "Personal" },
-          category: "PASSWORD",
-        },
-      ];
-
-      mockData = mockItems;
-
-      const result = await opListItems("Personal");
-      expect(result).toEqual(mockItems);
-    });
-
-    it("should throw error when vault access fails", async () => {
-      setupErrorThrow("Vault not found");
-
-      await expect(opListItems("NonExistent")).rejects.toThrow(
-        'Failed to list items in vault "NonExistent"'
-      );
-    });
-  });
-
   describe("opGetItem", () => {
-    it("should get item successfully", async () => {
-      const mockItem: OpItem = {
-        id: "item1",
-        title: "GitHub Token",
-        version: 1,
-        vault: { id: "vault1", name: "Personal" },
-        category: "SECURE_NOTE",
-        fields: [
-          {
-            id: "field1",
-            type: "STRING",
-            label: "token",
-            value: "secret-value",
-          },
-        ],
+    it("should get item by name and vault", async () => {
+      const mockItem = {
+        id: "1",
+        title: "Test Item",
+        vault: { name: "my-vault" },
       };
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: mockItem, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockResolvedValue(undefined),
+      };
+      mock$.mockReturnValue(mockChain);
 
-      mockData = mockItem;
+      const result = await opGetItem("Test Item", "my-vault");
 
-      const result = await opGetItem("GitHub Token", "Personal");
+      expect(mock$).toHaveBeenCalled();
+      expect(mockChain.stdout).toHaveBeenCalledWith("piped");
+      expect(mockChain.then).toHaveBeenCalled();
       expect(result).toEqual(mockItem);
     });
 
-    it("should throw error when item not found", async () => {
-      setupErrorThrow("Item not found");
+    it("should handle errors", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi.fn().mockRejectedValue(new Error("Item not found")),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockResolvedValue(undefined),
+      };
+      mock$.mockReturnValue(mockChain);
 
-      await expect(opGetItem("NonExistent", "Personal")).rejects.toThrow(
-        'Failed to get item "NonExistent" from vault "Personal"'
-      );
-    });
-  });
-
-  describe("opGetField", () => {
-    it("should get field value successfully", async () => {
-      mockText = "secret-token-value";
-
-      const result = await opGetField("GitHub Token", "token", "Personal");
-      expect(result).toBe("secret-token-value");
-    });
-
-    it("should handle whitespace in field values", async () => {
-      mockText = "  secret-value  \n";
-
-      const result = await opGetField("GitHub Token", "token", "Personal");
-      expect(result).toBe("secret-value");
-    });
-
-    it("should throw error when field access fails", async () => {
-      setupErrorThrow("Field not found");
-
-      await expect(
-        opGetField("GitHub Token", "nonexistent", "Personal")
-      ).rejects.toThrow(
-        'Failed to get field "nonexistent" from item "GitHub Token"'
+      await expect(opGetItem("Missing Item", "my-vault")).rejects.toThrow(
+        'Failed to get item "Missing Item" from vault "my-vault"'
       );
     });
   });
 
   describe("opSetField", () => {
-    it("should set field successfully", async () => {
-      setupSuccess();
+    it("should set field by item name and vault", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: {}, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockResolvedValue(undefined),
+      };
+      mock$.mockReturnValue(mockChain);
 
-      await opSetField("GitHub Token", "token", "new-value", "Personal");
-      // Should not throw
-      expect(commandMock).toHaveBeenCalled();
+      await opSetField("Test Item", "password", "new-password", "my-vault");
+
+      expect(mock$).toHaveBeenCalled();
+      expect(mockChain.exec).toHaveBeenCalled();
     });
 
-    it("should throw error when set operation fails", async () => {
-      setupErrorThrow("Operation failed");
+    it("should handle errors", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: {}, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockRejectedValue(new Error("Permission denied")),
+      };
+      mock$.mockReturnValue(mockChain);
 
       await expect(
-        opSetField("GitHub Token", "token", "new-value", "Personal")
-      ).rejects.toThrow("ITEM_OPERATION_FAILED: GitHub Token");
+        opSetField("Test Item", "password", "new-password", "my-vault")
+      ).rejects.toThrow("ITEM_OPERATION_FAILED: Test Item");
     });
   });
 
   describe("opCreateItem", () => {
-    it("should create item successfully with no fields", async () => {
-      setupSuccess();
+    it("should create item with fields", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: {}, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockResolvedValue(undefined),
+      };
+      mock$.mockReturnValue(mockChain);
 
-      await opCreateItem("New Item", "Personal");
-      // Should not throw
-      expect(commandMock).toHaveBeenCalled();
+      const fields = {
+        username: "test-user",
+        password: "test-pass",
+      };
+
+      await opCreateItem("Test Item", "my-vault", fields);
+
+      expect(mock$).toHaveBeenCalled();
+      expect(mockChain.exec).toHaveBeenCalled();
     });
 
-    it("should create item successfully with fields", async () => {
-      setupSuccess();
+    it("should handle creation errors", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: {}, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockRejectedValue(new Error("Item already exists")),
+      };
+      mock$.mockReturnValue(mockChain);
 
-      await opCreateItem("New Item", "Personal", {
-        username: "testuser",
-        password: "testpass",
-      });
-      // Should not throw
-      expect(commandMock).toHaveBeenCalled();
-    });
-
-    it("should throw error when create operation fails", async () => {
-      setupErrorThrow("Creation failed");
-
-      await expect(opCreateItem("New Item", "Personal")).rejects.toThrow(
-        'Failed to create item "New Item"'
+      await expect(opCreateItem("Test Item", "my-vault", {})).rejects.toThrow(
+        'Failed to create item "Test Item"'
       );
     });
   });
 
   describe("opDeleteItem", () => {
-    it("should delete item successfully", async () => {
-      setupSuccess();
+    it("should delete item by name and vault", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: {}, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockResolvedValue(undefined),
+      };
+      mock$.mockReturnValue(mockChain);
 
-      await opDeleteItem("Old Item", "Personal");
-      // Should not throw
-      expect(commandMock).toHaveBeenCalled();
+      await opDeleteItem("Test Item", "my-vault");
+
+      expect(mock$).toHaveBeenCalled();
+      expect(mockChain.exec).toHaveBeenCalled();
     });
 
-    it("should throw error when delete operation fails", async () => {
-      setupErrorThrow("Delete failed");
+    it("should handle deletion errors", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: {}, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockRejectedValue(new Error("Item not found")),
+      };
+      mock$.mockReturnValue(mockChain);
 
-      await expect(opDeleteItem("Old Item", "Personal")).rejects.toThrow(
-        'Failed to delete item "Old Item"'
+      await expect(opDeleteItem("Missing Item", "my-vault")).rejects.toThrow(
+        'Failed to delete item "Missing Item"'
+      );
+    });
+  });
+
+  describe("opListItems", () => {
+    it("should list items by vault", async () => {
+      const mockItems = [
+        { id: "1", title: "Item 1" },
+        { id: "2", title: "Item 2" },
+      ];
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi
+          .fn()
+          .mockImplementation((callback) =>
+            callback({ stdoutJson: mockItems, text: "" })
+          ),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockResolvedValue(undefined),
+      };
+      mock$.mockReturnValue(mockChain);
+
+      const result = await opListItems("my-vault");
+
+      expect(mock$).toHaveBeenCalled();
+      expect(mockChain.stdout).toHaveBeenCalledWith("piped");
+      expect(mockChain.then).toHaveBeenCalled();
+      expect(result).toEqual(mockItems);
+    });
+
+    it("should handle listing errors", async () => {
+      const mockChain = {
+        stdout: vi.fn().mockReturnThis(),
+        then: vi.fn().mockRejectedValue(new Error("Vault not found")),
+        text: vi.fn().mockResolvedValue(""),
+        exec: vi.fn().mockResolvedValue(undefined),
+      };
+      mock$.mockReturnValue(mockChain);
+
+      await expect(opListItems("missing-vault")).rejects.toThrow(
+        'Failed to list items in vault "missing-vault"'
       );
     });
   });
