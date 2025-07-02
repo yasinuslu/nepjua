@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { $ } from "./$.ts";
+import { ensureLinesInFile } from "./fs.ts";
 import { archiveSecret, getSecret, setSecret } from "./secret.ts";
 import { sopsBootstrap, sopsSetup } from "./sops.ts";
 import { createDenoMocks, createMock$ } from "./test-utils.ts";
@@ -9,6 +10,7 @@ const mock$ = vi.mocked($);
 
 // Mock dependencies
 vi.mock("./secret.ts", { spy: true });
+vi.mock("./fs.ts", { spy: true });
 
 describe("sops lib", () => {
   let denoMocks: ReturnType<typeof createDenoMocks>;
@@ -39,9 +41,9 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
       mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
 
-      vi.mocked(setSecret).mockResolvedValue();
-      denoMocks.readTextFile.mockRejectedValue(new Error("ENOENT"));
-      denoMocks.writeTextFile.mockResolvedValue();
+      vi.mocked(setSecret).mockResolvedValue(undefined);
+      vi.mocked(ensureLinesInFile).mockResolvedValue(undefined);
+      denoMocks.writeTextFile.mockResolvedValue(undefined);
 
       const result = await sopsBootstrap();
 
@@ -62,14 +64,17 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
         ".sops.yaml",
         "creation_rules:\n  - age: age1abcdef123456789\n"
       );
-      expect(denoMocks.writeTextFile).toHaveBeenCalledWith(
-        ".gitignore",
-        "\n# SOPS\n.sops/\n*.age\n"
-      );
+      expect(vi.mocked(ensureLinesInFile)).toHaveBeenCalledWith(".gitignore", [
+        "# SOPS",
+        ".sops/",
+        "*.age",
+        ".tmp",
+        "*.enc.tmp.*",
+      ]);
     });
 
     it("should refuse to bootstrap when .sops.yaml exists without force", async () => {
-      denoMocks.stat.mockResolvedValue({});
+      denoMocks.stat.mockResolvedValue({} as Deno.FileInfo);
 
       await expect(sopsBootstrap()).rejects.toThrow(
         ".sops.yaml already exists. Use --force to override."
@@ -87,22 +92,25 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
     it("should force bootstrap and archive existing key", async () => {
       // Setup: existing files/keys
-      denoMocks.stat.mockResolvedValue({});
+      denoMocks.stat.mockResolvedValue({} as Deno.FileInfo);
       vi.mocked(getSecret).mockResolvedValue("existing-key");
-      vi.mocked(archiveSecret).mockResolvedValue();
+      vi.mocked(archiveSecret).mockResolvedValue({
+        archivePath: "archive/SOPS/age-key/mock-timestamp",
+        originalPath: "SOPS/age-key",
+      });
 
       mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
 
-      vi.mocked(setSecret).mockResolvedValue();
-      denoMocks.readTextFile.mockResolvedValue("existing gitignore\n.sops/\n");
-      denoMocks.writeTextFile.mockResolvedValue();
+      vi.mocked(setSecret).mockResolvedValue(undefined);
+      vi.mocked(ensureLinesInFile).mockResolvedValue(undefined);
+      denoMocks.writeTextFile.mockResolvedValue(undefined);
 
       const result = await sopsBootstrap({ force: true });
 
       expect(result).toEqual({
         publicKey: "age1abcdef123456789",
         configCreated: true,
-        gitignoreUpdated: false,
+        gitignoreUpdated: true,
         keyArchived: true,
       });
 
@@ -119,13 +127,13 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
       mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
 
-      vi.mocked(setSecret).mockResolvedValue();
-      denoMocks.readTextFile.mockResolvedValue("existing gitignore\n.sops/\n");
-      denoMocks.writeTextFile.mockResolvedValue();
+      vi.mocked(setSecret).mockResolvedValue(undefined);
+      vi.mocked(ensureLinesInFile).mockResolvedValue(undefined);
+      denoMocks.writeTextFile.mockResolvedValue(undefined);
 
       const result = await sopsBootstrap();
 
-      expect(result.gitignoreUpdated).toBe(false);
+      expect(result.gitignoreUpdated).toBe(true);
       expect(denoMocks.writeTextFile).toHaveBeenCalledTimes(1); // Only .sops.yaml
     });
 
@@ -145,9 +153,10 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
     it("should successfully set up SOPS", async () => {
       const mockKeyData = "AGE-SECRET-KEY-1ABCDEF123456789...";
       vi.mocked(getSecret).mockResolvedValue(mockKeyData);
-      denoMocks.mkdir.mockResolvedValue();
-      denoMocks.writeTextFile.mockResolvedValue();
-      denoMocks.chmod.mockResolvedValue();
+      vi.mocked(ensureLinesInFile).mockResolvedValue(undefined);
+      denoMocks.mkdir.mockResolvedValue(undefined);
+      denoMocks.writeTextFile.mockResolvedValue(undefined);
+      denoMocks.chmod.mockResolvedValue(undefined);
 
       const result = await sopsSetup();
 
