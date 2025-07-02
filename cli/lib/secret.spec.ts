@@ -1,5 +1,9 @@
-import { assertEquals } from "@std/assert";
-import { describe, it } from "@std/testing/bdd";
+import { describe, expect, it, vi } from "vitest";
+
+// Mock @david/dax before importing the module
+vi.mock("@david/dax", () => ({
+  default: vi.fn(),
+}));
 
 import {
   getFullSecretName,
@@ -13,12 +17,12 @@ describe("secret.ts", () => {
   describe("getVaultName", () => {
     it("should return global vault name for global secrets", () => {
       const result = getVaultName(true);
-      assertEquals(result, "Nepjua Automation Global");
+      expect(result).toBe("Nepjua Automation Global");
     });
 
     it("should return repo vault name for repository secrets", () => {
       const result = getVaultName(false);
-      assertEquals(result, "Nepjua Automation");
+      expect(result).toBe("Nepjua Automation");
     });
   });
 
@@ -29,7 +33,7 @@ describe("secret.ts", () => {
         secretName: "main",
         fieldName: "github-token",
       };
-      assertEquals(result, expected);
+      expect(result).toEqual(expected);
     });
 
     it("should parse nested path correctly", () => {
@@ -38,7 +42,7 @@ describe("secret.ts", () => {
         secretName: "db/production",
         fieldName: "host",
       };
-      assertEquals(result, expected);
+      expect(result).toEqual(expected);
     });
 
     it("should parse two-part path correctly", () => {
@@ -47,7 +51,7 @@ describe("secret.ts", () => {
         secretName: "db",
         fieldName: "host",
       };
-      assertEquals(result, expected);
+      expect(result).toEqual(expected);
     });
 
     it("should handle single character field names", () => {
@@ -56,36 +60,36 @@ describe("secret.ts", () => {
         secretName: "config",
         fieldName: "x",
       };
-      assertEquals(result, expected);
+      expect(result).toEqual(expected);
     });
   });
 
   describe("getFullSecretName", () => {
     it("should return secret name as-is for global secrets", () => {
       const result = getFullSecretName("main", "");
-      assertEquals(result, "main");
+      expect(result).toBe("main");
     });
 
     it("should prepend namespace for repository secrets", () => {
       const result = getFullSecretName("main", "testuser/testrepo");
-      assertEquals(result, "testuser/testrepo/main");
+      expect(result).toBe("testuser/testrepo/main");
     });
 
     it("should handle complex secret names", () => {
       const result = getFullSecretName("db/production", "org/project");
-      assertEquals(result, "org/project/db/production");
+      expect(result).toBe("org/project/db/production");
     });
   });
 
   describe("parseFullSecretName", () => {
     it("should return name as-is for global secrets", () => {
       const result = parseFullSecretName("main", "");
-      assertEquals(result, "main");
+      expect(result).toBe("main");
     });
 
     it("should return complex name as-is for global secrets", () => {
       const result = parseFullSecretName("db/production", "");
-      assertEquals(result, "db/production");
+      expect(result).toBe("db/production");
     });
 
     it("should extract secret name from namespaced name", () => {
@@ -93,7 +97,7 @@ describe("secret.ts", () => {
         "testuser/testrepo/main",
         "testuser/testrepo"
       );
-      assertEquals(result, "main");
+      expect(result).toBe("main");
     });
 
     it("should extract complex secret name from namespaced name", () => {
@@ -101,7 +105,7 @@ describe("secret.ts", () => {
         "org/project/db/production",
         "org/project"
       );
-      assertEquals(result, "db/production");
+      expect(result).toBe("db/production");
     });
 
     it("should return null for non-matching namespace", () => {
@@ -109,7 +113,7 @@ describe("secret.ts", () => {
         "other/repo/main",
         "testuser/testrepo"
       );
-      assertEquals(result, null);
+      expect(result).toBeNull();
     });
 
     it("should return null for partial namespace match", () => {
@@ -117,12 +121,12 @@ describe("secret.ts", () => {
         "testuser/testrepo-fork/main",
         "testuser/testrepo"
       );
-      assertEquals(result, null);
+      expect(result).toBeNull();
     });
 
     it("should handle empty secret name", () => {
       const result = parseFullSecretName("", "");
-      assertEquals(result, "");
+      expect(result).toBe("");
     });
   });
 });

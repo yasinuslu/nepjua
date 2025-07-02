@@ -1,6 +1,9 @@
-import { assertEquals, assertRejects } from "@std/assert";
-import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
-import { restore, stub } from "@std/testing/mock";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Mock the command utility instead of dax directly
+vi.mock("./command.ts", () => ({
+  default: vi.fn(),
+}));
 
 import {
   opCreateItem,
@@ -14,33 +17,45 @@ import {
   type OpVault,
 } from "./op.ts";
 
-// Mock $ from @david/dax
-const mockDax = {
-  stdout: () => mockDax,
-  then: (callback: (result: any) => any) => {
-    return callback({
-      stdoutJson: mockDax._mockData,
-    });
-  },
-  text: () => Promise.resolve(mockDax._mockText || ""),
-  _mockData: null as any,
-  _mockText: null as string | null,
-};
+// Mock data storage
+let mockData: any = null;
+let mockText: string | null = null;
 
 describe("op.ts", () => {
-  let daxStub: any;
+  let commandMock: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Reset mock data
-    mockDax._mockData = null;
-    mockDax._mockText = null;
+    mockData = null;
+    mockText = null;
 
-    // Stub the default export from @david/dax
-    daxStub = stub(globalThis, "$" as any, () => mockDax);
+    // Import and mock the command utility
+    const commandModule = await import("./command.ts");
+    commandMock = vi.mocked(commandModule.default);
+
+    // Set up the mock to return our chainable API
+    commandMock.mockReturnValue({
+      stdout: () => ({
+        then: (callback: (result: { stdoutJson: any }) => any) => {
+          return Promise.resolve(callback({ stdoutJson: mockData }));
+        },
+      }),
+      then: (callback: (result: { stdoutJson: any }) => any) => {
+        return Promise.resolve(callback({ stdoutJson: mockData }));
+      },
+      text: () => Promise.resolve(mockText || ""),
+    });
   });
 
+  // Helper function to set up error throwing
+  function setupErrorThrow(errorMessage: string) {
+    commandMock.mockImplementation(() => {
+      throw new Error(errorMessage);
+    });
+  }
+
   afterEach(() => {
-    restore();
+    vi.restoreAllMocks();
   });
 
   describe("opListVaults", () => {
@@ -64,10 +79,10 @@ describe("op.ts", () => {
         },
       ];
 
-      mockDax._mockData = mockVaults;
+      mockData = mockVaults;
 
       const result = await opListVaults();
-      assertEquals(result, mockVaults);
+      expect(result).toEqual(mockVaults);
     });
   });
 
@@ -90,22 +105,16 @@ describe("op.ts", () => {
         },
       ];
 
-      mockDax._mockData = mockItems;
+      mockData = mockItems;
 
       const result = await opListItems("Personal");
-      assertEquals(result, mockItems);
+      expect(result).toEqual(mockItems);
     });
 
     it("should throw error when vault access fails", async () => {
-      // Mock a failing command by throwing an error
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => {
-        throw new Error("Vault not found");
-      });
+      setupErrorThrow("Vault not found");
 
-      await assertRejects(
-        () => opListItems("NonExistent"),
-        Error,
+      await expect(opListItems("NonExistent")).rejects.toThrow(
         'Failed to list items in vault "NonExistent"'
       );
     });
@@ -129,21 +138,16 @@ describe("op.ts", () => {
         ],
       };
 
-      mockDax._mockData = mockItem;
+      mockData = mockItem;
 
       const result = await opGetItem("GitHub Token", "Personal");
-      assertEquals(result, mockItem);
+      expect(result).toEqual(mockItem);
     });
 
     it("should throw error when item not found", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => {
-        throw new Error("Item not found");
-      });
+      setupErrorThrow("Item not found");
 
-      await assertRejects(
-        () => opGetItem("NonExistent", "Personal"),
-        Error,
+      await expect(opGetItem("NonExistent", "Personal")).rejects.toThrow(
         'Failed to get item "NonExistent" from vault "Personal"'
       );
     });
@@ -151,28 +155,25 @@ describe("op.ts", () => {
 
   describe("opGetField", () => {
     it("should get field value successfully", async () => {
-      mockDax._mockText = "secret-token-value";
+      mockText = "secret-token-value";
 
       const result = await opGetField("GitHub Token", "token", "Personal");
-      assertEquals(result, "secret-token-value");
+      expect(result).toBe("secret-token-value");
     });
 
     it("should handle whitespace in field values", async () => {
-      mockDax._mockText = "  secret-value  \n";
+      mockText = "  secret-value  \n";
 
       const result = await opGetField("GitHub Token", "token", "Personal");
-      assertEquals(result, "secret-value");
+      expect(result).toBe("secret-value");
     });
 
     it("should throw error when field access fails", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => {
-        throw new Error("Field not found");
-      });
+      setupErrorThrow("Field not found");
 
-      await assertRejects(
-        () => opGetField("GitHub Token", "nonexistent", "Personal"),
-        Error,
+      await expect(
+        opGetField("GitHub Token", "nonexistent", "Personal")
+      ).rejects.toThrow(
         'Failed to get field "nonexistent" from item "GitHub Token"'
       );
     });
@@ -181,39 +182,31 @@ describe("op.ts", () => {
   describe("opSetField", () => {
     it("should set field successfully", async () => {
       // Mock successful command (no exception thrown)
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => Promise.resolve());
+      commandMock.mockReturnValue(Promise.resolve());
 
       await opSetField("GitHub Token", "token", "new-value", "Personal");
       // Should not throw
     });
 
     it("should throw error when set operation fails", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => {
-        throw new Error("Operation failed");
-      });
+      setupErrorThrow("Operation failed");
 
-      await assertRejects(
-        () => opSetField("GitHub Token", "token", "new-value", "Personal"),
-        Error,
-        "ITEM_OPERATION_FAILED: GitHub Token"
-      );
+      await expect(
+        opSetField("GitHub Token", "token", "new-value", "Personal")
+      ).rejects.toThrow("ITEM_OPERATION_FAILED: GitHub Token");
     });
   });
 
   describe("opCreateItem", () => {
     it("should create item successfully with no fields", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => Promise.resolve());
+      commandMock.mockReturnValue(Promise.resolve());
 
       await opCreateItem("New Item", "Personal");
       // Should not throw
     });
 
     it("should create item successfully with fields", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => Promise.resolve());
+      commandMock.mockReturnValue(Promise.resolve());
 
       await opCreateItem("New Item", "Personal", {
         username: "testuser",
@@ -223,14 +216,9 @@ describe("op.ts", () => {
     });
 
     it("should throw error when create operation fails", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => {
-        throw new Error("Creation failed");
-      });
+      setupErrorThrow("Creation failed");
 
-      await assertRejects(
-        () => opCreateItem("New Item", "Personal"),
-        Error,
+      await expect(opCreateItem("New Item", "Personal")).rejects.toThrow(
         'Failed to create item "New Item"'
       );
     });
@@ -238,22 +226,16 @@ describe("op.ts", () => {
 
   describe("opDeleteItem", () => {
     it("should delete item successfully", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => Promise.resolve());
+      commandMock.mockReturnValue(Promise.resolve());
 
       await opDeleteItem("Old Item", "Personal");
       // Should not throw
     });
 
     it("should throw error when delete operation fails", async () => {
-      daxStub.restore();
-      daxStub = stub(globalThis, "$" as any, () => {
-        throw new Error("Delete failed");
-      });
+      setupErrorThrow("Delete failed");
 
-      await assertRejects(
-        () => opDeleteItem("Old Item", "Personal"),
-        Error,
+      await expect(opDeleteItem("Old Item", "Personal")).rejects.toThrow(
         'Failed to delete item "Old Item"'
       );
     });

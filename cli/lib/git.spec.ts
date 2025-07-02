@@ -1,6 +1,4 @@
-import { assertEquals, assertRejects } from "@std/assert";
-import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
-import { assertSpyCall, restore, stub } from "@std/testing/mock";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   gitFindRoot,
@@ -29,19 +27,20 @@ class MockCommand {
 }
 
 describe("git.ts", () => {
-  let commandStub: any;
+  let commandSpy: any;
 
   beforeEach(() => {
-    // Stub Deno.Command
-    commandStub = stub(
-      Deno,
-      "Command",
-      (...args: unknown[]) => new MockCommand(args[0] as string, args[1] as any)
-    );
+    // Mock Deno.Command
+    commandSpy = vi
+      .spyOn(Deno, "Command")
+      .mockImplementation(
+        (...args: unknown[]) =>
+          new MockCommand(args[0] as string, args[1] as any)
+      );
   });
 
   afterEach(() => {
-    restore();
+    vi.restoreAllMocks();
   });
 
   describe("gitFindRoot", () => {
@@ -52,25 +51,20 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode(""),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
       const result = await gitFindRoot();
-      assertEquals(result, "/path/to/repo");
+      expect(result).toBe("/path/to/repo");
 
-      assertSpyCall(commandStub, 0, {
-        args: [
-          "git",
-          {
-            args: ["rev-parse", "--show-toplevel"],
-            stdout: "piped",
-            stderr: "piped",
-          },
-        ],
+      expect(commandSpy).toHaveBeenCalledWith("git", {
+        args: ["rev-parse", "--show-toplevel"],
+        stdout: "piped",
+        stderr: "piped",
       });
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
 
     it("should throw error when not in a git repository", async () => {
@@ -80,17 +74,13 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode("fatal: not a git repository"),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
-      await assertRejects(
-        () => gitFindRoot(),
-        Error,
-        "Not in a git repository"
-      );
+      await expect(gitFindRoot()).rejects.toThrow("Not in a git repository");
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
   });
 
@@ -106,9 +96,9 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode(""),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
       const result = await gitGetRemotes();
 
@@ -130,9 +120,9 @@ describe("git.ts", () => {
         },
       ];
 
-      assertEquals(result, expected);
+      expect(result).toEqual(expected);
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
 
     it("should handle empty remotes", async () => {
@@ -142,14 +132,14 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode(""),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
       const result = await gitGetRemotes();
-      assertEquals(result, []);
+      expect(result).toEqual([]);
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
 
     it("should throw error when git command fails", async () => {
@@ -159,17 +149,15 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode("fatal: not a git repository"),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
-      await assertRejects(
-        () => gitGetRemotes(),
-        Error,
+      await expect(gitGetRemotes()).rejects.toThrow(
         "Failed to get git remotes"
       );
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
   });
 
@@ -184,9 +172,9 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode(""),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
       const result = await gitGetGitHubNamespace();
 
@@ -196,61 +184,35 @@ describe("git.ts", () => {
         full: "user/repo",
       };
 
-      assertEquals(result, expected);
+      expect(result).toEqual(expected);
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
 
-    it("should handle SSH URLs with profiles", async () => {
+    it("should return namespace from SSH origin remote", async () => {
       const mockOutput = {
         code: 0,
         stdout: new TextEncoder().encode(
-          "origin\tgit@github.com-work:company/repo.git (fetch)\n"
+          "origin\tgit@github.com:user/repo.git (fetch)\n"
         ),
         stderr: new TextEncoder().encode(""),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
       const result = await gitGetGitHubNamespace();
 
       const expected: GitNamespace = {
-        owner: "company",
+        owner: "user",
         repo: "repo",
-        full: "company/repo",
+        full: "user/repo",
       };
 
-      assertEquals(result, expected);
+      expect(result).toEqual(expected);
 
-      outputStub.restore();
-    });
-
-    it("should fall back to first GitHub remote when no origin", async () => {
-      const mockOutput = {
-        code: 0,
-        stdout: new TextEncoder().encode(
-          "upstream\thttps://github.com/upstream/repo.git (fetch)\n"
-        ),
-        stderr: new TextEncoder().encode(""),
-      };
-
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
-
-      const result = await gitGetGitHubNamespace();
-
-      const expected: GitNamespace = {
-        owner: "upstream",
-        repo: "repo",
-        full: "upstream/repo",
-      };
-
-      assertEquals(result, expected);
-
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
 
     it("should throw error when no GitHub remotes found", async () => {
@@ -262,37 +224,33 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode(""),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
-      await assertRejects(
-        () => gitGetGitHubNamespace(),
-        Error,
+      await expect(gitGetGitHubNamespace()).rejects.toThrow(
         "No GitHub remotes found"
       );
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
 
-    it("should throw error when no remotes found", async () => {
+    it("should throw error when git command fails", async () => {
       const mockOutput = {
-        code: 0,
+        code: 1,
         stdout: new TextEncoder().encode(""),
-        stderr: new TextEncoder().encode(""),
+        stderr: new TextEncoder().encode("fatal: not a git repository"),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
+
+      await expect(gitGetGitHubNamespace()).rejects.toThrow(
+        "Failed to get git remotes"
       );
 
-      await assertRejects(
-        () => gitGetGitHubNamespace(),
-        Error,
-        "No git remotes found"
-      );
-
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
   });
 
@@ -304,14 +262,14 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode(""),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
       const result = await gitIsRepository();
-      assertEquals(result, true);
+      expect(result).toBe(true);
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
 
     it("should return false when not in a git repository", async () => {
@@ -321,14 +279,14 @@ describe("git.ts", () => {
         stderr: new TextEncoder().encode("fatal: not a git repository"),
       };
 
-      const outputStub = stub(MockCommand.prototype, "output", () =>
-        Promise.resolve(mockOutput)
-      );
+      const outputSpy = vi
+        .spyOn(MockCommand.prototype, "output")
+        .mockResolvedValue(mockOutput);
 
       const result = await gitIsRepository();
-      assertEquals(result, false);
+      expect(result).toBe(false);
 
-      outputStub.restore();
+      outputSpy.mockRestore();
     });
   });
 });

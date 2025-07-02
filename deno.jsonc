@@ -1,13 +1,14 @@
 {
   "tasks": {
     "dev": "deno run --watch cli/main.ts",
-    "test": "deno test cli/lib/git.test.ts cli/lib/secret.test.ts",
-    "test:all": "deno test cli/lib/"
+    "test": "deno run -A npm:vitest run",
+    "test:watch": "deno run -A npm:vitest"
   },
   "imports": {
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
     "@david/dax": "jsr:@david/dax@^0.43.1",
     "@std/assert": "jsr:@std/assert@1",
-    "@std/testing": "jsr:@std/testing@1"
+    "@std/testing": "jsr:@std/testing@1",
+    "vitest": "npm:vitest@^2.1.8"
   }
 }
