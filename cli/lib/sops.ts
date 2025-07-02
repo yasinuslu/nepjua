@@ -1,3 +1,4 @@
+import { stringify } from "@std/yaml";
 import path from "node:path";
 import { $ } from "zx";
 import { ensureLinesInFile } from "./fs.ts";
@@ -73,9 +74,25 @@ export async function sopsBootstrap(
   await setSecret(SOPS_KEY_SECRET_NAME, keyOutput.trim(), false);
 
   // Create .sops.yaml
-  const sopsConfig = `creation_rules:
-  - age: ${publicKey}
-`;
+  const sopsConfig = stringify(
+    {
+      stores: {
+        yaml: {
+          indent: 2,
+        },
+      },
+      creation_rules: [
+        {
+          path_regex: ".*\\.enc\\.(yaml|yml|json|env)$",
+          unencrypted_regex: "^(apiVersion|metadata|kind|type|immutable)$",
+          age: publicKey,
+        },
+      ],
+    },
+    {
+      indent: 2,
+    }
+  );
   await Deno.writeTextFile(path.join(gitRoot, ".sops.yaml"), sopsConfig);
 
   await sopsSetup();
