@@ -1,11 +1,10 @@
 import { $ } from "zx";
-import { zxConfiguration } from "../zx-configuration.ts";
 
 // Timeout for 1Password operations (in milliseconds)
 const OP_TIMEOUT = 60000; // 60 seconds - much higher since manual commands work fine
 
 // Create a dedicated zx context with timeout
-const $$ = $({ ...zxConfiguration, timeout: OP_TIMEOUT });
+const $$ = $({ timeout: OP_TIMEOUT });
 
 // Base64 encoding/decoding utilities for handling multiline values
 function encodeValue(value: string): string {
