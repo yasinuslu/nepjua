@@ -183,3 +183,5 @@ dist
 # SOPS
 .sops/
 *.age
+.tmp
+*.enc.tmp.*

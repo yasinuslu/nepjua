@@ -1,4 +1,5 @@
 import { $ } from "./$.ts";
+import { ensureLinesInFile } from "./fs.ts";
 import { archiveSecret, getSecret, setSecret } from "./secret.ts";
 
 const SOPS_KEY_PATH = "SOPS/age-key";
@@ -79,23 +80,18 @@ export async function sopsBootstrap(
 `;
   await Deno.writeTextFile(".sops.yaml", sopsConfig);
 
-  // Update .gitignore
-  const gitignoreContent = await Deno.readTextFile(".gitignore").catch(
-    () => ""
-  );
-  let gitignoreUpdated = false;
-  if (!gitignoreContent.includes(".sops/")) {
-    await Deno.writeTextFile(
-      ".gitignore",
-      gitignoreContent + "\n# SOPS\n.sops/\n*.age\n"
-    );
-    gitignoreUpdated = true;
-  }
+  await ensureLinesInFile(".gitignore", [
+    "# SOPS",
+    ".sops/",
+    "*.age",
+    ".tmp",
+    "*.enc.tmp.*",
+  ]);
 
   return {
     publicKey,
     configCreated: true,
-    gitignoreUpdated,
+    gitignoreUpdated: true,
     keyArchived,
   };
 }
@@ -118,6 +114,14 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   const keyPath = ".sops/age-key.txt";
   await Deno.writeTextFile(keyPath, keyData);
   await Deno.chmod(keyPath, 0o600);
+
+  await ensureLinesInFile(".gitignore", [
+    "# SOPS",
+    ".sops/",
+    "*.age",
+    ".tmp",
+    "*.enc.tmp.*",
+  ]);
 
   return {
     keyPath,
