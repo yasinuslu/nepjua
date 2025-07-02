@@ -1,8 +1,10 @@
+import path from "node:path";
 import { $ } from "zx";
 import { ensureLinesInFile } from "./fs.ts";
+import { gitFindRoot } from "./git.ts";
 import { getSecret, setSecret } from "./secret.ts";
 
-const SOPS_KEY_PATH = "SOPS/age-key";
+const SOPS_KEY_SECRET_NAME = "SOPS/age-key";
 
 export interface SopsBootstrapOptions {
   force?: boolean;
@@ -11,7 +13,6 @@ export interface SopsBootstrapOptions {
 export interface SopsBootstrapResult {
   publicKey: string;
   configCreated: boolean;
-  gitignoreUpdated: boolean;
   keyArchived: boolean;
 }
 
@@ -24,10 +25,11 @@ export async function sopsBootstrap(
   options: SopsBootstrapOptions = {}
 ): Promise<SopsBootstrapResult> {
   const { force = false } = options;
+  const gitRoot = await gitFindRoot();
 
   // Check if .sops.yaml already exists
   try {
-    await Deno.stat(".sops.yaml");
+    await Deno.stat(path.join(gitRoot, ".sops.yaml"));
     if (!force) {
       throw new Error(".sops.yaml already exists. Use --force to override.");
     }
@@ -43,7 +45,7 @@ export async function sopsBootstrap(
 
   // Check if SOPS AGE key already exists
   try {
-    await getSecret(SOPS_KEY_PATH, false);
+    await getSecret(SOPS_KEY_SECRET_NAME, false);
     if (!force) {
       throw new Error("SOPS AGE key already exists. Use --force to override.");
     }
@@ -68,26 +70,19 @@ export async function sopsBootstrap(
   const publicKey = publicKeyMatch[1];
 
   // Store private key (this will update existing or create new)
-  await setSecret(SOPS_KEY_PATH, keyOutput.trim(), false);
+  await setSecret(SOPS_KEY_SECRET_NAME, keyOutput.trim(), false);
 
   // Create .sops.yaml
   const sopsConfig = `creation_rules:
   - age: ${publicKey}
 `;
-  await Deno.writeTextFile(".sops.yaml", sopsConfig);
+  await Deno.writeTextFile(path.join(gitRoot, ".sops.yaml"), sopsConfig);
 
-  await ensureLinesInFile(".gitignore", [
-    "# SOPS",
-    ".sops/",
-    "*.age",
-    ".tmp",
-    "*.enc.tmp.*",
-  ]);
+  await sopsSetup();
 
   return {
     publicKey,
     configCreated: true,
-    gitignoreUpdated: true,
     keyArchived: false,
   };
 }
@@ -96,15 +91,17 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   // Get AGE key
   let keyData;
   try {
-    keyData = await getSecret(SOPS_KEY_PATH, false);
+    keyData = await getSecret(SOPS_KEY_SECRET_NAME, false);
   } catch {
     throw new Error(
       "Failed to retrieve SOPS AGE key. Run 'nep sops bootstrap' first to set up SOPS"
     );
   }
 
+  const gitRoot = await gitFindRoot();
+
   // Create .sops directory
-  await Deno.mkdir(".sops", { recursive: true });
+  await Deno.mkdir(path.join(gitRoot, ".sops"), { recursive: true });
 
   // Extract only the private key line for the identity file
   const privateKeyMatch = keyData.match(/AGE-SECRET-KEY-[A-Z0-9]+/);
@@ -114,16 +111,27 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   const privateKey = privateKeyMatch[0];
 
   // Write key to file
-  const keyPath = ".sops/age-key.txt";
+  const keyPath = path.join(gitRoot, ".sops/age-key.txt");
   await Deno.writeTextFile(keyPath, privateKey + "\n");
   await Deno.chmod(keyPath, 0o600);
 
-  await ensureLinesInFile(".gitignore", [
+  await ensureLinesInFile(path.join(gitRoot, ".gitignore"), [
     "# SOPS",
     ".sops/",
     "*.age",
     ".tmp",
     "*.enc.tmp.*",
+  ]);
+
+  await ensureLinesInFile(path.join(gitRoot, ".envrc"), [
+    "watch_file .env",
+    "set -a",
+    "source .env",
+    "set +a",
+  ]);
+
+  await ensureLinesInFile(path.join(gitRoot, ".env"), [
+    `SOPS_AGE_KEY_FILE="${keyPath}"`,
   ]);
 
   return {

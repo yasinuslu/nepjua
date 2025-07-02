@@ -22,12 +22,6 @@ export const sopsCommand = new Command()
       console.log("🔐 Stored private key");
       console.log("📝 Created .sops.yaml configuration");
 
-      if (result.gitignoreUpdated) {
-        console.log("📝 Updated .gitignore");
-      } else {
-        console.log("📝 .gitignore already up to date");
-      }
-
       console.log("✅ SOPS bootstrap complete!");
       console.log(`   Public key: ${result.publicKey}`);
     } catch (error) {
