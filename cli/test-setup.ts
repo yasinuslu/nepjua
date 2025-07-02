@@ -1,12 +1,14 @@
 import { afterEach, vi } from "vitest";
 
 // Mock the command module using modern Vitest patterns
-vi.mock("./command.ts", () => ({
+vi.mock("./lib/$.ts", () => ({
   $: vi.fn().mockImplementation(() => ({
-    stdout: vi.fn().mockReturnThis(),
-    then: vi.fn().mockResolvedValue({ stdoutJson: {}, text: "" }),
+    json: vi.fn().mockResolvedValue({}),
     text: vi.fn().mockResolvedValue(""),
-    exec: vi.fn().mockResolvedValue(undefined),
+    then: vi.fn().mockReturnValue({
+      json: vi.fn().mockResolvedValue({}),
+      text: vi.fn().mockResolvedValue(""),
+    }),
   })),
 }));
 

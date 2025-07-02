@@ -7,9 +7,9 @@
   "nodeModulesDir": "auto",
   "imports": {
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
-    "@david/dax": "jsr:@david/dax@^0.43.1",
     "@std/assert": "jsr:@std/assert@1",
     "@std/testing": "jsr:@std/testing@1",
-    "vitest": "npm:vitest@^2.1.8"
+    "vitest": "npm:vitest@^2.1.8",
+    "zx": "npm:zx@^8.6.1"
   }
 }

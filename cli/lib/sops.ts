@@ -1,4 +1,4 @@
-import { $ } from "./command.ts";
+import { $ } from "./$.ts";
 import { archiveSecret, getSecret, setSecret } from "./secret.ts";
 
 const SOPS_KEY_PATH = "SOPS/age-key";

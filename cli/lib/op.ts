@@ -1,4 +1,4 @@
-import { $ } from "./command.ts";
+import { $ } from "./$.ts";
 
 export interface OpVault {
   id: string;
@@ -37,18 +37,19 @@ export interface OpField {
 }
 
 export async function opListVaults() {
-  const vaults: OpVault[] = await $`op vault list --format=json`
-    .stdout("piped")
-    .then((r) => r.stdoutJson);
+  const vaults: OpVault[] = await $`op vault list --format=json`.then((r) =>
+    r.json()
+  );
 
   return vaults;
 }
 
 export async function opListItems(vault: string): Promise<OpItem[]> {
   try {
-    const items: OpItem[] = await $`op item list --vault=${vault} --format=json`
-      .stdout("piped")
-      .then((r) => r.stdoutJson);
+    const items = await $`op item list --vault=${vault} --format=json`.json<
+      OpItem[]
+    >();
+
     return items;
   } catch (error) {
     throw new Error(
@@ -64,10 +65,8 @@ export async function opGetItem(
   vault: string
 ): Promise<OpItem> {
   try {
-    const item: OpItem =
-      await $`op item get ${itemName} --vault=${vault} --format=json`
-        .stdout("piped")
-        .then((r) => r.stdoutJson);
+    const item =
+      await $`op item get ${itemName} --vault=${vault} --format=json`.json<OpItem>();
     return item;
   } catch (error) {
     throw new Error(
@@ -103,7 +102,7 @@ export async function opSetField(
   vault: string
 ): Promise<void> {
   try {
-    await $`op item edit ${itemName} --vault=${vault} ${fieldName}=${value}`.exec();
+    await $`op item edit ${itemName} --vault=${vault} ${fieldName}=${value}`;
   } catch (error) {
     // For 1Password CLI errors, we just need to check the exit code
     // The actual error message goes to stderr which we see in console
@@ -136,7 +135,7 @@ export async function opDeleteItem(
   vault: string
 ): Promise<void> {
   try {
-    await $`op item delete ${itemName} --vault=${vault}`.exec();
+    await $`op item delete ${itemName} --vault=${vault}`;
   } catch (error) {
     throw new Error(
       `Failed to delete item "${itemName}": ${

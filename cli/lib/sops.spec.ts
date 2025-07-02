@@ -4,7 +4,6 @@ import { archiveSecret, getSecret, setSecret } from "./secret.ts";
 import { sopsBootstrap, sopsSetup } from "./sops.ts";
 
 // Mock dependencies
-vi.mock("./command.ts", { spy: true });
 vi.mock("./secret.ts", { spy: true });
 
 // Mock Deno APIs

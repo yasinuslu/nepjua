@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { $ } from "./command.ts";
+import { $ } from "./$.ts";
 import {
   opCreateItem,
   opDeleteItem,
