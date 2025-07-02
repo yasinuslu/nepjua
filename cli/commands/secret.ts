@@ -2,7 +2,6 @@ import { Command } from "@cliffy/command";
 import {
   archiveSecret,
   getSecret,
-  listArchives,
   listSecretNames,
   setSecret,
 } from "../lib/secret.ts";
@@ -100,33 +99,6 @@ export const secretCmd = new Command()
           const isGlobal = options.global || false;
           await archiveSecret(path, isGlobal);
           console.log(`✅ Archived ${path}`);
-        } catch (error) {
-          console.error(
-            `❌ Error: ${
-              error instanceof Error ? error.message : String(error)
-            }`
-          );
-          Deno.exit(1);
-        }
-      })
-  )
-  .command(
-    "archives",
-    new Command()
-      .description("List archived secrets")
-      .option("-g, --global", "Use the global vault", { default: false })
-      .action(async (options: { global?: boolean }) => {
-        try {
-          const isGlobal = options.global || false;
-
-          const archives = await listArchives(isGlobal);
-
-          if (archives.length === 0) {
-            const scope = isGlobal ? "global" : "repository";
-            console.log(`No archived secrets found for ${scope}`);
-          } else {
-            archives.forEach((archive) => console.log(archive));
-          }
         } catch (error) {
           console.error(
             `❌ Error: ${

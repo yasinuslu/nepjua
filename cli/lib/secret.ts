@@ -92,7 +92,7 @@ export async function setSecret(
       error instanceof Error &&
       error.message.includes("ITEM_OPERATION_FAILED")
     ) {
-      await opCreateItem(fullSecretName, value, vaultName);
+      await opCreateItem(fullSecretName, vaultName, value);
     } else {
       throw error;
     }

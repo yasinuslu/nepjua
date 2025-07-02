@@ -1,10 +1,32 @@
 import { $ } from "zx";
 
 // Timeout for 1Password operations (in milliseconds)
-const OP_TIMEOUT = 10000; // 10 seconds
+const OP_TIMEOUT = 60000; // 60 seconds - much higher since manual commands work fine
 
 // Create a dedicated zx context with timeout
 const $$ = $({ timeout: OP_TIMEOUT });
+
+// Base64 encoding/decoding utilities for handling multiline values
+function encodeValue(value: string): string {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(value);
+  return btoa(String.fromCharCode(...data));
+}
+
+function decodeValue(encodedValue: string): string {
+  try {
+    const binaryString = atob(encodedValue);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const decoder = new TextDecoder();
+    return decoder.decode(bytes);
+  } catch (error) {
+    // If decoding fails, assume it's not base64 encoded (legacy data)
+    return encodedValue;
+  }
+}
 
 // Simple cache for item mappings per vault
 interface VaultCache {
@@ -241,7 +263,8 @@ export async function opGetValue(
       trimmedValue = trimmedValue.slice(1, -1);
     }
 
-    return trimmedValue;
+    // Decode from base64 (handles both new base64 and legacy plain text)
+    return decodeValue(trimmedValue);
   } catch (error) {
     if (
       error instanceof Error &&
@@ -268,7 +291,9 @@ export async function opSetValue(
   try {
     // Resolve item name to ID for edit operations
     const itemId = await resolveItemId(itemName, vault);
-    await $$`op item edit ${itemId} --vault ${vault} notesPlain=${value}`;
+    // Encode value as base64 to avoid multiline/escaping issues
+    const encodedValue = encodeValue(value);
+    await $$`op item edit ${itemId} --vault ${vault} notesPlain=${encodedValue}`;
   } catch (error) {
     if (
       error instanceof Error &&
@@ -297,9 +322,10 @@ export async function opCreateItem(
   value: string
 ): Promise<void> {
   try {
-    const fieldAssignment = `notesPlain=${value}`;
+    // Encode value as base64 to avoid multiline/escaping issues
+    const encodedValue = encodeValue(value);
     const result =
-      await $$`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldAssignment} --format json`.json<OpItem>();
+      await $$`op item create --category=Secure Note --title=${itemName} --vault=${vault} notesPlain=${encodedValue} --format json`.json<OpItem>();
 
     // Cache the newly created item
     setCachedItemId(vault, itemName, result.id);

@@ -1,6 +1,6 @@
 import { $ } from "zx";
 import { ensureLinesInFile } from "./fs.ts";
-import { archiveSecret, getSecret, setSecret } from "./secret.ts";
+import { getSecret, setSecret } from "./secret.ts";
 
 const SOPS_KEY_PATH = "SOPS/age-key";
 
@@ -24,7 +24,6 @@ export async function sopsBootstrap(
   options: SopsBootstrapOptions = {}
 ): Promise<SopsBootstrapResult> {
   const { force = false } = options;
-  let keyArchived = false;
 
   // Check if .sops.yaml already exists
   try {
@@ -48,9 +47,6 @@ export async function sopsBootstrap(
     if (!force) {
       throw new Error("SOPS AGE key already exists. Use --force to override.");
     }
-    // Archive existing key before creating new one
-    await archiveSecret(SOPS_KEY_PATH, "Replaced by new bootstrap", false);
-    keyArchived = true;
   } catch (error) {
     if (
       error instanceof Error &&
@@ -71,7 +67,7 @@ export async function sopsBootstrap(
   }
   const publicKey = publicKeyMatch[1];
 
-  // Store private key (this will create the new key)
+  // Store private key (this will update existing or create new)
   await setSecret(SOPS_KEY_PATH, keyOutput.trim(), false);
 
   // Create .sops.yaml
@@ -92,7 +88,7 @@ export async function sopsBootstrap(
     publicKey,
     configCreated: true,
     gitignoreUpdated: true,
-    keyArchived,
+    keyArchived: false,
   };
 }
 
