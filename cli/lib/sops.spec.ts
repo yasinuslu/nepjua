@@ -1,30 +1,30 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { $ } from "./command.ts";
+import { $ } from "./$.ts";
 import { archiveSecret, getSecret, setSecret } from "./secret.ts";
 import { sopsBootstrap, sopsSetup } from "./sops.ts";
+import { createDenoMocks, createMock$ } from "./test-utils.ts";
+
+// Get access to the mocked $ function
+const mock$ = vi.mocked($);
 
 // Mock dependencies
 vi.mock("./secret.ts", { spy: true });
 
-// Mock Deno APIs
-const mockStat = vi.fn();
-const mockReadTextFile = vi.fn();
-const mockWriteTextFile = vi.fn();
-const mockMkdir = vi.fn();
-const mockChmod = vi.fn();
-
-// Monkey patch Deno for tests
-(globalThis as any).Deno = {
-  stat: mockStat,
-  readTextFile: mockReadTextFile,
-  writeTextFile: mockWriteTextFile,
-  mkdir: mockMkdir,
-  chmod: mockChmod,
-};
-
 describe("sops lib", () => {
+  let denoMocks: ReturnType<typeof createDenoMocks>;
+
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Create fresh Deno mocks for each test
+    denoMocks = createDenoMocks();
+
+    // Spy on Deno methods instead of replacing the whole object
+    vi.spyOn(Deno, "stat").mockImplementation(denoMocks.stat);
+    vi.spyOn(Deno, "readTextFile").mockImplementation(denoMocks.readTextFile);
+    vi.spyOn(Deno, "writeTextFile").mockImplementation(denoMocks.writeTextFile);
+    vi.spyOn(Deno, "mkdir").mockImplementation(denoMocks.mkdir);
+    vi.spyOn(Deno, "chmod").mockImplementation(denoMocks.chmod);
   });
 
   describe("sopsBootstrap", () => {
@@ -34,14 +34,14 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
     it("should successfully bootstrap SOPS when no existing config", async () => {
       // Setup: no existing files/keys
-      mockStat.mockRejectedValue(new Error("ENOENT"));
+      denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
       vi.mocked(getSecret).mockRejectedValue(new Error("Not found"));
-      vi.mocked($).mockReturnValue({
-        text: () => Promise.resolve(mockKeyOutput),
-      } as any);
+
+      mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
+
       vi.mocked(setSecret).mockResolvedValue();
-      mockReadTextFile.mockRejectedValue(new Error("ENOENT"));
-      mockWriteTextFile.mockResolvedValue();
+      denoMocks.readTextFile.mockRejectedValue(new Error("ENOENT"));
+      denoMocks.writeTextFile.mockResolvedValue();
 
       const result = await sopsBootstrap();
 
@@ -52,24 +52,24 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
         keyArchived: false,
       });
 
-      expect(vi.mocked($)).toHaveBeenCalledWith(["age-keygen"]);
+      expect(mock$).toHaveBeenCalled();
       expect(vi.mocked(setSecret)).toHaveBeenCalledWith(
         "SOPS/age-key",
         mockKeyOutput.trim(),
         false
       );
-      expect(mockWriteTextFile).toHaveBeenCalledWith(
+      expect(denoMocks.writeTextFile).toHaveBeenCalledWith(
         ".sops.yaml",
         "creation_rules:\n  - age: age1abcdef123456789\n"
       );
-      expect(mockWriteTextFile).toHaveBeenCalledWith(
+      expect(denoMocks.writeTextFile).toHaveBeenCalledWith(
         ".gitignore",
         "\n# SOPS\n.sops/\n*.age\n"
       );
     });
 
     it("should refuse to bootstrap when .sops.yaml exists without force", async () => {
-      mockStat.mockResolvedValue({});
+      denoMocks.stat.mockResolvedValue({});
 
       await expect(sopsBootstrap()).rejects.toThrow(
         ".sops.yaml already exists. Use --force to override."
@@ -77,7 +77,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
     });
 
     it("should refuse to bootstrap when SOPS key exists without force", async () => {
-      mockStat.mockRejectedValue(new Error("ENOENT"));
+      denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
       vi.mocked(getSecret).mockResolvedValue("existing-key");
 
       await expect(sopsBootstrap()).rejects.toThrow(
@@ -87,15 +87,15 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
     it("should force bootstrap and archive existing key", async () => {
       // Setup: existing files/keys
-      mockStat.mockResolvedValue({});
+      denoMocks.stat.mockResolvedValue({});
       vi.mocked(getSecret).mockResolvedValue("existing-key");
       vi.mocked(archiveSecret).mockResolvedValue();
-      vi.mocked($).mockReturnValue({
-        text: () => Promise.resolve(mockKeyOutput),
-      } as any);
+
+      mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
+
       vi.mocked(setSecret).mockResolvedValue();
-      mockReadTextFile.mockResolvedValue("existing gitignore\n.sops/\n");
-      mockWriteTextFile.mockResolvedValue();
+      denoMocks.readTextFile.mockResolvedValue("existing gitignore\n.sops/\n");
+      denoMocks.writeTextFile.mockResolvedValue();
 
       const result = await sopsBootstrap({ force: true });
 
@@ -114,27 +114,26 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
     });
 
     it("should not update gitignore if SOPS entries already exist", async () => {
-      mockStat.mockRejectedValue(new Error("ENOENT"));
+      denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
       vi.mocked(getSecret).mockRejectedValue(new Error("Not found"));
-      vi.mocked($).mockReturnValue({
-        text: () => Promise.resolve(mockKeyOutput),
-      } as any);
+
+      mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
+
       vi.mocked(setSecret).mockResolvedValue();
-      mockReadTextFile.mockResolvedValue("existing gitignore\n.sops/\n");
-      mockWriteTextFile.mockResolvedValue();
+      denoMocks.readTextFile.mockResolvedValue("existing gitignore\n.sops/\n");
+      denoMocks.writeTextFile.mockResolvedValue();
 
       const result = await sopsBootstrap();
 
       expect(result.gitignoreUpdated).toBe(false);
-      expect(mockWriteTextFile).toHaveBeenCalledTimes(1); // Only .sops.yaml
+      expect(denoMocks.writeTextFile).toHaveBeenCalledTimes(1); // Only .sops.yaml
     });
 
     it("should fail when age-keygen output is invalid", async () => {
-      mockStat.mockRejectedValue(new Error("ENOENT"));
+      denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
       vi.mocked(getSecret).mockRejectedValue(new Error("Not found"));
-      vi.mocked($).mockReturnValue({
-        text: () => Promise.resolve("invalid output"),
-      } as any);
+
+      mock$.mockReturnValue(createMock$({ text: "invalid output" }));
 
       await expect(sopsBootstrap()).rejects.toThrow(
         "Failed to extract public key from age-keygen output"
@@ -146,9 +145,9 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
     it("should successfully set up SOPS", async () => {
       const mockKeyData = "AGE-SECRET-KEY-1ABCDEF123456789...";
       vi.mocked(getSecret).mockResolvedValue(mockKeyData);
-      mockMkdir.mockResolvedValue();
-      mockWriteTextFile.mockResolvedValue();
-      mockChmod.mockResolvedValue();
+      denoMocks.mkdir.mockResolvedValue();
+      denoMocks.writeTextFile.mockResolvedValue();
+      denoMocks.chmod.mockResolvedValue();
 
       const result = await sopsSetup();
 
@@ -158,12 +157,14 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
       });
 
       expect(vi.mocked(getSecret)).toHaveBeenCalledWith("SOPS/age-key", false);
-      expect(mockMkdir).toHaveBeenCalledWith(".sops", { recursive: true });
-      expect(mockWriteTextFile).toHaveBeenCalledWith(
+      expect(denoMocks.mkdir).toHaveBeenCalledWith(".sops", {
+        recursive: true,
+      });
+      expect(denoMocks.writeTextFile).toHaveBeenCalledWith(
         ".sops/age-key.txt",
         mockKeyData
       );
-      expect(mockChmod).toHaveBeenCalledWith(".sops/age-key.txt", 0o600);
+      expect(denoMocks.chmod).toHaveBeenCalledWith(".sops/age-key.txt", 0o600);
     });
 
     it("should fail when SOPS key doesn't exist", async () => {

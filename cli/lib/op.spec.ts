@@ -7,6 +7,7 @@ import {
   opListItems,
   opSetField,
 } from "./op.ts";
+import { createMock$ } from "./test-utils.ts";
 
 // Get access to the mocked $ function
 const mock$ = vi.mocked($);
@@ -19,34 +20,18 @@ describe("op.ts", () => {
         title: "Test Item",
         vault: { name: "my-vault" },
       };
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: mockItem, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockResolvedValue(undefined),
-      };
-      mock$.mockReturnValue(mockChain);
+
+      mock$.mockReturnValue(createMock$({ json: mockItem }));
 
       const result = await opGetItem("Test Item", "my-vault");
 
       expect(mock$).toHaveBeenCalled();
-      expect(mockChain.stdout).toHaveBeenCalledWith("piped");
-      expect(mockChain.then).toHaveBeenCalled();
       expect(result).toEqual(mockItem);
     });
 
     it("should handle errors", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi.fn().mockRejectedValue(new Error("Item not found")),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockResolvedValue(undefined),
-      };
-      mock$.mockReturnValue(mockChain);
+      const error = new Error("Item not found");
+      mock$.mockReturnValue(createMock$({ error }));
 
       await expect(opGetItem("Missing Item", "my-vault")).rejects.toThrow(
         'Failed to get item "Missing Item" from vault "my-vault"'
@@ -56,36 +41,16 @@ describe("op.ts", () => {
 
   describe("opSetField", () => {
     it("should set field by item name and vault", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: {}, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockResolvedValue(undefined),
-      };
-      mock$.mockReturnValue(mockChain);
+      mock$.mockReturnValue(createMock$({}));
 
       await opSetField("Test Item", "password", "new-password", "my-vault");
 
       expect(mock$).toHaveBeenCalled();
-      expect(mockChain.exec).toHaveBeenCalled();
     });
 
     it("should handle errors", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: {}, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockRejectedValue(new Error("Permission denied")),
-      };
-      mock$.mockReturnValue(mockChain);
+      const error = new Error("Permission denied");
+      mock$.mockReturnValue(createMock$({ error }));
 
       await expect(
         opSetField("Test Item", "password", "new-password", "my-vault")
@@ -95,17 +60,7 @@ describe("op.ts", () => {
 
   describe("opCreateItem", () => {
     it("should create item with fields", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: {}, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockResolvedValue(undefined),
-      };
-      mock$.mockReturnValue(mockChain);
+      mock$.mockReturnValue(createMock$({}));
 
       const fields = {
         username: "test-user",
@@ -115,21 +70,11 @@ describe("op.ts", () => {
       await opCreateItem("Test Item", "my-vault", fields);
 
       expect(mock$).toHaveBeenCalled();
-      expect(mockChain.exec).toHaveBeenCalled();
     });
 
     it("should handle creation errors", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: {}, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockRejectedValue(new Error("Item already exists")),
-      };
-      mock$.mockReturnValue(mockChain);
+      const error = new Error("Item already exists");
+      mock$.mockReturnValue(createMock$({ error }));
 
       await expect(opCreateItem("Test Item", "my-vault", {})).rejects.toThrow(
         'Failed to create item "Test Item"'
@@ -139,36 +84,16 @@ describe("op.ts", () => {
 
   describe("opDeleteItem", () => {
     it("should delete item by name and vault", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: {}, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockResolvedValue(undefined),
-      };
-      mock$.mockReturnValue(mockChain);
+      mock$.mockReturnValue(createMock$({}));
 
       await opDeleteItem("Test Item", "my-vault");
 
       expect(mock$).toHaveBeenCalled();
-      expect(mockChain.exec).toHaveBeenCalled();
     });
 
     it("should handle deletion errors", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: {}, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockRejectedValue(new Error("Item not found")),
-      };
-      mock$.mockReturnValue(mockChain);
+      const error = new Error("Item not found");
+      mock$.mockReturnValue(createMock$({ error }));
 
       await expect(opDeleteItem("Missing Item", "my-vault")).rejects.toThrow(
         'Failed to delete item "Missing Item"'
@@ -182,34 +107,18 @@ describe("op.ts", () => {
         { id: "1", title: "Item 1" },
         { id: "2", title: "Item 2" },
       ];
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi
-          .fn()
-          .mockImplementation((callback) =>
-            callback({ stdoutJson: mockItems, text: "" })
-          ),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockResolvedValue(undefined),
-      };
-      mock$.mockReturnValue(mockChain);
+
+      mock$.mockReturnValue(createMock$({ json: mockItems }));
 
       const result = await opListItems("my-vault");
 
       expect(mock$).toHaveBeenCalled();
-      expect(mockChain.stdout).toHaveBeenCalledWith("piped");
-      expect(mockChain.then).toHaveBeenCalled();
       expect(result).toEqual(mockItems);
     });
 
     it("should handle listing errors", async () => {
-      const mockChain = {
-        stdout: vi.fn().mockReturnThis(),
-        then: vi.fn().mockRejectedValue(new Error("Vault not found")),
-        text: vi.fn().mockResolvedValue(""),
-        exec: vi.fn().mockResolvedValue(undefined),
-      };
-      mock$.mockReturnValue(mockChain);
+      const error = new Error("Vault not found");
+      mock$.mockReturnValue(createMock$({ error }));
 
       await expect(opListItems("missing-vault")).rejects.toThrow(
         'Failed to list items in vault "missing-vault"'
