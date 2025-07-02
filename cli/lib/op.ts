@@ -1,10 +1,11 @@
 import { $ } from "zx";
+import { zxConfiguration } from "../zx-configuration.ts";
 
 // Timeout for 1Password operations (in milliseconds)
 const OP_TIMEOUT = 60000; // 60 seconds - much higher since manual commands work fine
 
 // Create a dedicated zx context with timeout
-const $$ = $({ timeout: OP_TIMEOUT });
+const $$ = $({ ...zxConfiguration, timeout: OP_TIMEOUT });
 
 // Base64 encoding/decoding utilities for handling multiline values
 function encodeValue(value: string): string {
@@ -293,7 +294,9 @@ export async function opSetValue(
     const itemId = await resolveItemId(itemName, vault);
     // Encode value as base64 to avoid multiline/escaping issues
     const encodedValue = encodeValue(value);
-    await $$`op item edit ${itemId} --vault ${vault} notesPlain=${encodedValue}`;
+    await $$({
+      stdio: "inherit",
+    })`op item edit ${itemId} --vault ${vault} notesPlain="${encodedValue}"`;
   } catch (error) {
     if (
       error instanceof Error &&
@@ -324,11 +327,9 @@ export async function opCreateItem(
   try {
     // Encode value as base64 to avoid multiline/escaping issues
     const encodedValue = encodeValue(value);
-    const result =
-      await $$`op item create --category=Secure Note --title=${itemName} --vault=${vault} notesPlain=${encodedValue} --format json`.json<OpItem>();
-
-    // Cache the newly created item
-    setCachedItemId(vault, itemName, result.id);
+    await $$({
+      stdio: "inherit",
+    })`op item create --category=${`Secure Note`} --title="${itemName}" --vault=${vault} notesPlain="${encodedValue}"`;
   } catch (error) {
     if (
       error instanceof Error &&
