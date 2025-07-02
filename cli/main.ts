@@ -1,3 +1,5 @@
+import "./zx-configuration.ts";
+
 import { Command } from "@cliffy/command";
 import { CompletionsCommand } from "@cliffy/command/completions";
 import { certsCmd } from "./commands/certs.ts";

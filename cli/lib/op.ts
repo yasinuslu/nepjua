@@ -1,4 +1,4 @@
-import { $ } from "./$.ts";
+import { $ } from "zx";
 
 export interface OpVault {
   id: string;
@@ -37,19 +37,18 @@ export interface OpField {
 }
 
 export async function opListVaults() {
-  const vaults: OpVault[] = await $`op vault list --format=json`.then((r) =>
-    r.json()
-  );
+  const vaults: OpVault[] = await $`op vault list --format json`.json<
+    OpVault[]
+  >();
 
   return vaults;
 }
 
 export async function opListItems(vault: string): Promise<OpItem[]> {
   try {
-    const items = await $`op item list --vault=${vault} --format=json`.json<
+    const items = await $`op item list --vault ${vault} --format json`.json<
       OpItem[]
     >();
-
     return items;
   } catch (error) {
     throw new Error(
@@ -66,7 +65,7 @@ export async function opGetItem(
 ): Promise<OpItem> {
   try {
     const item =
-      await $`op item get ${itemName} --vault=${vault} --format=json`.json<OpItem>();
+      await $`op item get ${itemName} --vault ${vault} --format json`.json<OpItem>();
     return item;
   } catch (error) {
     throw new Error(
@@ -83,8 +82,8 @@ export async function opGetField(
   vault: string
 ): Promise<string> {
   try {
-    const value: string =
-      await $`op item get ${itemName} --vault=${vault} --fields=${fieldName} --reveal`.text();
+    const value =
+      await $`op item get ${itemName} --vault ${vault} --fields ${fieldName} --reveal`.text();
     return value.trim();
   } catch (error) {
     throw new Error(
@@ -102,7 +101,9 @@ export async function opSetField(
   vault: string
 ): Promise<void> {
   try {
-    await $`op item edit ${itemName} --vault=${vault} ${fieldName}=${value}`;
+    const args = [`${fieldName}[password]=${value}`];
+
+    await $`op item edit ${itemName} --vault ${vault} ${args}`;
   } catch (error) {
     // For 1Password CLI errors, we just need to check the exit code
     // The actual error message goes to stderr which we see in console
@@ -120,7 +121,7 @@ export async function opCreateItem(
       `${key}[password]=${value}`,
     ]);
 
-    await $`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldArgs}`.exec();
+    await $`op item create --category="Secure Note" --title=${itemName} --vault=${vault} ${fieldArgs}`;
   } catch (error) {
     throw new Error(
       `Failed to create item "${itemName}": ${

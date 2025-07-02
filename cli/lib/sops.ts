@@ -1,4 +1,4 @@
-import { $ } from "./$.ts";
+import { $ } from "zx";
 import { ensureLinesInFile } from "./fs.ts";
 import { archiveSecret, getSecret, setSecret } from "./secret.ts";
 
