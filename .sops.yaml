@@ -4,4 +4,4 @@ stores:
 creation_rules:
   - path_regex: .*\.enc\.(yaml|yml|json|env)$
     unencrypted_regex: ^(apiVersion|metadata|kind|type|immutable)$
-    age: age13vymj4l47exa2cdlt4hqantfgger5yqvj5pgrc4tud8ylrht4yjqkhh3ld
+    age: age1kmcfw420lmcsw67s4vjdws5xmlncmqavs9k3xp79jw8jccv53yjsjhp79w
