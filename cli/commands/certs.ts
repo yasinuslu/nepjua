@@ -96,7 +96,21 @@ async function writeCertFile(certFile: string, content: string): Promise<void> {
   }
 }
 
-async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
+async function ensureDirectoryExists(filePath: string): Promise<void> {
+  const dir = filePath.substring(0, filePath.lastIndexOf("/"));
+  try {
+    await Deno.mkdir(dir, { recursive: true });
+  } catch (error) {
+    if (!(error instanceof Deno.errors.AlreadyExists)) {
+      throw error;
+    }
+  }
+}
+
+async function checkAndUpdateCerts(
+  hosts: string[] = DEFAULT_HOSTS,
+  destinationFile?: string
+) {
   try {
     // Extract certificates from all hosts
     const allCertificates = new Set<string>();
@@ -115,9 +129,9 @@ async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
       `🔍 Total unique certificates found across all hosts: ${allCertificates.size}`
     );
 
-    // Get certificate file path
+    // Get certificate file path for comparison
     const certFile = await getCertFile();
-    console.log(`📂 Using certificate file: ${certFile}`);
+    console.log(`📂 Comparing against certificate file: ${certFile}`);
 
     // Read current certificate file
     const currentContent = await readCertFile(certFile);
@@ -139,17 +153,26 @@ async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
     }
 
     console.log(
-      `🔧 Found ${missingCerts.length} missing certificate(s). Adding them...`
+      `🔧 Found ${missingCerts.length} missing certificate(s). Writing them to destination file...`
     );
 
-    // Add missing certificates
-    const updatedContent =
-      currentContent + "\n" + missingCerts.join("\n\n") + "\n";
+    // Determine destination file
+    const defaultDestination = `${Deno.env.get(
+      "HOME"
+    )}/code/nepjua/.generated/extra_certs.crt`;
+    const destination = destinationFile || defaultDestination;
 
-    await writeCertFile(certFile, updatedContent);
+    console.log(`📂 Writing to: ${destination}`);
+
+    // Ensure destination directory exists
+    await ensureDirectoryExists(destination);
+
+    // Write missing certificates to destination file
+    const content = missingCerts.join("\n\n") + "\n";
+    await Deno.writeTextFile(destination, content);
 
     console.log(
-      `✅ Successfully added ${missingCerts.length} certificate(s) to ${certFile}`
+      `✅ Successfully wrote ${missingCerts.length} missing certificate(s) to ${destination}`
     );
   } catch (error) {
     console.error(
@@ -186,7 +209,11 @@ Default hosts checked: cache.nixos.org, registry.npmjs.org`
         "-h, --hosts <hosts...>",
         "Additional hosts to check certificates for"
       )
-      .action(async (options: { hosts?: string[] }) => {
+      .option(
+        "-d, --destination <file>",
+        "Destination file for missing certificates"
+      )
+      .action(async (options: { hosts?: string[]; destination?: string }) => {
         const userHosts = options.hosts || [];
 
         const allHosts = [...new Set([...DEFAULT_HOSTS, ...userHosts])];
@@ -194,7 +221,7 @@ Default hosts checked: cache.nixos.org, registry.npmjs.org`
         console.log(
           `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
         );
-        await checkAndUpdateCerts(allHosts);
+        await checkAndUpdateCerts(allHosts, options.destination);
       })
   )
   .reset()

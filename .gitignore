@@ -185,3 +185,4 @@ dist
 *.age
 .tmp
 *.enc.tmp.*
+.generated
