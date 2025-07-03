@@ -1,9 +1,15 @@
 import { Command } from "@cliffy/command";
+import { exists } from "@std/fs/exists";
 import { join } from "@std/path";
-import { ensureFileContent } from "../lib/fs.ts";
+import { ensureDirectoryContent } from "../lib/fs.ts";
 import { nepjuaResolveRootPath } from "../lib/nepjua.ts";
 
 const DEFAULT_HOSTS = ["cache.nixos.org", "registry.npmjs.org"];
+
+const POSSIBLE_SYSTEM_CERT_FILES = [
+  "/etc/ssl/certs/ca-certificates.crt",
+  "/etc/ssl/certs/ca-certificates.crt.bak",
+];
 
 async function runCommand(
   cmd: string[]
@@ -47,14 +53,25 @@ async function extractCertificates(host: string): Promise<string[]> {
 }
 
 async function getCertFile(): Promise<string> {
-  const nixSslCertFile = Deno.env.get("NIX_SSL_CERT_FILE");
-  if (nixSslCertFile) {
-    return nixSslCertFile;
+  for (const path of POSSIBLE_SYSTEM_CERT_FILES) {
+    try {
+      if (await exists(path)) {
+        console.log(`🔧 Using system certificate file: ${path}`);
+        return path;
+      }
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) {
+        continue;
+      }
+      throw error;
+    }
   }
 
-  const defaultPath = "/etc/ssl/certs/ca-certificates.crt";
-  console.log(`🔧 Using default certificate file: ${defaultPath}`);
-  return defaultPath;
+  throw new Error(
+    `No valid certificate file found. Please ensure one of the following exists: ${POSSIBLE_SYSTEM_CERT_FILES.join(
+      ", "
+    )}`
+  );
 }
 
 async function readCertFile(certFile: string): Promise<string> {
@@ -97,43 +114,39 @@ async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
     console.log(`📂 Comparing against certificate file: ${certFile}`);
 
     // Read current certificate file
-    const currentContent = await readCertFile(certFile);
+    const systemCertContent = await readCertFile(certFile);
 
     // Check which certificates are missing
-    const missingCerts: string[] = [];
+    const extraCerts: string[] = [];
 
     for (const cert of allCertificates) {
-      if (!currentContent.includes(cert)) {
-        missingCerts.push(cert);
+      if (!systemCertContent.includes(cert)) {
+        extraCerts.push(cert);
       }
     }
 
-    await Promise.all(
-      Array.from(allCertificates).map((cert, index) =>
-        ensureFileContent(
-          join(nepjuaRoot, `.generated/certs/${index}.crt`),
-          cert
-        )
-      )
+    const fullBundleContent = `
+Original Certificate Bundle
+============================
+${systemCertContent}
+============================
+Additional Certificates
+============================
+${extraCerts.join("\n\n")}
+============================
+    `;
+
+    const extraCertFiles = Object.fromEntries(
+      Array.from(allCertificates).map((cert, index) => [
+        `extra/${index}.crt`,
+        { content: cert },
+      ])
     );
 
-    // await $`sudo chmod 644 -R ${join(nepjuaRoot, ".generated/my-files")}`;
-
-    if (missingCerts.length === 0) {
-      console.log(
-        "✅ All certificates are already present in the certificate file"
-      );
-      return;
-    }
-
-    console.log(
-      `🔧 Found ${missingCerts.length} missing certificate(s). Writing them to destination file...`
-    );
-
-    await ensureFileContent(
-      join(nepjuaRoot, ".generated/certs.pem"),
-      missingCerts.join("\n")
-    );
+    await ensureDirectoryContent(join(nepjuaRoot, ".generated/cert"), {
+      ...extraCertFiles,
+      "ca-bundle.pem": { content: fullBundleContent },
+    });
   } catch (error) {
     console.error(
       `❌ Error: ${error instanceof Error ? error.message : String(error)}`

@@ -11,7 +11,7 @@
 
   security.pki.certificates =
     let
-      certsDir = "/Users/yahmet/code/nepjua/.generated/certs";
+      certsDir = "/Users/yahmet/code/nepjua/.generated/cert/extra";
       certFiles = builtins.readDir certsDir;
       certContents = builtins.filter (name: builtins.match ".*\\.crt$" name != null) (
         builtins.attrNames certFiles

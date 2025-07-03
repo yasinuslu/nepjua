@@ -85,9 +85,19 @@ build:
   echo -e "🔹 OS: \033[1;32m{{ os }}\033[0m"
   echo -e "🔹 Command: \033[1;32m{{ rebuild_cmd }}\033[0m\n"
 
+  nep certs update
+
+  if [ -f "/etc/ssl/certs/ca-certificates.crt" ]; then
+    sudo mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.bak
+  fi
+
+  sudo cp "$HOME/code/nepjua/.generated/cert/ca-bundle.pem" /etc/ssl/certs/ca-certificates.crt
+
   {{ rebuild_cmd }} build \
     --flake .#{{ host }} \
     {{ rebuild_args }}
+
+  sudo mv /etc/ssl/certs/ca-certificates.crt.bak /etc/ssl/certs/ca-certificates.crt
 
 # Switch configuration using the detected rebuild command with retries
 switch:
@@ -97,7 +107,7 @@ switch:
   echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
   for i in {1..3}; do
-      nep certs update
+      just --set host {{ host }} build
       if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
           echo -e "✅ Switch successful on attempt $i at $(date)\n"
           echo -e "Installing nep-cli completions\n"
