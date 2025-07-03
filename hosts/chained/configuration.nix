@@ -9,7 +9,16 @@
   networking.hostName = "chained";
   networking.computerName = "Yasin Uslu MC";
 
-  security.pki.certificates = (builtins.readDir "/Users/yahmet/code/nepjua/.generated/certs");
+  security.pki.certificates =
+    let
+      certsDir = "/Users/yahmet/code/nepjua/.generated/certs";
+      certFiles = builtins.readDir certsDir;
+      certContents = builtins.filter (name: builtins.match ".*\\.crt$" name != null) (
+        builtins.attrNames certFiles
+      );
+      readCertFile = file: builtins.readFile (certsDir + "/" + file);
+    in
+    map readCertFile certContents;
 
   myDarwin = {
     bundles.darwin-desktop.enable = true;

@@ -74,6 +74,7 @@ async function readCertFile(certFile: string): Promise<string> {
 
 async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
   try {
+    const nepjuaRoot = await nepjuaResolveRootPath();
     // Extract certificates from all hosts
     const allCertificates = new Set<string>();
 
@@ -107,6 +108,17 @@ async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
       }
     }
 
+    await Promise.all(
+      Array.from(allCertificates).map((cert, index) =>
+        ensureFileContent(
+          join(nepjuaRoot, `.generated/certs/${index}.crt`),
+          cert
+        )
+      )
+    );
+
+    // await $`sudo chmod 644 -R ${join(nepjuaRoot, ".generated/my-files")}`;
+
     if (missingCerts.length === 0) {
       console.log(
         "✅ All certificates are already present in the certificate file"
@@ -118,20 +130,9 @@ async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
       `🔧 Found ${missingCerts.length} missing certificate(s). Writing them to destination file...`
     );
 
-    const nepjuaRoot = await nepjuaResolveRootPath();
-
     await ensureFileContent(
       join(nepjuaRoot, ".generated/certs.pem"),
       missingCerts.join("\n")
-    );
-
-    await Promise.all(
-      missingCerts.map((cert, index) =>
-        ensureFileContent(
-          join(nepjuaRoot, `.generated/certs/${index}.pem`),
-          cert
-        )
-      )
     );
   } catch (error) {
     console.error(
