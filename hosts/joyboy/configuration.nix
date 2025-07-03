@@ -6,15 +6,6 @@
   networking.hostName = "joyboy";
   networking.computerName = "Joi Boi";
 
-  sops.secrets."joyboy-combined-cert" = {
-    key = "joyboy-combined-cert";
-    mode = "0644";
-  };
-
-  security.pki.certificates = [
-    (builtins.readFile config.sops.secrets."joyboy-combined-cert".path)
-  ];
-
   myDarwin = {
     bundles.darwin-desktop.enable = true;
 

@@ -1,9 +1,5 @@
-import { exists } from "jsr:@std/fs@1/exists";
-import { basename } from "jsr:@std/path@1/basename";
-import { extname } from "jsr:@std/path@1/extname";
-import { dirname } from "jsr:@std/path@^1.0.8/dirname";
-import { join } from "jsr:@std/path@^1.0.8/join";
-import path from "node:path";
+import { exists } from "@std/fs/exists";
+import { basename, dirname, extname, join } from "@std/path";
 import { $ } from "zx";
 import { sopsReadAndDecrypt } from "./sops.ts";
 
@@ -13,7 +9,7 @@ export async function ensureLinesInFile(
   { mode = "append" }: { mode?: "append" | "prepend" } = {}
 ): Promise<void> {
   if (!(await Deno.stat(filePath).catch(() => false))) {
-    await Deno.mkdir(path.dirname(filePath), { recursive: true });
+    await Deno.mkdir(dirname(filePath), { recursive: true });
     await Deno.writeTextFile(filePath, "");
   }
 
@@ -102,7 +98,7 @@ export async function ensureDirectoryContent(
 export async function ensureFileContent(
   fullPath: string,
   rawDesiredContent: string,
-  isEncrypted: boolean
+  isEncrypted: boolean = false
 ) {
   const directory = dirname(fullPath);
 

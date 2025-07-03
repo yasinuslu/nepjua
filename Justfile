@@ -97,6 +97,7 @@ switch:
   echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
   for i in {1..3}; do
+      nep certs update
       if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
           echo -e "✅ Switch successful on attempt $i at $(date)\n"
           echo -e "Installing nep-cli completions\n"

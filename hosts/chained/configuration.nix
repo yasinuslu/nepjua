@@ -9,14 +9,7 @@
   networking.hostName = "chained";
   networking.computerName = "Yasin Uslu MC";
 
-  sops.secrets."chained-combined-cert" = {
-    key = "chained-combined-cert";
-    mode = "0644";
-  };
-
-  security.pki.certificates = [
-    (builtins.readFile config.sops.secrets."chained-combined-cert".path)
-  ];
+  security.pki.certificates = (builtins.readDir "/Users/yahmet/code/nepjua/.generated/certs");
 
   myDarwin = {
     bundles.darwin-desktop.enable = true;

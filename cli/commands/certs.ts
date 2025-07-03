@@ -1,9 +1,9 @@
 import { Command } from "@cliffy/command";
-import type { SecretSchemaType } from "../lib/secret/schema.ts";
-import { secretRead, secretWrite } from "../lib/secret/secret.ts";
+import { join } from "@std/path";
+import { ensureFileContent } from "../lib/fs.ts";
+import { nepjuaResolveRootPath } from "../lib/nepjua.ts";
 
 const DEFAULT_HOSTS = ["cache.nixos.org", "registry.npmjs.org"];
-const GLOBAL_CERT_FILE = `${Deno.env.get("HOME")}/.config/certs/combined.pem`;
 
 async function runCommand(
   cmd: string[]
@@ -72,10 +72,7 @@ async function readCertFile(certFile: string): Promise<string> {
   }
 }
 
-async function checkAndUpdateCerts(
-  hosts: string[] = DEFAULT_HOSTS,
-  destinationHost: string
-) {
+async function checkAndUpdateCerts(hosts: string[] = DEFAULT_HOSTS) {
   try {
     // Extract certificates from all hosts
     const allCertificates = new Set<string>();
@@ -121,24 +118,20 @@ async function checkAndUpdateCerts(
       `🔧 Found ${missingCerts.length} missing certificate(s). Writing them to destination file...`
     );
 
-    const mainSecret = await secretRead();
-    mainSecret[`${destinationHost}-combined-cert` as keyof SecretSchemaType] =
-      missingCerts.join("\n");
+    const nepjuaRoot = await nepjuaResolveRootPath();
 
-    await secretWrite(mainSecret);
+    await ensureFileContent(
+      join(nepjuaRoot, ".generated/certs.pem"),
+      missingCerts.join("\n")
+    );
 
-    // FIXME: If it turns out that we don't need this, remove the commented code
-    // const nepjuaRoot = await nepjuaResolveRootPath();
-
-    // await ensureFileContent(
-    //   join(nepjuaRoot, ".generated/certs.pem"),
-    //   missingCerts.join("\n"),
-    //   false
-    // );
-    // await ensureFileContent(GLOBAL_CERT_FILE, missingCerts.join("\n"), false);
-
-    console.log(
-      `✅ Successfully wrote ${missingCerts.length} missing certificate(s) to ${destinationHost}`
+    await Promise.all(
+      missingCerts.map((cert, index) =>
+        ensureFileContent(
+          join(nepjuaRoot, `.generated/certs/${index}.pem`),
+          cert
+        )
+      )
     );
   } catch (error) {
     console.error(
@@ -175,14 +168,7 @@ Default hosts checked: cache.nixos.org, registry.npmjs.org`
         "-h, --hosts <hosts...>",
         "Additional hosts to check certificates for"
       )
-      .option(
-        "-d, --destination <destination>",
-        "Destination host to write certificates to",
-        {
-          default: "chained",
-        }
-      )
-      .action(async (options: { hosts?: string[]; destination: string }) => {
+      .action(async (options: { hosts?: string[] }) => {
         const userHosts = options.hosts || [];
 
         const allHosts = [...new Set([...DEFAULT_HOSTS, ...userHosts])];
@@ -190,7 +176,7 @@ Default hosts checked: cache.nixos.org, registry.npmjs.org`
         console.log(
           `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
         );
-        await checkAndUpdateCerts(allHosts, options.destination as never);
+        await checkAndUpdateCerts(allHosts);
       })
   )
   .reset()
