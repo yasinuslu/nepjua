@@ -1,16 +1,9 @@
 import { Command } from "@cliffy/command";
-import path from "node:path";
-import { gitFindRoot } from "../lib/git.ts";
 import type { SecretSchemaType } from "../lib/secret/schema.ts";
 import { secretRead, secretWrite } from "../lib/secret/secret.ts";
 
 const DEFAULT_HOSTS = ["cache.nixos.org", "registry.npmjs.org"];
-
-async function getHostConfigurationFolder(host: string): Promise<string> {
-  const gitRoot = await gitFindRoot();
-  const hostConfigPath = path.join(gitRoot, "hosts", host);
-  return hostConfigPath;
-}
+const GLOBAL_CERT_FILE = `${Deno.env.get("HOME")}/.config/certs/combined.pem`;
 
 async function runCommand(
   cmd: string[]
@@ -79,20 +72,9 @@ async function readCertFile(certFile: string): Promise<string> {
   }
 }
 
-async function ensureDirectoryExists(filePath: string): Promise<void> {
-  const dir = filePath.substring(0, filePath.lastIndexOf("/"));
-  try {
-    await Deno.mkdir(dir, { recursive: true });
-  } catch (error) {
-    if (!(error instanceof Deno.errors.AlreadyExists)) {
-      throw error;
-    }
-  }
-}
-
 async function checkAndUpdateCerts(
   hosts: string[] = DEFAULT_HOSTS,
-  destinationHost: keyof SecretSchemaType["hosts"]
+  destinationHost: string
 ) {
   try {
     // Extract certificates from all hosts
@@ -140,8 +122,20 @@ async function checkAndUpdateCerts(
     );
 
     const mainSecret = await secretRead();
-    mainSecret.hosts[destinationHost].certificates = missingCerts;
+    mainSecret[`${destinationHost}-combined-cert` as keyof SecretSchemaType] =
+      missingCerts.join("\n");
+
     await secretWrite(mainSecret);
+
+    // FIXME: If it turns out that we don't need this, remove the commented code
+    // const nepjuaRoot = await nepjuaResolveRootPath();
+
+    // await ensureFileContent(
+    //   join(nepjuaRoot, ".generated/certs.pem"),
+    //   missingCerts.join("\n"),
+    //   false
+    // );
+    // await ensureFileContent(GLOBAL_CERT_FILE, missingCerts.join("\n"), false);
 
     console.log(
       `✅ Successfully wrote ${missingCerts.length} missing certificate(s) to ${destinationHost}`
