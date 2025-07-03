@@ -4,7 +4,7 @@ import {
   externalSecretGet,
   externalSecretList,
   setSecret,
-} from "../lib/secret.ts";
+} from "../lib/external-secret.ts";
 
 export const secretCmd = new Command()
   .name("secret")

@@ -1,9 +1,9 @@
 import { stringify } from "@std/yaml";
 import path from "node:path";
 import { $ } from "zx";
+import { externalSecretGet, setSecret } from "./external-secret.ts";
 import { ensureLinesInFile } from "./fs.ts";
 import { gitFindRoot } from "./git.ts";
-import { externalSecretGet, setSecret } from "./secret.ts";
 
 const SOPS_KEY_SECRET_NAME = "SOPS/age-key";
 

@@ -12,7 +12,7 @@ import {
 const REPO_VAULT_NAME = "Nepjua Automation";
 const GLOBAL_VAULT_NAME = "Nepjua-Global";
 
-function externalSecretGetVaultName(isGlobal: boolean): string {
+export function externalSecretGetVaultName(isGlobal: boolean): string {
   return isGlobal ? GLOBAL_VAULT_NAME : REPO_VAULT_NAME;
 }
 
