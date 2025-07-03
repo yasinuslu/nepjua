@@ -5,7 +5,7 @@ import { dirname } from "jsr:@std/path@^1.0.8/dirname";
 import { join } from "jsr:@std/path@^1.0.8/join";
 import path from "node:path";
 import { $ } from "zx";
-import { sopsDecrypt } from "./sops.ts";
+import { sopsReadAndDecrypt } from "./sops.ts";
 
 export async function ensureLinesInFile(
   filePath: string,
@@ -113,7 +113,7 @@ export async function ensureFileContent(
   if (await exists(fullPath)) {
     const currentRawContent = await Deno.readTextFile(fullPath);
     if (isEncrypted) {
-      const currentEncryptedContent = await sopsDecrypt(fullPath);
+      const currentEncryptedContent = await sopsReadAndDecrypt(fullPath);
       if (currentEncryptedContent === rawDesiredContent) {
         return;
       }

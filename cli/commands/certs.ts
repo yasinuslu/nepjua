@@ -1,7 +1,8 @@
 import { Command } from "@cliffy/command";
 import path from "node:path";
-import { ensureFileContent } from "../lib/fs.ts";
 import { gitFindRoot } from "../lib/git.ts";
+import type { SecretSchemaType } from "../lib/secret/schema.ts";
+import { secretRead, secretWrite } from "../lib/secret/secret.ts";
 
 const DEFAULT_HOSTS = ["cache.nixos.org", "registry.npmjs.org"];
 
@@ -91,7 +92,7 @@ async function ensureDirectoryExists(filePath: string): Promise<void> {
 
 async function checkAndUpdateCerts(
   hosts: string[] = DEFAULT_HOSTS,
-  destinationHost: string
+  destinationHost: keyof SecretSchemaType["hosts"]
 ) {
   try {
     // Extract certificates from all hosts
@@ -138,25 +139,12 @@ async function checkAndUpdateCerts(
       `🔧 Found ${missingCerts.length} missing certificate(s). Writing them to destination file...`
     );
 
-    const hostConfigPath = await getHostConfigurationFolder(destinationHost);
-    const hostSecretFile = path.join(hostConfigPath, "secrets.enc.json");
-
-    console.log(`📂 Writing to: ${hostSecretFile}`);
-
-    await ensureFileContent(
-      hostSecretFile,
-      JSON.stringify(
-        {
-          certificates: missingCerts,
-        },
-        null,
-        2
-      ),
-      true
-    );
+    const mainSecret = await secretRead();
+    mainSecret.hosts[destinationHost].certificates = missingCerts;
+    await secretWrite(mainSecret);
 
     console.log(
-      `✅ Successfully wrote ${missingCerts.length} missing certificate(s) to ${hostSecretFile}`
+      `✅ Successfully wrote ${missingCerts.length} missing certificate(s) to ${destinationHost}`
     );
   } catch (error) {
     console.error(
@@ -170,7 +158,7 @@ export const certsCmd = new Command()
   .name("certs")
   .description("Certificate management for Nix SSL")
   .command(
-    "check",
+    "update",
     new Command()
       .description(
         `Check and update SSL certificates for Nix cache.
@@ -194,24 +182,22 @@ Default hosts checked: cache.nixos.org, registry.npmjs.org`
         "Additional hosts to check certificates for"
       )
       .option(
-        "-dh, --destinationHost <host>",
+        "-d, --destination <destination>",
         "Destination host to write certificates to",
         {
           default: "chained",
         }
       )
-      .action(
-        async (options: { hosts?: string[]; destinationHost: string }) => {
-          const userHosts = options.hosts || [];
+      .action(async (options: { hosts?: string[]; destination: string }) => {
+        const userHosts = options.hosts || [];
 
-          const allHosts = [...new Set([...DEFAULT_HOSTS, ...userHosts])];
+        const allHosts = [...new Set([...DEFAULT_HOSTS, ...userHosts])];
 
-          console.log(
-            `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
-          );
-          await checkAndUpdateCerts(allHosts, options.destinationHost);
-        }
-      )
+        console.log(
+          `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
+        );
+        await checkAndUpdateCerts(allHosts, options.destination as never);
+      })
   )
   .reset()
   .action(() => certsCmd.showHelp());

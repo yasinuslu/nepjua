@@ -163,6 +163,6 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   };
 }
 
-export function sopsDecrypt(path: string) {
+export function sopsReadAndDecrypt(path: string) {
   return $`sops --decrypt ${path}`.text();
 }

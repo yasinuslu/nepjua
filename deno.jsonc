@@ -11,6 +11,7 @@
     "@std/testing": "jsr:@std/testing@1",
     "@std/yaml": "jsr:@std/yaml@1.0.5",
     "vitest": "npm:vitest@^2.1.8",
+    "zod": "npm:zod@^3.25.71",
     "zx": "npm:zx@^8.6.1"
   }
 }
