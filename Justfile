@@ -107,16 +107,22 @@ switch:
   echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
   for i in {1..3}; do
-      just --set host {{ host }} build
-      if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
+      if just --set host {{ host }} build; then
+        echo -e "✅ Build successful on attempt $i at $(date)\n"
+        echo -e "🔄 Attempting to switch configuration...\n"
+        if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
           echo -e "✅ Switch successful on attempt $i at $(date)\n"
           echo -e "Installing nep-cli completions\n"
           mkdir -p "$HOME/.config/fish/completions"
           deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
           exit 0
-      else
+        else
           echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
           sleep 5
+        fi
+      else
+        echo -e "❌ Build failed on attempt $i, retrying in 5 seconds...\n"
+        sleep 5
       fi
   done
 
