@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { $ } from "./$.ts";
 import { ensureLinesInFile } from "./fs.ts";
-import { archiveSecret, getSecret, setSecret } from "./secret.ts";
+import {
+  externalSecretArchive,
+  externalSecretGet,
+  setSecret,
+} from "./secret.ts";
 import { sopsBootstrap, sopsSetup } from "./sops.ts";
 import { createDenoMocks, createMock$ } from "./test-utils.ts";
 
@@ -37,7 +41,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
     it("should successfully bootstrap SOPS when no existing config", async () => {
       // Setup: no existing files/keys
       denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
-      vi.mocked(getSecret).mockRejectedValue(new Error("Not found"));
+      vi.mocked(externalSecretGet).mockRejectedValue(new Error("Not found"));
 
       mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
 
@@ -83,7 +87,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
     it("should refuse to bootstrap when SOPS key exists without force", async () => {
       denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
-      vi.mocked(getSecret).mockResolvedValue("existing-key");
+      vi.mocked(externalSecretGet).mockResolvedValue("existing-key");
 
       await expect(sopsBootstrap()).rejects.toThrow(
         "SOPS AGE key already exists. Use --force to override."
@@ -93,8 +97,8 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
     it("should force bootstrap and archive existing key", async () => {
       // Setup: existing files/keys
       denoMocks.stat.mockResolvedValue({} as Deno.FileInfo);
-      vi.mocked(getSecret).mockResolvedValue("existing-key");
-      vi.mocked(archiveSecret).mockResolvedValue({
+      vi.mocked(externalSecretGet).mockResolvedValue("existing-key");
+      vi.mocked(externalSecretArchive).mockResolvedValue({
         archivePath: "archive/SOPS/age-key/mock-timestamp",
         originalPath: "SOPS/age-key",
       });
@@ -114,7 +118,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
         keyArchived: true,
       });
 
-      expect(vi.mocked(archiveSecret)).toHaveBeenCalledWith(
+      expect(vi.mocked(externalSecretArchive)).toHaveBeenCalledWith(
         "SOPS/age-key",
         "Replaced by new bootstrap",
         false
@@ -123,7 +127,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
     it("should not update gitignore if SOPS entries already exist", async () => {
       denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
-      vi.mocked(getSecret).mockRejectedValue(new Error("Not found"));
+      vi.mocked(externalSecretGet).mockRejectedValue(new Error("Not found"));
 
       mock$.mockReturnValue(createMock$({ text: mockKeyOutput }));
 
@@ -139,7 +143,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
 
     it("should fail when age-keygen output is invalid", async () => {
       denoMocks.stat.mockRejectedValue(new Error("ENOENT"));
-      vi.mocked(getSecret).mockRejectedValue(new Error("Not found"));
+      vi.mocked(externalSecretGet).mockRejectedValue(new Error("Not found"));
 
       mock$.mockReturnValue(createMock$({ text: "invalid output" }));
 
@@ -152,7 +156,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
   describe("sopsSetup", () => {
     it("should successfully set up SOPS", async () => {
       const mockKeyData = "AGE-SECRET-KEY-1ABCDEF123456789...";
-      vi.mocked(getSecret).mockResolvedValue(mockKeyData);
+      vi.mocked(externalSecretGet).mockResolvedValue(mockKeyData);
       vi.mocked(ensureLinesInFile).mockResolvedValue(undefined);
       denoMocks.mkdir.mockResolvedValue(undefined);
       denoMocks.writeTextFile.mockResolvedValue(undefined);
@@ -165,7 +169,10 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
         keyWritten: true,
       });
 
-      expect(vi.mocked(getSecret)).toHaveBeenCalledWith("SOPS/age-key", false);
+      expect(vi.mocked(externalSecretGet)).toHaveBeenCalledWith(
+        "SOPS/age-key",
+        false
+      );
       expect(denoMocks.mkdir).toHaveBeenCalledWith(".sops", {
         recursive: true,
       });
@@ -177,7 +184,7 @@ AGE-SECRET-KEY-1ABCDEF123456789...`;
     });
 
     it("should fail when SOPS key doesn't exist", async () => {
-      vi.mocked(getSecret).mockRejectedValue(new Error("Not found"));
+      vi.mocked(externalSecretGet).mockRejectedValue(new Error("Not found"));
 
       await expect(sopsSetup()).rejects.toThrow(
         "Failed to retrieve SOPS AGE key. Run 'nep sops bootstrap' first to set up SOPS"

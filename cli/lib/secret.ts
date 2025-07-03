@@ -12,11 +12,11 @@ import {
 const REPO_VAULT_NAME = "Nepjua Automation";
 const GLOBAL_VAULT_NAME = "Nepjua-Global";
 
-function getVaultName(isGlobal: boolean): string {
+function externalSecretGetVaultName(isGlobal: boolean): string {
   return isGlobal ? GLOBAL_VAULT_NAME : REPO_VAULT_NAME;
 }
 
-async function getNamespace(isGlobal: boolean): Promise<string> {
+async function externalSecretGetNamespace(isGlobal: boolean): Promise<string> {
   if (isGlobal) {
     return "global";
   }
@@ -24,11 +24,14 @@ async function getNamespace(isGlobal: boolean): Promise<string> {
   return namespace.full;
 }
 
-function getFullSecretName(secretName: string, namespace: string): string {
+function externalSecretGetFullSecretName(
+  secretName: string,
+  namespace: string
+): string {
   return `${namespace}/${secretName}`;
 }
 
-function parseFullSecretName(
+function externalSecretParseFullSecretName(
   fullSecretName: string,
   namespace: string
 ): string | null {
@@ -39,9 +42,9 @@ function parseFullSecretName(
   return null;
 }
 
-export async function listSecretNames(isGlobal: boolean): Promise<string[]> {
-  const vaultName = getVaultName(isGlobal);
-  const namespace = await getNamespace(isGlobal);
+export async function externalSecretList(isGlobal: boolean): Promise<string[]> {
+  const vaultName = externalSecretGetVaultName(isGlobal);
+  const namespace = await externalSecretGetNamespace(isGlobal);
 
   // Warm up the cache for the vault
   const items = await warmupVaultCache(vaultName);
@@ -52,7 +55,7 @@ export async function listSecretNames(isGlobal: boolean): Promise<string[]> {
   const itemsToList = items.length > 0 ? items : await opListItems(vaultName);
 
   for (const item of itemsToList) {
-    const secretName = parseFullSecretName(item.title, namespace);
+    const secretName = externalSecretParseFullSecretName(item.title, namespace);
     if (secretName !== null) {
       secrets.push(secretName);
     }
@@ -61,13 +64,13 @@ export async function listSecretNames(isGlobal: boolean): Promise<string[]> {
   return secrets.sort();
 }
 
-export async function getSecret(
+export async function externalSecretGet(
   path: string,
   isGlobal: boolean
 ): Promise<string> {
-  const namespace = await getNamespace(isGlobal);
-  const vaultName = getVaultName(isGlobal);
-  const fullSecretName = getFullSecretName(path, namespace);
+  const namespace = await externalSecretGetNamespace(isGlobal);
+  const vaultName = externalSecretGetVaultName(isGlobal);
+  const fullSecretName = externalSecretGetFullSecretName(path, namespace);
 
   // Warm up the cache before any operations
   await warmupVaultCache(vaultName);
@@ -79,9 +82,9 @@ export async function setSecret(
   value: string,
   isGlobal: boolean
 ) {
-  const namespace = await getNamespace(isGlobal);
-  const vaultName = getVaultName(isGlobal);
-  const fullSecretName = getFullSecretName(path, namespace);
+  const namespace = await externalSecretGetNamespace(isGlobal);
+  const vaultName = externalSecretGetVaultName(isGlobal);
+  const fullSecretName = externalSecretGetFullSecretName(path, namespace);
 
   try {
     // Warm up the cache before any operations
@@ -103,13 +106,13 @@ export interface ArchiveResult {
   itemName: string;
 }
 
-export async function archiveSecret(
+export async function externalSecretArchive(
   path: string,
   isGlobal: boolean
 ): Promise<ArchiveResult> {
-  const namespace = await getNamespace(isGlobal);
-  const vaultName = getVaultName(isGlobal);
-  const fullSecretName = getFullSecretName(path, namespace);
+  const namespace = await externalSecretGetNamespace(isGlobal);
+  const vaultName = externalSecretGetVaultName(isGlobal);
+  const fullSecretName = externalSecretGetFullSecretName(path, namespace);
 
   // Warm up the cache before any operations
   await warmupVaultCache(vaultName);
@@ -122,17 +125,17 @@ export async function archiveSecret(
   };
 }
 
-export async function listArchivedSecrets(
+export async function externalSecretListArchive(
   isGlobal: boolean
 ): Promise<string[]> {
-  const vaultName = getVaultName(isGlobal);
-  const namespace = await getNamespace(isGlobal);
+  const vaultName = externalSecretGetVaultName(isGlobal);
+  const namespace = await externalSecretGetNamespace(isGlobal);
 
   const archivedItems = await opListArchivedItems(vaultName);
   const archives: string[] = [];
 
   for (const item of archivedItems) {
-    const secretName = parseFullSecretName(item.title, namespace);
+    const secretName = externalSecretParseFullSecretName(item.title, namespace);
     if (secretName !== null) {
       archives.push(secretName);
     }

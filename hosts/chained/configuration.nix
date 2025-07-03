@@ -1,15 +1,20 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 {
   networking.hostName = "chained";
   networking.computerName = "Yasin Uslu MC";
 
-  # TODO: Somehow read sops encrypted certificate files and populate this list
-  security.pki.certificates = [
-
-  ];
+  # Simple sops test - just define a secret to prove it works
+  sops.secrets.certificates = {
+    mode = "0644";
+  };
 
   myDarwin = {
     bundles.darwin-desktop.enable = true;

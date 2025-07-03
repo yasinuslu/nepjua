@@ -1,8 +1,8 @@
 import { Command } from "@cliffy/command";
 import {
-  archiveSecret,
-  getSecret,
-  listSecretNames,
+  externalSecretArchive,
+  externalSecretGet,
+  externalSecretList,
   setSecret,
 } from "../lib/secret.ts";
 
@@ -20,7 +20,7 @@ export const secretCmd = new Command()
       .action(async (options: { global?: boolean }) => {
         try {
           const isGlobal = options.global || false;
-          const secrets = await listSecretNames(isGlobal);
+          const secrets = await externalSecretList(isGlobal);
 
           if (secrets.length === 0) {
             const scope = isGlobal ? "global" : "repository";
@@ -50,7 +50,7 @@ export const secretCmd = new Command()
       .action(async (options: { global?: boolean }, path: string) => {
         try {
           const isGlobal = options.global || false;
-          const value = await getSecret(path, isGlobal);
+          const value = await externalSecretGet(path, isGlobal);
           console.log(value);
         } catch (error) {
           console.error(
@@ -97,7 +97,7 @@ export const secretCmd = new Command()
       .action(async (options: { global?: boolean }, path: string) => {
         try {
           const isGlobal = options.global || false;
-          await archiveSecret(path, isGlobal);
+          await externalSecretArchive(path, isGlobal);
           console.log(`✅ Archived ${path}`);
         } catch (error) {
           console.error(

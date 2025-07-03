@@ -39,11 +39,17 @@ let
   }) (myLib.filesIn ./services);
 in
 {
-  imports = [ inputs.home-manager.darwinModules.home-manager ] ++ features ++ bundles ++ services;
+  imports =
+    [
+      inputs.home-manager.darwinModules.home-manager
+      inputs.sops-nix.darwinModules.sops
+    ]
+    ++ features
+    ++ bundles
+    ++ services;
 
   config = {
     system.stateVersion = 6;
-
 
     nix.settings = {
       experimental-features = "nix-command flakes auto-allocate-uids";

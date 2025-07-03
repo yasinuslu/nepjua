@@ -3,7 +3,7 @@ import path from "node:path";
 import { $ } from "zx";
 import { ensureLinesInFile } from "./fs.ts";
 import { gitFindRoot } from "./git.ts";
-import { getSecret, setSecret } from "./secret.ts";
+import { externalSecretGet, setSecret } from "./secret.ts";
 
 const SOPS_KEY_SECRET_NAME = "SOPS/age-key";
 
@@ -46,7 +46,7 @@ export async function sopsBootstrap(
 
   // Check if SOPS AGE key already exists
   try {
-    await getSecret(SOPS_KEY_SECRET_NAME, false);
+    await externalSecretGet(SOPS_KEY_SECRET_NAME, false);
     if (!force) {
       throw new Error("SOPS AGE key already exists. Use --force to override.");
     }
@@ -108,7 +108,7 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   // Get AGE key
   let keyData;
   try {
-    keyData = await getSecret(SOPS_KEY_SECRET_NAME, false);
+    keyData = await externalSecretGet(SOPS_KEY_SECRET_NAME, false);
   } catch {
     throw new Error(
       "Failed to retrieve SOPS AGE key. Run 'nep sops bootstrap' first to set up SOPS"
