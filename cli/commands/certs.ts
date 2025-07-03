@@ -1,6 +1,15 @@
 import { Command } from "@cliffy/command";
+import path from "node:path";
+import { ensureFileContent } from "../lib/fs.ts";
+import { gitFindRoot } from "../lib/git.ts";
 
 const DEFAULT_HOSTS = ["cache.nixos.org", "registry.npmjs.org"];
+
+async function getHostConfigurationFolder(host: string): Promise<string> {
+  const gitRoot = await gitFindRoot();
+  const hostConfigPath = path.join(gitRoot, "hosts", host);
+  return hostConfigPath;
+}
 
 async function runCommand(
   cmd: string[]
@@ -69,33 +78,6 @@ async function readCertFile(certFile: string): Promise<string> {
   }
 }
 
-async function writeCertFile(certFile: string, content: string): Promise<void> {
-  try {
-    await Deno.writeTextFile(certFile, content);
-  } catch (error) {
-    if (error instanceof Deno.errors.PermissionDenied) {
-      console.log(`🔐 Permission denied. Attempting to write with sudo...`);
-
-      // Write to temporary file first
-      const tempFile = "/tmp/ca-certificates-updated.crt";
-      await Deno.writeTextFile(tempFile, content);
-
-      // Move with sudo
-      const result = await runCommand(["sudo", "mv", tempFile, certFile]);
-
-      if (result.code !== 0) {
-        throw new Error(
-          `Failed to write certificate file with sudo: ${result.stderr}`
-        );
-      }
-
-      console.log(`✅ Certificate file updated with sudo`);
-    } else {
-      throw error;
-    }
-  }
-}
-
 async function ensureDirectoryExists(filePath: string): Promise<void> {
   const dir = filePath.substring(0, filePath.lastIndexOf("/"));
   try {
@@ -109,7 +91,7 @@ async function ensureDirectoryExists(filePath: string): Promise<void> {
 
 async function checkAndUpdateCerts(
   hosts: string[] = DEFAULT_HOSTS,
-  destinationFile?: string
+  destinationHost: string
 ) {
   try {
     // Extract certificates from all hosts
@@ -156,23 +138,25 @@ async function checkAndUpdateCerts(
       `🔧 Found ${missingCerts.length} missing certificate(s). Writing them to destination file...`
     );
 
-    // Determine destination file
-    const defaultDestination = `${Deno.env.get(
-      "HOME"
-    )}/code/nepjua/.generated/extra_certs.crt`;
-    const destination = destinationFile || defaultDestination;
+    const hostConfigPath = await getHostConfigurationFolder(destinationHost);
+    const hostSecretFile = path.join(hostConfigPath, "secrets.enc.json");
 
-    console.log(`📂 Writing to: ${destination}`);
+    console.log(`📂 Writing to: ${hostSecretFile}`);
 
-    // Ensure destination directory exists
-    await ensureDirectoryExists(destination);
-
-    // Write missing certificates to destination file
-    const content = missingCerts.join("\n\n") + "\n";
-    await Deno.writeTextFile(destination, content);
+    await ensureFileContent(
+      hostSecretFile,
+      JSON.stringify(
+        {
+          certificates: missingCerts,
+        },
+        null,
+        2
+      ),
+      true
+    );
 
     console.log(
-      `✅ Successfully wrote ${missingCerts.length} missing certificate(s) to ${destination}`
+      `✅ Successfully wrote ${missingCerts.length} missing certificate(s) to ${hostSecretFile}`
     );
   } catch (error) {
     console.error(
@@ -210,19 +194,24 @@ Default hosts checked: cache.nixos.org, registry.npmjs.org`
         "Additional hosts to check certificates for"
       )
       .option(
-        "-d, --destination <file>",
-        "Destination file for missing certificates"
+        "-dh, --destinationHost <host>",
+        "Destination host to write certificates to",
+        {
+          default: "chained",
+        }
       )
-      .action(async (options: { hosts?: string[]; destination?: string }) => {
-        const userHosts = options.hosts || [];
+      .action(
+        async (options: { hosts?: string[]; destinationHost: string }) => {
+          const userHosts = options.hosts || [];
 
-        const allHosts = [...new Set([...DEFAULT_HOSTS, ...userHosts])];
+          const allHosts = [...new Set([...DEFAULT_HOSTS, ...userHosts])];
 
-        console.log(
-          `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
-        );
-        await checkAndUpdateCerts(allHosts, options.destination);
-      })
+          console.log(
+            `🌐 Checking certificates for hosts: ${allHosts.join(", ")}`
+          );
+          await checkAndUpdateCerts(allHosts, options.destinationHost);
+        }
+      )
   )
   .reset()
   .action(() => certsCmd.showHelp());

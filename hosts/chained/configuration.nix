@@ -6,9 +6,9 @@
   networking.hostName = "chained";
   networking.computerName = "Yasin Uslu MC";
 
-  security.pki.certificateFiles = [
-    "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-    "/Users/yahmet/code/nepjua/.generated/extra_certs.crt"
+  # TODO: Somehow read sops encrypted certificate files and populate this list
+  security.pki.certificates = [
+
   ];
 
   myDarwin = {

@@ -162,3 +162,7 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
     keyWritten: true,
   };
 }
+
+export function sopsDecrypt(path: string) {
+  return $`sops --decrypt ${path}`.text();
+}
