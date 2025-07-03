@@ -11,10 +11,10 @@
   networking.hostName = "chained";
   networking.computerName = "Yasin Uslu MC";
 
-  # Simple sops test - just define a secret to prove it works
-  sops.secrets.certificates = {
-    mode = "0644";
-  };
+  # Secrets are now defined centrally in modules/darwin/features/sops.nix
+  # They will be available at:
+  # - config.sops.secrets."hosts/chained/username".path
+  # - config.sops.secrets."hosts/chained/certificates".path
 
   myDarwin = {
     bundles.darwin-desktop.enable = true;

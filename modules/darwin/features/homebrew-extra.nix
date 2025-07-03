@@ -25,7 +25,7 @@
     "rustdesk"
     "ollama"
     "crossover"
-    "mullvadvpn"
+    # "mullvadvpn"
     "macfuse"
     "lens"
   ];
