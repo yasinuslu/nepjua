@@ -135,7 +135,9 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
     ".sops/",
     "*.age",
     ".tmp",
+    ".env",
     "*.enc.tmp.*",
+    ".decrypted-*",
   ]);
 
   await ensureLinesInFile(
