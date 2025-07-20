@@ -41,6 +41,8 @@
 
     nix.settings.trusted-users = [ "root" ] ++ (builtins.attrNames config.myDarwin.users);
 
+    system.primaryUser = builtins.head (builtins.attrNames config.myDarwin.users);
+
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
