@@ -124,49 +124,20 @@ export async function sopsSetup(): Promise<SopsSetupResult> {
   }
   const privateKey = privateKeyMatch[0];
 
-  // Use global SOPS directory instead of project-relative
-  const homeDir = Deno.env.get("HOME");
-  if (!homeDir) {
-    throw new Error("HOME environment variable not set");
-  }
-  const globalSopsDir = path.join(homeDir, ".config", "sops");
-
-  // Create global .config/sops directory
-  await Deno.mkdir(globalSopsDir, { recursive: true });
-
-  // Write key to global location
-  const keyPath = path.join(globalSopsDir, "age-key.txt");
+  // Write key to .sops/age-key.txt
+  const keyPath = path.join(gitRoot, ".sops/age-key.txt");
+  await Deno.mkdir(path.dirname(keyPath), { recursive: true });
   await Deno.writeTextFile(keyPath, privateKey);
   await Deno.chmod(keyPath, 0o600);
-
-  // Also place key in root location for activation phase (requires sudo)
-  const rootSopsDir = "/var/root/.config/sops";
-  const rootKeyPath = path.join(rootSopsDir, "age-key.txt");
-
-  try {
-    console.log("Setting up age key for root user...");
-    await $`sudo mkdir -p ${rootSopsDir}`;
-    await $`sudo cp ${keyPath} ${rootKeyPath}`;
-    await $`sudo chmod 600 ${rootKeyPath}`;
-    await $`sudo chown root:wheel ${rootKeyPath}`;
-    console.log(`✅ Age key installed for root at ${rootKeyPath}`);
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.warn(`⚠️  Failed to setup root key: ${errorMessage}`);
-    console.warn(
-      "You may need to run 'sudo darwin-rebuild switch' for initial setup"
-    );
-  }
-
-  // Still create local .sops directory for any local temp files
-  await Deno.mkdir(path.join(gitRoot, ".sops"), { recursive: true });
 
   await ensureLinesInFile(path.join(gitRoot, ".gitignore"), [
     "# SOPS",
     ".sops/",
     "*.age",
     ".tmp",
+    ".env",
     "*.enc.tmp.*",
+    ".decrypted-*",
   ]);
 
   await ensureLinesInFile(
