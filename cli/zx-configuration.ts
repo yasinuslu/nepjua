@@ -1,5 +1,5 @@
 import { $, useBash } from "zx";
 
 useBash();
-$.verbose = true;
+// $.verbose = true;
 $.shell = "bash";
