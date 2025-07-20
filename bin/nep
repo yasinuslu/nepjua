@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-export NEPJUA_ROOT="''${NEPJUA_ROOT:-$HOME/code/.profile/yasinuslu/nepjua}"
+export NEPJUA_ROOT="${NEPJUA_ROOT:-$HOME/code/.profile/yasinuslu/nepjua}"
 deno run -A -c "$NEPJUA_ROOT"/deno.jsonc "$NEPJUA_ROOT"/cli/main.ts "$@"
