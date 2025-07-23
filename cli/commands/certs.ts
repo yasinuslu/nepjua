@@ -4,7 +4,11 @@ import { join } from "@std/path";
 import { ensureDirectoryContent } from "../lib/fs.ts";
 import { nepjuaResolveRootPath } from "../lib/nepjua.ts";
 
-const DEFAULT_HOSTS = ["cache.nixos.org", "registry.npmjs.org"];
+const DEFAULT_HOSTS = [
+  "cache.nixos.org",
+  "registry.npmjs.org",
+  "repo.yarnpkg.com",
+];
 
 const POSSIBLE_SYSTEM_CERT_FILES = [
   "/etc/ssl/certs/ca-certificates.crt",
