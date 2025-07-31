@@ -7,6 +7,7 @@
 {
   myNixOS = {
     wsl.enable = lib.mkOverride 100 true;
+    binbash.enable = lib.mkOverride 100 true;
 
     nix-ld.enable = lib.mkOverride 100 true;
     common-base.enable = lib.mkOverride 100 true;

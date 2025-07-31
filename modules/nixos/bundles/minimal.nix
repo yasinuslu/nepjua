@@ -9,6 +9,7 @@
     gaming.enable = lib.mkOverride 150 false;
     hoppscotch.enable = lib.mkOverride 150 false;
     networking.enable = lib.mkOverride 100 true;
+    binbash.enable = lib.mkOverride 100 true;
 
     # FIXME: This either never worked or temporarily broken
     networking.qos.enable = lib.mkOverride 100 false;
