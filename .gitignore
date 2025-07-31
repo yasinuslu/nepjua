@@ -105,7 +105,7 @@ web_modules/
 
 # dotenv environment variable files
 
-.env
+
 .env.development.local
 .env.test.local
 .env.production.local
@@ -180,9 +180,17 @@ dist
 .DS_Store
 .vite
 
+
+
+
+
+
+.generated
+
 # SOPS
 .sops/
 *.age
 .tmp
+.env
 *.enc.tmp.*
-.generated
+.decrypted-*
