@@ -28,5 +28,6 @@
     # "mullvadvpn"
     "macfuse"
     "lens"
+    "ollama"
   ];
 }
