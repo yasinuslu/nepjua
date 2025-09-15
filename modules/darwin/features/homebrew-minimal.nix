@@ -47,7 +47,7 @@
       "whatsapp"
       "zed"
       "zen"
-      "copyq"
+      # "copyq"
     ];
   };
 }

@@ -26,8 +26,10 @@
     "ollama"
     "crossover"
     # "mullvadvpn"
+    "soundsource"
     "macfuse"
     "lens"
     "ollama"
+    "mullvad-vpn"
   ];
 }
