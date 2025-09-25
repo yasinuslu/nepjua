@@ -15,6 +15,7 @@
       bind-key % split-window -h -c "#{pane_current_path}"
       bind-key -r C-'[' swap-window -t -1\; previous-window
       bind-key -r C-']' swap-window -t +1\; next-window
+      set -g mouse on
     '';
     shortcut = "s";
   };
