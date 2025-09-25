@@ -111,17 +111,9 @@ build: setup-sops-at-root
 
   nep certs update
 
-  if [ -f "/etc/ssl/certs/ca-certificates.crt" ]; then
-    sudo mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.bak
-  fi
-
-  sudo cp "$HOME/code/nepjua/.generated/cert/ca-bundle.pem" /etc/ssl/certs/ca-certificates.crt
-
   {{ rebuild_cmd }} build \
     --flake .#{{ host }} \
     {{ rebuild_args }}
-
-  sudo mv /etc/ssl/certs/ca-certificates.crt.bak /etc/ssl/certs/ca-certificates.crt
 
 # Switch configuration using the detected rebuild command with retries
 switch: setup-sops-at-root
@@ -137,22 +129,17 @@ switch: setup-sops-at-root
 
   trap cleanup_sops EXIT
 
+  nep certs update
+
   for i in {1..3}; do
-      if just --set host {{ host }} build; then
-        echo -e "✅ Build successful on attempt $i at $(date)\n"
-        echo -e "🔄 Attempting to switch configuration...\n"
-        if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
-          echo -e "✅ Switch successful on attempt $i at $(date)\n"
-          echo -e "Installing nep-cli completions\n"
-          mkdir -p "$HOME/.config/fish/completions"
-          deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
-          exit 0
-        else
-          echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
-          sleep 5
-        fi
+      if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
+        echo -e "✅ Switch successful on attempt $i at $(date)\n"
+        echo -e "Installing nep-cli completions\n"
+        mkdir -p "$HOME/.config/fish/completions"
+        deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
+        exit 0
       else
-        echo -e "❌ Build failed on attempt $i, retrying in 5 seconds...\n"
+        echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
         sleep 5
       fi
   done

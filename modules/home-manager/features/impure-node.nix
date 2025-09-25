@@ -10,7 +10,8 @@ let
   npmHome = "$HOME/.npm";
   pnpmHome = "$HOME/.nix-mutable/node/pnpm";
   globalNodeModules = "$HOME/.nix-mutable/node/npm/node_modules";
-  caFile = "/etc/ssl/certs/ca-certificates.crt";
+  # caFile = "/etc/ssl/certs/ca-certificates.crt";
+  caFile = "$HOME/code/nepjua/.generated/cert/ca-bundle.pem";
 in
 {
   home.packages = with pkgs; [

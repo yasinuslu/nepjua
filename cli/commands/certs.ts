@@ -8,12 +8,13 @@ const DEFAULT_HOSTS = [
   "cache.nixos.org",
   "registry.npmjs.org",
   "repo.yarnpkg.com",
+  "jfrog.io",
 ];
 
-const POSSIBLE_SYSTEM_CERT_FILES = [
-  "/etc/ssl/certs/ca-certificates.crt",
-  "/etc/ssl/certs/ca-certificates.crt.bak",
-];
+// const POSSIBLE_SYSTEM_CERT_FILES = [
+//   "/etc/ssl/certs/ca-certificates.crt",
+//   "/etc/ssl/certs/ca-certificates.crt.bak",
+// ];
 
 async function runCommand(
   cmd: string[]
@@ -56,8 +57,29 @@ async function extractCertificates(host: string): Promise<string[]> {
   return certificates;
 }
 
+async function getPossibleCertFiles(): Promise<string[]> {
+  const cacertPackagePathCommand = await runCommand([
+    "nix",
+    "eval",
+    "nixpkgs#cacert.outPath",
+  ]);
+  if (cacertPackagePathCommand.code !== 0) {
+    throw new Error(
+      `Failed to evaluate cacert package: ${cacertPackagePathCommand.stderr}`
+    );
+  }
+
+  const cacertPackagePath = cacertPackagePathCommand.stdout
+    .replaceAll('"', "")
+    .trim();
+  const cacertFilePath = join(cacertPackagePath, "etc/ssl/certs/ca-bundle.crt");
+
+  return [cacertFilePath];
+}
+
 async function getCertFile(): Promise<string> {
-  for (const path of POSSIBLE_SYSTEM_CERT_FILES) {
+  const possibleCertFiles = await getPossibleCertFiles();
+  for (const path of possibleCertFiles) {
     try {
       if (await exists(path)) {
         console.log(`🔧 Using system certificate file: ${path}`);
@@ -72,7 +94,7 @@ async function getCertFile(): Promise<string> {
   }
 
   throw new Error(
-    `No valid certificate file found. Please ensure one of the following exists: ${POSSIBLE_SYSTEM_CERT_FILES.join(
+    `No valid certificate file found. Please ensure one of the following exists: ${possibleCertFiles.join(
       ", "
     )}`
   );
