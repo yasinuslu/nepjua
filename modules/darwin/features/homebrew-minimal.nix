@@ -47,6 +47,7 @@
       "whatsapp"
       "zed"
       "zen"
+      "only-switch"
       # "copyq"
     ];
   };
