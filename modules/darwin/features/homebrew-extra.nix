@@ -16,7 +16,6 @@
     "teamviewer"
     "zoom"
     "cloudflare-warp"
-    "cursor"
     "blitz-gg"
     "discord"
     "gitkraken"
