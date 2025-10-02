@@ -30,8 +30,9 @@ let
       code "$@"
     elif is_remote_vscode_path "$CURSOR_PATH"; then
       cursor "$@"
-    elif [[ "$FULL_PWD" == */mastercontrol/* ]]; then
-      code "$@"
+    elif [[ "$FULL_PWD" == */*astercont*/* ]]; then
+      # I'm still keeping this, maybe I'll change it to `cursor-mc` or something like that
+      cursor-mc "$@"
     elif [[ "$FULL_PWD" == */yasinuslu/* ]]; then
       cursor "$@"
     elif is_available "$CURSOR_PATH"; then
@@ -96,12 +97,17 @@ let
   editorRealPath = pkgs.writeShellScriptBin "er" ''
     ${editorPackage}/bin/e $(realpath "$1")
   '';
+
+  cursorMcPackage = pkgs.writeShellScriptBin "cursor-mc" ''
+    cursor "$@"
+  '';
 in
 {
   home.packages = [
     editorPackage
     editorBetaPackage
     editorRealPath
+    cursorMcPackage
   ];
 
   home.sessionVariables = {

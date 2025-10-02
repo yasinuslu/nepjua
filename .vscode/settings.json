@@ -7,5 +7,6 @@
     "source.sortImports": "explicit",
     "source.removeUnused.ts": "explicit",
     "source.fixAll.ts": "explicit"
-  }
+  },
+  "nix.enableLanguageServer": true
 }
