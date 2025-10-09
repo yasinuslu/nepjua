@@ -8,13 +8,8 @@ const DEFAULT_HOSTS = [
   "cache.nixos.org",
   "registry.npmjs.org",
   "repo.yarnpkg.com",
-  "jfrog.io",
+  // "jfrog.io",
 ];
-
-// const POSSIBLE_SYSTEM_CERT_FILES = [
-//   "/etc/ssl/certs/ca-certificates.crt",
-//   "/etc/ssl/certs/ca-certificates.crt.bak",
-// ];
 
 async function runCommand(
   cmd: string[]

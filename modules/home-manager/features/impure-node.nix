@@ -52,11 +52,13 @@ in
 
       export PATH="${pnpmHome}:${nodeBinDir}:${globalNodeModules}/bin:$PATH"
       export PNPM_HOME="${pnpmHome}"
-      export NODE_EXTRA_CA_CERTS="${caFile}"
 
-      npm config set cafile "${caFile}"
+      if [ -f "${caFile}" ]; then
+        export NODE_EXTRA_CA_CERTS="${caFile}"
+        npm config set cafile "${caFile}"
+      fi
+
       npm config set prefix ${globalNodeModules}
-
       execute_with_retries "npm uninstall -g pnpm yarn" "Uninstalling existing global pnpm and yarn modules"
       execute_with_retries "npm i -g corepack" "Installing corepack..."
       execute_with_retries "corepack install -g pnpm@10 yarn" "Installing pnpm and yarn..."

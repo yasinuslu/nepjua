@@ -109,8 +109,6 @@ build: setup-sops-at-root
   echo -e "🔹 OS: \033[1;32m{{ os }}\033[0m"
   echo -e "🔹 Command: \033[1;32m{{ rebuild_cmd }}\033[0m\n"
 
-  nep certs update
-
   {{ rebuild_cmd }} build \
     --flake .#{{ host }} \
     {{ rebuild_args }}
@@ -128,8 +126,6 @@ switch: setup-sops-at-root
   }
 
   trap cleanup_sops EXIT
-
-  nep certs update
 
   for i in {1..3}; do
       if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
