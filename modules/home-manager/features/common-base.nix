@@ -46,6 +46,8 @@
   home.sessionVariables = {
     DIRENV_LOG_FORMAT = "";
     NIXPKGS_ALLOW_UNFREE = "1";
+    LANG = "en_US.UTF-8";
+    LC_MESSAGES = "en_US.UTF-8";
   };
 
   programs = {

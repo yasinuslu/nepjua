@@ -2,6 +2,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }:
 let
@@ -10,8 +11,9 @@ let
   npmHome = "$HOME/.npm";
   pnpmHome = "$HOME/.nix-mutable/node/pnpm";
   globalNodeModules = "$HOME/.nix-mutable/node/npm/node_modules";
-  # caFile = "/etc/ssl/certs/ca-certificates.crt";
-  caFile = "$HOME/code/nepjua/.generated/cert/ca-bundle.pem";
+  caFileRelative = "code/nepjua/.generated/cert/ca-bundle.pem";
+  caFileEnv = "$HOME/${caFileRelative}";
+  caFileAbsolute = "${config.home.homeDirectory}/${caFileRelative}";
 in
 {
   home.packages = with pkgs; [
@@ -53,9 +55,9 @@ in
       export PATH="${pnpmHome}:${nodeBinDir}:${globalNodeModules}/bin:$PATH"
       export PNPM_HOME="${pnpmHome}"
 
-      if [ -f "${caFile}" ]; then
-        export NODE_EXTRA_CA_CERTS="${caFile}"
-        npm config set cafile "${caFile}"
+      if [ -f "${caFileEnv}" ]; then
+        export NODE_EXTRA_CA_CERTS="${caFileEnv}"
+        npm config set cafile "${caFileEnv}"
       fi
 
       npm config set prefix ${globalNodeModules}
@@ -73,6 +75,6 @@ in
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = globalNodeModules;
     PNPM_HOME = pnpmHome;
-    NODE_EXTRA_CA_CERTS = caFile;
-  };
+  }
+  // (if builtins.pathExists caFileAbsolute then { NODE_EXTRA_CA_CERTS = caFileEnv; } else { });
 }
