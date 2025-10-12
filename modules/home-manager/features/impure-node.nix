@@ -75,6 +75,7 @@ in
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = globalNodeModules;
     PNPM_HOME = pnpmHome;
+    BUN_INSTALL = "$HOME/.bun";
   }
   // (if builtins.pathExists caFileAbsolute then { NODE_EXTRA_CA_CERTS = caFileEnv; } else { });
 }
