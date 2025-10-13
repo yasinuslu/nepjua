@@ -25,7 +25,6 @@
       "tesseract"
       "tig"
       "jeffreywildman/homebrew-virt-manager/virt-viewer"
-      "jordanbaird-ice"
     ];
     casks = [
       "1password-cli"
@@ -49,6 +48,7 @@
       "zed"
       "zen"
       "cursor"
+      "jordanbaird-ice"
       # "copyq"
     ];
   };

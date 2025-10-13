@@ -38,7 +38,6 @@
         kubectx
         gh
         transcrypt
-        awscli2
         argocd
         yq-go
         jq
