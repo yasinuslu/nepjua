@@ -75,8 +75,8 @@ let
       code-insiders "$@"
     elif is_remote_vscode_path "$CURSOR_PATH"; then
       cursor "$@"
-    elif [[ "$FULL_PWD" == */mastercontrol/* ]]; then
-      code-insiders "$@"
+    elif [[ "$FULL_PWD" == */*astercont*/* ]]; then
+      cursor-mc "$@"
     elif [[ "$FULL_PWD" == */yasinuslu/* ]]; then
       cursor "$@"
     elif is_available "$CURSOR_PATH"; then
