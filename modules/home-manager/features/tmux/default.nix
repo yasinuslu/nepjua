@@ -8,8 +8,8 @@ let
     # -- Custom user configuration -------------------------------------------------
 
     # Add custom prefix (C-g) in addition to default
-    set -g prefix2 C-g
-    bind C-g send-prefix -2
+    set -g prefix2 C-s
+    bind C-s send-prefix -2
 
     # Ensure vi mode is enabled
     setw -g mode-keys vi
