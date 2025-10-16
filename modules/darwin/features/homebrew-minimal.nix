@@ -24,6 +24,7 @@
       "telnet"
       "tesseract"
       "tig"
+      "htop"
       "jeffreywildman/homebrew-virt-manager/virt-viewer"
     ];
     casks = [
