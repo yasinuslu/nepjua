@@ -22,13 +22,12 @@
     "microsoft-auto-update"
     "microsoft-office"
     "rustdesk"
-    "ollama"
+    "ollama-app"
     "crossover"
     # "mullvadvpn"
     "soundsource"
     "macfuse"
     "lens"
-    "ollama"
     "mullvad-vpn"
   ];
 }
