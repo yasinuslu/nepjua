@@ -50,6 +50,7 @@
       "zen"
       "cursor"
       "jordanbaird-ice"
+      "ghostty"
       # "copyq"
     ];
   };
