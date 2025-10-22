@@ -6,7 +6,7 @@ let
   # User's custom tmux configuration
   extraLocalConfig = ''
     # -- Custom user configuration -------------------------------------------------
-    set option -g default-shell ${pkgs.fish}/bin/fish
+    set-option -g default-shell ${pkgs.fish}/bin/fish
 
     # Add custom prefix (C-g) in addition to default
     set -g prefix2 C-s
