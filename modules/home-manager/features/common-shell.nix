@@ -5,9 +5,10 @@ let
     ls = "lsd";
   };
   abbreviations = {
+    gpd = "git diff $(git merge-base HEAD origin/main)..HEAD | cat";
     cls = "clear; echo 'Shell cleared'";
     gcom = "git checkout (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')";
-    gcd = "cd (git rev-parse --show-toplevel)";
+    gcd = "cd (git rev-parse --show-toplevel)"; 
     d = "docker";
     doc = "docker compose";
     docp = "docker compose -f docker-compose.yml -f docker-compose.prod.yml";
