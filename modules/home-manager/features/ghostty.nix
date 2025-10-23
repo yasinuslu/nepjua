@@ -16,6 +16,9 @@
     shell-integration = fish
 
     command = "/run/current-system/sw/bin/fish -l"
+
+    quick-terminal-autohide = false
+    quick-terminal-animation-duration = 0.15
   '';
 
   myHomeManager.paths = [
