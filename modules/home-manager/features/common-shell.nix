@@ -5,7 +5,8 @@ let
     ls = "lsd";
   };
   abbreviations = {
-    gpd = "git diff $(git merge-base HEAD origin/main)..HEAD | cat";
+    # Git Pull Request Diff, shows the diff between the current branch and the closest ancestor in main branch
+    gpd = "git diff $(git merge-base HEAD origin/main)..HEAD";
     cls = "clear; echo 'Shell cleared'";
     gcom = "git checkout (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')";
     gcd = "cd (git rev-parse --show-toplevel)"; 
