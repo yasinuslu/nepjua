@@ -23,6 +23,11 @@ let
     # Window swapping with Ctrl+[ and Ctrl+]
     bind-key -r C-'[' swap-window -t -1\; previous-window
     bind-key -r C-']' swap-window -t +1\; next-window
+
+    # New window/pane opens in current directory
+    bind '"' split-window -c "#{pane_current_path}"
+    bind % split-window -h -c "#{pane_current_path}"
+    bind c new-window -c "#{pane_current_path}"
   '';
 in
 {
