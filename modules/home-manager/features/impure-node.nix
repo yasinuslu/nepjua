@@ -63,7 +63,7 @@ in
       npm config set prefix ${globalNodeModules}
       execute_with_retries "npm uninstall -g pnpm yarn" "Uninstalling existing global pnpm and yarn modules"
       execute_with_retries "npm i -g corepack" "Installing corepack..."
-      execute_with_retries "corepack install -g pnpm@10 yarn" "Installing pnpm and yarn..."
+      execute_with_retries "corepack install -g pnpm yarn" "Installing pnpm and yarn..."
     '';
   };
 
