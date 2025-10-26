@@ -10,17 +10,8 @@
       url = "github:hercules-ci/flake-parts";
     };
 
-    nixos-unified = {
-      url = "github:srid/nixos-unified";
-    };
-
     flake-root = {
       url = "github:srid/flake-root";
-    };
-
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -59,6 +50,11 @@
 
     nixvim = {
       url = "github:dc-tec/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    khanelivim = {
+      url = "github:khaneliman/khanelivim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

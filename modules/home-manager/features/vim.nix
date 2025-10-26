@@ -1,7 +1,7 @@
 { inputs, pkgs, ... }:
 {
   home.packages = [
-    inputs.nixvim.packages.${pkgs.system}.default
+    inputs.khanelivim.packages.${pkgs.system}.default
   ];
 
   home.shellAliases = {
