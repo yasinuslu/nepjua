@@ -40,8 +40,6 @@
     findutils
     binutils
     file
-
-    inputs.nixvim.packages.${pkgs.system}.default
   ];
 
   home.sessionVariables = {
