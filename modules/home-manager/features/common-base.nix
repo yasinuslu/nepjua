@@ -26,7 +26,6 @@
     jq
     lsd
     starship
-    vim
     lsof
 
     # Python

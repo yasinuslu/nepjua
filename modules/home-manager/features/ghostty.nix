@@ -19,6 +19,9 @@
 
     quick-terminal-autohide = false
     quick-terminal-animation-duration = 0.15
+
+    background-blue = true
+    background-opacity = 0.7
   '';
 
   myHomeManager.paths = [
