@@ -26,7 +26,7 @@ in
         local command="$1"
         local message="$2"
         echo ""
-        for i in {1..10}; do
+        for i in {1..5}; do
           echo "=================="
           echo "Executing: $command"
           echo "Message: $message"

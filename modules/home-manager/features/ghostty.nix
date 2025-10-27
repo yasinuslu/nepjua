@@ -11,6 +11,7 @@
     font-size = 15
 
     # Keybindings
+    keybind = global:alt+§=toggle_quick_terminal
     keybind = global:alt+backquote=toggle_quick_terminal
 
     shell-integration = fish
@@ -20,7 +21,7 @@
     quick-terminal-autohide = false
     quick-terminal-animation-duration = 0.15
 
-    background-blue = true
+    background-blur = true
     background-opacity = 0.7
   '';
 
