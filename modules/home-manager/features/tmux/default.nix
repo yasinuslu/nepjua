@@ -19,7 +19,8 @@ let
     bind -r C-'[' swap-window -t -1\; previous-window
     bind -r C-']' swap-window -t +1\; next-window
 
-    tmux_conf_new_session_retain_current_path=true
+    # We disable this because tmux does not pick up existing environment variables in the shell when it is enabled
+    tmux_conf_new_session_retain_current_path=disabled
 
     # -- windows & pane creation ---------------------------------------------------
 
