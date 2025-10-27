@@ -14,8 +14,8 @@
         userConfig =
           { ... }:
           {
-            programs.git.userName = "Yasin Uslu";
-            programs.git.userEmail = "nepjua@gmail.com";
+            programs.git.settings.user.name = "Yasin Uslu";
+            programs.git.settings.user.email = "nepjua@gmail.com";
             myHomeManager.darwin.colima.enable = true;
             myHomeManager.deno.enable = true;
           };

@@ -11,7 +11,11 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    diff-so-fancy.enable = true;
+  };
+
+  programs.diff-so-fancy = {
+    enable = true;
+    enableGitIntegration = true;
   };
 
   home.packages = with pkgs; [

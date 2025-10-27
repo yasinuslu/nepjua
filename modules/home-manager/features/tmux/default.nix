@@ -15,19 +15,19 @@ let
     # Ensure vi mode is enabled
     setw -g mode-keys vi
 
-    # New window/pane opens in current directory
-    bind-key c new-window -c "#{pane_current_path}"
-    bind-key '"' split-window -c "#{pane_current_path}"
-    bind-key % split-window -h -c "#{pane_current_path}"
-
     # Window swapping with Ctrl+[ and Ctrl+]
-    bind-key -r C-'[' swap-window -t -1\; previous-window
-    bind-key -r C-']' swap-window -t +1\; next-window
+    bind -r C-'[' swap-window -t -1\; previous-window
+    bind -r C-']' swap-window -t +1\; next-window
 
-    # New window/pane opens in current directory
-    bind '"' split-window -c "#{pane_current_path}"
-    bind % split-window -h -c "#{pane_current_path}"
-    bind c new-window -c "#{pane_current_path}"
+    tmux_conf_new_session_retain_current_path=true
+
+    # -- windows & pane creation ---------------------------------------------------
+
+    # new window retains current path, possible values are:
+    #   - true
+    #   - false (default)
+    #   - disabled (do not modify new-window bindings)
+    tmux_conf_new_window_retain_current_path=true
   '';
 in
 {
