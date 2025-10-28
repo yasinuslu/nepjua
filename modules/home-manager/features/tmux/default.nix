@@ -15,6 +15,9 @@ let
     # Ensure vi mode is enabled
     setw -g mode-keys vi
 
+    # Enable mouse mode by default
+    set -g mouse on
+
     # Window swapping with Ctrl+[ and Ctrl+]
     bind -r C-'[' swap-window -t -1\; previous-window
     bind -r C-']' swap-window -t +1\; next-window
