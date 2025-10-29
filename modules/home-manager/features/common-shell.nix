@@ -4,7 +4,8 @@ let
     lsl = "command ls --color";
     ls = "lsd";
   };
-  abbreviations = {
+  abbreviations_and_maybe_aliases = {
+    gst = "git status";
     # Git Pull Request Diff, shows the diff between the current branch and the closest ancestor in main branch
     gpd = "git diff $(git merge-base HEAD origin/main)..HEAD";
     cls = "clear; echo 'Shell cleared'";
@@ -23,6 +24,6 @@ let
   };
 in
 {
-  home.shellAliases = aliases // abbreviations;
-  programs.fish.shellAbbrs = abbreviations;
+  home.shellAliases = aliases // abbreviations_and_maybe_aliases;
+  programs.fish.shellAbbrs = abbreviations_and_maybe_aliases;
 }

@@ -30,8 +30,8 @@
         userConfig =
           { ... }:
           {
-            programs.git.userName = "TO BE SET";
-            programs.git.userEmail = "to-be-set@example.com";
+            programs.git.settings.user.name = "TO BE SET";
+            programs.git.settings.user.email = "to-be-set@example.com";
 
             myHomeManager = {
               # impure-node.enable = false;

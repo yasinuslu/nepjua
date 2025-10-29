@@ -79,18 +79,7 @@ setup-sops-at-root:
   #!/usr/bin/env bash
   set -euo pipefail
 
-  echo -e "\n🔑 Setting up SOPS key at root location...\n"
-
-  # Ensure the sops directory exists
-  sudo mkdir -p /var/root/.config/sops
-
-  # Copy the SOPS key to the root location
-  sudo cp ".sops/age-key.txt" /var/root/.config/sops/age-key.txt
-
-  echo -e "✅ SOPS key set up at /var/root/.config/sops/age-key.txt\n"
-
-  sudo chmod 600 /var/root/.config/sops/age-key.txt
-  sudo chown root:wheel /var/root/.config/sops/age-key.txt
+  
 
 build: setup-sops-at-root
   #!/usr/bin/env bash
@@ -118,14 +107,14 @@ switch: setup-sops-at-root
   #!/usr/bin/env bash
   set -euo pipefail
 
-  echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
-
   cleanup_sops() {
     echo -e "🔑 Cleaning up SOPS key at root location...\n"
     sudo rm -rf /var/root/.config/sops
   }
 
   trap cleanup_sops EXIT
+
+  echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
   for i in {1..3}; do
       if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then

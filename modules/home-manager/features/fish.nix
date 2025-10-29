@@ -56,24 +56,6 @@
         sha256 = "sha256-jSUIk3ewM6QnfoAtp16l96N1TlX6vR0d99dvEH53Xgw=";
       };
     }
-    # (lib.mkIf (userConfig.system == "aarch64-darwin") {
-    #   name = "oh-my-fish-plugin-osx"; # FIXME: Move this into a newly created osx-specific configuration
-    #   src = pkgs.fetchFromGitHub {
-    #     owner = "oh-my-fish";
-    #     repo = "plugin-osx";
-    #     rev = "master";
-    #     sha256 = "sha256-jSUIk3ewM6QnfoAtp16l96N1TlX6vR0d99dvEH53Xgw=";
-    #   };
-    # })
-    {
-      name = "jhillyerd-plugin-git";
-      src = pkgs.fetchFromGitHub {
-        owner = "jhillyerd";
-        repo = "plugin-git";
-        rev = "c2b38f53f0b04bc67f9a0fa3d583bafb3f558718";
-        sha256 = "sha256-efKPbsXxjHm1wVWPJCV8teG4DgZN5dshEzX8PWuhKo4=";
-      };
-    }
     {
       name = "evanlucas-fish-kubectl-completions";
       src = pkgs.fetchFromGitHub {
@@ -84,40 +66,6 @@
       };
     }
   ];
-
-  programs.fish.functions = {
-    git-remove-branches-except = {
-      argumentNames = [ "branches" ];
-      description = "Remove all git branches except the specified ones";
-      body = ''
-        if test -z "$branches"
-          git branch | grep -v main | xargs git branch -D
-        else
-          set -l branch_regex (string join '|' $branches)
-          git branch | grep -vE "main|$branch_regex" | xargs git branch -D
-        end
-      '';
-    };
-
-    git-local-upstream-exec = {
-      description = "Execute given command in an upstream that is defined via local filesystem";
-      body = ''
-        set current_dir (pwd)
-        set upstream (git config --local --get remote.origin.url | sed -e 's/.*\/\([^ ]*\/[^.]*\)\.git/\1/')
-        cd $upstream
-        eval $argv
-        cd $current_dir
-      '';
-    };
-
-    git-with-all-upstream-exec = {
-      description = "Execute given command both in current git and upstream";
-      body = ''
-        git-local-upstream-exec $argv
-        eval $argv
-      '';
-    };
-  };
 
   programs.fish.shellInitLast = ''
     if type -q gpg
@@ -134,6 +82,4 @@
       just --completions fish | source
     end
   '';
-
-  myHomeManager.paths = [ "$HOME/.local/bin" ];
 }
