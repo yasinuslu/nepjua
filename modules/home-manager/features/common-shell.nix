@@ -5,10 +5,16 @@ let
     ls = "lsd";
   };
   abbreviations_and_maybe_aliases = {
+    cls = "clear; echo 'Shell cleared'";
+    gl = "git pull";
     gst = "git status";
+    grm = "git fetch origin; git rebase origin/main";
+    # FIXME: Move this to `git.nix`
+    gr = "git-rebase-tracked";
     # Git Pull Request Diff, shows the diff between the current branch and the closest ancestor in main branch
     gpd = "git diff $(git merge-base HEAD origin/main)..HEAD";
-    cls = "clear; echo 'Shell cleared'";
+    gco = "git checkout";
+    gc = "git commit -m";
     gcom = "git checkout (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')";
     gcd = "cd (git rev-parse --show-toplevel)"; 
     d = "docker";
