@@ -9,6 +9,10 @@ let
       HIDKeyboardModifierMappingSrc = 30064771172;
       HIDKeyboardModifierMappingDst = 30064771125;
     };
+    remapEuroToTilde = {
+      HIDKeyboardModifierMappingSrc = 30064771125;
+      HIDKeyboardModifierMappingDst = 30064771172;
+    };
     swapLeftCommandAndLeftAlt1 = {
       HIDKeyboardModifierMappingSrc = 30064771299;
       HIDKeyboardModifierMappingDst = 30064771298;
@@ -24,6 +28,7 @@ let
       mappingList = [
         # mappingDefinitions.remapCapsLockToEscape
         mappingDefinitions.remapTilde
+        mappingDefinitions.remapEuroToTilde
       ];
     }
     {
