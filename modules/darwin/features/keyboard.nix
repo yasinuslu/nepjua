@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
   mappingDefinitions = {
     remapCapsLockToEscape = {
@@ -53,12 +53,19 @@ let
     mapping:
     if mapping.external then externalMappingToHidUtil mapping else nonExternalMappingToHidUtil mapping
   ) customKeyboardMappingList;
-in
-{
-  system.activationScripts.postActivation.text = ''
-    #!/usr/bin/env bash
+
+  keyboardMappingScript = pkgs.writeShellScriptBin "apply-keyboard-mappings" ''
     # Configuring keyboard
     echo "configuring custom keyboard mappings:"
     ${hidUtilCommand}
   '';
+in
+{
+  launchd.user.agents.nepjua-keyboard-mappings = {
+    command = "${keyboardMappingScript}/bin/apply-keyboard-mappings";
+    serviceConfig = {
+      RunAtLoad = true;
+      KeepAlive = false;
+    };
+  };
 }
