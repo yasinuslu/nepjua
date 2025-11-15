@@ -37,6 +37,7 @@ let
       mappingList = [
         # mappingDefinitions.remapCapsLockToEscape
         mappingDefinitions.remapTilde
+        mappingDefinitions.remapEuroToTilde
         mappingDefinitions.swapLeftCommandAndLeftAlt1
         mappingDefinitions.swapLeftCommandAndLeftAlt2
       ];
