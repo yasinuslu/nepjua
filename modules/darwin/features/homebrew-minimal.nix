@@ -48,6 +48,7 @@
       "cursor"
       "jordanbaird-ice"
       "ghostty"
+      "blender"
       # "copyq"
     ];
   };
