@@ -2,13 +2,13 @@
 
 pkgs.stdenv.mkDerivation {
   pname = "oh-my-tmux";
-  version = "2025-01-15";
+  version = "2025-11-21";
 
   src = pkgs.fetchFromGitHub {
     owner = "gpakosz";
     repo = ".tmux";
     rev = "master";
-    sha256 = "sha256-0yfcig5f81b25fc4ia1266ihjkr0grrnn49kvqb28qhbiz87bfk5";
+    sha256 = "sha256-0suqQJvB7OfUuxw8ruRbBOSjv+hHy2mfwsvJKbg5csQ=";
   };
 
   installPhase = ''
