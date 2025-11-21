@@ -50,6 +50,7 @@
       "ghostty"
       "blender"
       # "copyq"
+      "blender"
     ];
   };
 }
