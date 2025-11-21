@@ -8,7 +8,7 @@ pkgs.stdenv.mkDerivation {
     owner = "gpakosz";
     repo = ".tmux";
     rev = "master";
-    sha256 = "sha256-XXiyPSvrrtZgQ1IN797O1vgZDkwppKImgL+OQE507Fs=";
+    sha256 = "sha256-0yfcig5f81b25fc4ia1266ihjkr0grrnn49kvqb28qhbiz87bfk5";
   };
 
   installPhase = ''
