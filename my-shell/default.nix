@@ -59,6 +59,7 @@
         sops
         age
         nixfmt-rfc-style
+        cacert
       ]);
       shellHook = ''
         echo "Welcome in $name"
