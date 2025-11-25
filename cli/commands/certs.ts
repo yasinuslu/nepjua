@@ -11,6 +11,11 @@ const DEFAULT_HOSTS = [
   // "jfrog.io",
 ];
 
+const POSSIBLE_SYSTEM_CERT_FILES = [
+  "/etc/ssl/certs/ca-certificates.crt",
+  "/etc/ssl/certs/ca-certificates.crt.bak",
+];
+
 async function runCommand(
   cmd: string[]
 ): Promise<{ stdout: string; stderr: string; code: number }> {
@@ -52,7 +57,7 @@ async function extractCertificates(host: string): Promise<string[]> {
   return certificates;
 }
 
-async function getPossibleCertFiles(): Promise<string[]> {
+async function getExtraCertFiles(): Promise<string[]> {
   const cacertPackagePathCommand = await runCommand([
     "nix",
     "eval",
@@ -72,9 +77,8 @@ async function getPossibleCertFiles(): Promise<string[]> {
   return [cacertFilePath];
 }
 
-async function getCertFile(): Promise<string> {
-  const possibleCertFiles = await getPossibleCertFiles();
-  for (const path of possibleCertFiles) {
+async function tryCertFiles(certFiles: string[]) {
+  for (const path of certFiles) {
     try {
       if (await exists(path)) {
         console.log(`🔧 Using system certificate file: ${path}`);
@@ -89,10 +93,19 @@ async function getCertFile(): Promise<string> {
   }
 
   throw new Error(
-    `No valid certificate file found. Please ensure one of the following exists: ${possibleCertFiles.join(
+    `No valid certificate file found. Please ensure one of the following exists: ${certFiles.join(
       ", "
     )}`
   );
+}
+
+async function getCertFile(): Promise<string> {
+  try {
+    return await tryCertFiles(POSSIBLE_SYSTEM_CERT_FILES);
+  } catch {
+    // We don't care
+    return await tryCertFiles(await getExtraCertFiles());
+  }
 }
 
 async function readCertFile(certFile: string): Promise<string> {

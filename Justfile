@@ -79,7 +79,18 @@ setup-sops-at-root:
   #!/usr/bin/env bash
   set -euo pipefail
 
-  
+  echo -e "\n🔑 Setting up SOPS key at root location...\n"
+
+  # Ensure the sops directory exists
+  sudo mkdir -p /var/root/.config/sops
+
+  # Copy the SOPS key to the root location
+  sudo cp ".sops/age-key.txt" /var/root/.config/sops/age-key.txt
+
+  echo -e "✅ SOPS key set up at /var/root/.config/sops/age-key.txt\n"
+
+  sudo chmod 600 /var/root/.config/sops/age-key.txt
+  sudo chown root:wheel /var/root/.config/sops/age-key.txt
 
 build: setup-sops-at-root
   #!/usr/bin/env bash
@@ -98,14 +109,26 @@ build: setup-sops-at-root
   echo -e "🔹 OS: \033[1;32m{{ os }}\033[0m"
   echo -e "🔹 Command: \033[1;32m{{ rebuild_cmd }}\033[0m\n"
 
+  nep certs update
+
+  if [ -f "/etc/ssl/certs/ca-certificates.crt" ]; then
+    sudo mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.bak
+  fi
+
+  sudo cp "$HOME/code/nepjua/.generated/cert/ca-bundle.pem" /etc/ssl/certs/ca-certificates.crt
+
   {{ rebuild_cmd }} build \
     --flake .#{{ host }} \
     {{ rebuild_args }}
+
+  sudo mv /etc/ssl/certs/ca-certificates.crt.bak /etc/ssl/certs/ca-certificates.crt
 
 # Switch configuration using the detected rebuild command with retries
 switch: setup-sops-at-root
   #!/usr/bin/env bash
   set -euo pipefail
+
+  echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
   cleanup_sops() {
     echo -e "🔑 Cleaning up SOPS key at root location...\n"
@@ -114,17 +137,22 @@ switch: setup-sops-at-root
 
   trap cleanup_sops EXIT
 
-  echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
-
   for i in {1..3}; do
-      if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
-        echo -e "✅ Switch successful on attempt $i at $(date)\n"
-        echo -e "Installing nep-cli completions\n"
-        mkdir -p "$HOME/.config/fish/completions"
-        deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
-        exit 0
+      if just --set host {{ host }} build; then
+        echo -e "✅ Build successful on attempt $i at $(date)\n"
+        echo -e "🔄 Attempting to switch configuration...\n"
+        if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
+          echo -e "✅ Switch successful on attempt $i at $(date)\n"
+          echo -e "Installing nep-cli completions\n"
+          mkdir -p "$HOME/.config/fish/completions"
+          deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
+          exit 0
+        else
+          echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
+          sleep 5
+        fi
       else
-        echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
+        echo -e "❌ Build failed on attempt $i, retrying in 5 seconds...\n"
         sleep 5
       fi
   done
