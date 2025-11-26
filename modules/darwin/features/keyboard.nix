@@ -68,4 +68,13 @@ in
       KeepAlive = false;
     };
   };
+
+  system.activationScripts.postActivation.text = ''
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    echo "configuring custom keyboard mappings:"
+    ${keyboardMappingScript}/bin/apply-keyboard-mappings
+    echo "done"
+  '';
 }

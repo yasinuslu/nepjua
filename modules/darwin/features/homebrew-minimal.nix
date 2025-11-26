@@ -46,7 +46,7 @@
       "zed"
       "zen"
       "cursor"
-      "jordanbaird-ice"
+      "jordanbaird-ice@beta"
       "ghostty"
       "blender"
       # "copyq"
