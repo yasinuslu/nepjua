@@ -29,5 +29,6 @@
     "macfuse"
     "lens"
     "mullvad-vpn"
+    "antigravity"
   ];
 }
