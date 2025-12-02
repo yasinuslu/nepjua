@@ -31,7 +31,13 @@ let
     #   - true
     #   - false (default)
     #   - disabled (do not modify new-window bindings)
-    tmux_conf_new_window_retain_current_path=true
+    tmux_conf_new_window_retain_current_path=disabled
+
+    # Unbind the default 'c' binding (which creates a new window)
+    unbind c
+
+    # Rebind 'c' so new windows start in the same working directory as the current pane
+    bind c new-window -c "#{pane_current_path}"
   '';
 in
 {

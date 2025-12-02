@@ -9,6 +9,7 @@ rebuild_cmd := if os == "Darwin" { "sudo nix run nix-darwin/master#darwin-rebuil
 rebuild_args := "--impure"
 host := `hostname`
 nix_config := "experimental-features = nix-command flakes$(gh auth token | xargs -I {} echo \"\nextra-access-tokens = github.com={}\")"
+fresh_build := "0"
 
 # Default recipe to show available commands
 default:
@@ -138,23 +139,22 @@ switch: setup-sops-at-root
   trap cleanup_sops EXIT
 
   for i in {1..3}; do
-      if just --set host {{ host }} build; then
-        echo -e "✅ Build successful on attempt $i at $(date)\n"
-        echo -e "🔄 Attempting to switch configuration...\n"
-        if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
-          echo -e "✅ Switch successful on attempt $i at $(date)\n"
-          echo -e "Installing nep-cli completions\n"
-          mkdir -p "$HOME/.config/fish/completions"
-          deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
-          exit 0
-        else
-          echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
-          sleep 5
-        fi
-      else
-        echo -e "❌ Build failed on attempt $i, retrying in 5 seconds...\n"
-        sleep 5
-      fi
+    if [ "{{ fresh_build }}" -eq "1" ]; then
+      just --set host {{ host }} build
+      echo -e "✅ Build successful on attempt $i at $(date)\n"
+      echo -e "🔄 Attempting to switch configuration...\n"
+    fi
+
+    if {{ rebuild_cmd }} switch --flake .#{{ host }} --impure; then
+      echo -e "✅ Switch successful on attempt $i at $(date)\n"
+      echo -e "Installing nep-cli completions\n"
+      mkdir -p "$HOME/.config/fish/completions"
+      deno run -A -c deno.jsonc cli/main.ts completions fish > "$HOME/.config/fish/completions/nep.fish"
+      exit 0
+    else
+      echo -e "❌ Switch failed on attempt $i at $(date), retrying in 5 seconds...\n"
+      sleep 5
+    fi
   done
 
   echo -e "❌ Switch failed after 3 attempts at $(date)\n"

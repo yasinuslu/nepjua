@@ -8,7 +8,8 @@
 
   homebrew.casks = [
     "macfuse"
-    "anydesk"
+    # For some reason, upgrading anydesk is failing even though I deleted it
+    # "anydesk"
     "parsec"
     "qbittorrent"
     "slack"
