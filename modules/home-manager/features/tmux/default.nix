@@ -44,8 +44,8 @@ let
     # Rebind 'c' so new windows start in the same working directory as the current pane
     bind c new-window -c "#{pane_current_path}"
 
-    bind -r C-b swap-window -t -1 \; select-window -t -1  # swap current window with the previous one
-    bind -r C-, swap-window -t +1 \; select-window -t +1  # swap current window with the next one
+    bind -r C-u swap-window -t -1 \; select-window -t -1  # swap current window with the previous one
+    bind -r C-i swap-window -t +1 \; select-window -t +1  # swap current window with the next one
   '';
 in
 {
