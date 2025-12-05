@@ -7,6 +7,11 @@ let
   extraLocalConfig = ''
     # -- Custom user configuration -------------------------------------------------
     set-option -g default-shell ${pkgs.fish}/bin/fish
+    set-option -g default-command "exec ${pkgs.fish}/bin/fish"
+
+    # Update environment variables from shell when creating new sessions/windows
+    # This ensures tmux picks up environment variables that change in the shell
+    set-option -g update-environment "PATH DISPLAY SSH_AUTH_SOCK SSH_CONNECTION SSH_CLIENT TERM TERM_PROGRAM TERM_PROGRAM_VERSION NODE_OPTIONS"
 
     # Add custom prefix (C-g) in addition to default
     set -g prefix2 C-s
@@ -38,6 +43,9 @@ let
 
     # Rebind 'c' so new windows start in the same working directory as the current pane
     bind c new-window -c "#{pane_current_path}"
+
+    bind -r C-b swap-window -t -1 \; select-window -t -1  # swap current window with the previous one
+    bind -r C-, swap-window -t +1 \; select-window -t +1  # swap current window with the next one
   '';
 in
 {
