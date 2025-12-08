@@ -51,6 +51,7 @@
       "blender"
       # "copyq"
       "blender"
+      "claude-code"
     ];
   };
 }
