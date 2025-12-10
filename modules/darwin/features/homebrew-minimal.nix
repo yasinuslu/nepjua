@@ -26,6 +26,7 @@
       "tig"
       "htop"
       "jeffreywildman/homebrew-virt-manager/virt-viewer"
+      "sonar-scanner"
     ];
     casks = [
       "1password-cli"
