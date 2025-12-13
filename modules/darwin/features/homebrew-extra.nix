@@ -31,6 +31,5 @@
     "lens"
     "mullvad-vpn"
     "antigravity"
-    "comet"
   ];
 }
