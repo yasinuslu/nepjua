@@ -33,6 +33,7 @@
       "1password"
       "alt-tab"
       # "background-music"
+      "google-chrome"
       "bettermouse"
       "gitkraken-cli"
       "insomnia"
