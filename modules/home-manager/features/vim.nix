@@ -1,7 +1,17 @@
-{ inputs, pkgs, ... }:
+{ inputs, lib, pkgs, ... }:
 {
   home.packages = [
-    inputs.khanelivim.packages.${pkgs.system}.default
+    (let
+      baseConfig = inputs.khanelivim.nixvimConfigurations.${pkgs.system}.khanelivim;
+      extendedConfig = baseConfig.extendModules {
+        modules = [
+          {
+            # Disable specific plugins
+            plugins.neotest.enable = lib.mkForce false;
+          }
+        ];
+      };
+    in extendedConfig.config.build.package)
   ];
 
   home.shellAliases = {
