@@ -8,6 +8,7 @@
   myNixOS = {
     wsl.enable = lib.mkOverride 100 true;
     binbash.enable = lib.mkOverride 100 true;
+    vscode-remote.enable = lib.mkOverride 100 true;
 
     nix-ld.enable = lib.mkOverride 100 true;
     common-base.enable = lib.mkOverride 100 true;
@@ -37,7 +38,7 @@
     qemu-guest.enable = lib.mkOverride 100 false;
     spice-guest.enable = lib.mkOverride 100 false;
     spice-viewer.enable = lib.mkOverride 100 false;
-    ssh-server.enable = lib.mkOverride 100 false;
+    ssh-server.enable = lib.mkOverride 100 true;
     systemd-boot.enable = lib.mkOverride 100 false;
     tailscale.enable = lib.mkOverride 100 false;
     xserver.enable = lib.mkOverride 150 false;

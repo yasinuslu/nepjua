@@ -1,5 +1,6 @@
 { pkgs, ... }:
 let
+  public-ssh-keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGdWdyY/m6TktOs5TmfRU0Q32saPCvK5aqvttcH6+pbZ"];
   ssh-command-handler = pkgs.writeScriptBin "ssh-command-handler" ''
     #!/usr/bin/env bash
     if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
@@ -27,7 +28,6 @@ in
     '';
   };
 
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJdpt9EGv3VZwkxRUP0M90kVkkOCtC+huewLt6NJhKg"
-  ];
+  users.users.root.openssh.authorizedKeys.keys = public-ssh-keys;
+  users.users.nepjua.openssh.authorizedKeys.keys = public-ssh-keys;
 }
