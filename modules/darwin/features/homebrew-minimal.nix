@@ -49,6 +49,7 @@
       "jordanbaird-ice@beta"
       "ghostty"
       "blender"
+      "beyond-compare"
       # "copyq"
       "blender"
       "claude-code"

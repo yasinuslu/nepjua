@@ -58,6 +58,8 @@ in
       if [ -f "${caFileEnv}" ]; then
         export NODE_EXTRA_CA_CERTS="${caFileEnv}"
         npm config set cafile "${caFileEnv}"
+      else
+        npm config delete cafile
       fi
 
       npm config set prefix ${globalNodeModules}
