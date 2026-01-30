@@ -8,6 +8,7 @@ const DEFAULT_HOSTS = [
   "cache.nixos.org",
   "registry.npmjs.org",
   "repo.yarnpkg.com",
+  "api.github.com",
   // "jfrog.io",
 ];
 
