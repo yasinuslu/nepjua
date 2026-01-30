@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v14
+
+      - name: Set up Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v4
+
+      - name: Run tests
+        run: |
+          nix develop --command deno task test
+
+      - name: Check formatting
+        run: |
+          nix develop --command deno fmt --check
+
+      - name: Lint
+        run: |
+          nix develop --command deno lint
