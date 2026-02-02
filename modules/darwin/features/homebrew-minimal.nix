@@ -52,7 +52,6 @@
       "beyond-compare"
       # "copyq"
       "blender"
-      "claude-code"
     ];
   };
 }
