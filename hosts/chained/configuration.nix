@@ -9,6 +9,14 @@
   networking.hostName = "chained";
   networking.computerName = "Yasin Uslu MC";
 
+  # Netskope SSL/TLS certificate bundle for AWS, Python, OpenSSL, and Node
+  environment.variables = {
+    AWS_CA_BUNDLE = "/Library/Netskope/mcpbundle.pem";
+    REQUESTS_CA_BUNDLE = "/Library/Netskope/mcpbundle.pem";
+    SSL_CERT_FILE = "/Library/Netskope/mcpbundle.pem";
+    NODE_EXTRA_CA_CERTS = "/Library/Netskope/mcpbundle.pem";
+  };
+
   security.pki.certificates =
     let
       certsDir = "/Users/yahmet/code/nepjua/.generated/cert/extra";
