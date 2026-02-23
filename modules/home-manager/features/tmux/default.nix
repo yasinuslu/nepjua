@@ -68,7 +68,10 @@ in
   # Place oh-my-tmux configuration files in ~/.config/tmux/
   xdg.configFile."tmux/tmux.conf".source = "${oh-my-tmux}/tmux.conf";
 
-  # Use oh-my-tmux's example local config as base, append our customizations
-  xdg.configFile."tmux/tmux.conf.local".text =
-    builtins.readFile "${oh-my-tmux}/tmux.conf.local" + "\n\n" + extraLocalConfig;
+  # Use oh-my-tmux's example local config as base, append our customizations.
+  # force = true so home-manager overwrites any manually edited backup files.
+  xdg.configFile."tmux/tmux.conf.local" = {
+    force = true;
+    text = builtins.readFile "${oh-my-tmux}/tmux.conf.local" + "\n\n" + extraLocalConfig;
+  };
 }
