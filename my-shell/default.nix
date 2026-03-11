@@ -74,6 +74,11 @@
         export PATH="$HOME/.console-ninja/.bin:$PATH"
         export PATH="$HOME/.bun/bin:$PATH"
 
+        export OPENROUTER_API_KEY=$(sops -d --extract '["openrouter-api-key"]' .main.enc.yaml)
+        export ANTHROPIC_BASE_URL="https://openrouter.ai/api/v1/anthropic"
+        export ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY"
+        export ANTHROPIC_API_KEY="" # Important: Must be explicitly empty
+
         # Find FLAKE_ROOT and exit early if not found
         if [ -z "$FLAKE_ROOT" ]; then
           if [ -f "$HOME/code/nepjua/flake.nix" ]; then
