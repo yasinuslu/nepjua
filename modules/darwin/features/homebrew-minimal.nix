@@ -34,6 +34,7 @@
       "alt-tab"
       # "background-music"
       "google-chrome"
+      "notion"
       "bettermouse"
       "gitkraken-cli"
       "insomnia"
