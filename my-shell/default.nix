@@ -6,6 +6,12 @@
   mkShell =
     { version, inputsFrom }:
     let
+      xcode-select = pkgs.writeShellScriptBin "xcode-select" ''
+        exec /usr/bin/env -u DEVELOPER_DIR -u SDKROOT /usr/bin/xcode-select "$@"
+      '';
+      xcrun = pkgs.writeShellScriptBin "xcrun" ''
+        exec /usr/bin/env -u DEVELOPER_DIR -u SDKROOT /usr/bin/xcrun "$@"
+      '';
       op = pkgs.writeShellScriptBin "op" ''
         if [[ $(command -v op.exe) ]]; then
           op.exe "$@"
@@ -17,6 +23,8 @@
     pkgs.mkShell {
       name = "default";
       buildInputs = [
+        xcode-select
+        xcrun
         op
       ]
       ++ (with pkgs; [
@@ -63,6 +71,13 @@
       ]);
       shellHook = ''
         echo "Welcome in $name"
+
+        # Prefer our xcrun/xcode-select wrappers over xcbuild (or any other) from inputsFrom.
+        export PATH="${xcrun}/bin:${xcode-select}/bin:$PATH"
+
+        # Unset Nix-injected Apple SDK vars so system xcrun/xcode-select work correctly.
+        unset DEVELOPER_DIR
+        unset SDKROOT
 
         # Enable Hugging Face's Rust-based transfer implementation for faster downloads/uploads of large models
         # Only takes effect when huggingface_hub is installed with [hf_transfer] extra
