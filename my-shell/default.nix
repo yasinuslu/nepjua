@@ -19,6 +19,9 @@
           ${pkgs._1password-cli}/bin/op "$@"
         fi
       '';
+      specify = pkgs.writeShellScriptBin "specify" ''
+        uvx --from git+https://github.com/github/spec-kit.git specify "$@"
+      '';
     in
     pkgs.mkShell {
       name = "default";
@@ -68,6 +71,8 @@
         age
         nixfmt-rfc-style
         cacert
+        uv
+        specify
       ]);
       shellHook = ''
         echo "Welcome in $name"
