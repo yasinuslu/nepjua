@@ -28,4 +28,5 @@ If the user provides a version number (e.g. `1.2.0`), include it in the release 
 ## Output
 
 - Print the generated release notes (markdown) so the user can copy them into the release or a file.
+- Releases ship two binaries only: `nep-x86_64-unknown-linux-gnu` (Linux x86_64) and `nep-aarch64-apple-darwin` (macOS ARM64). Mention them only if the diff affects install or distribution.
 - If run in a context where the repo or tags are unavailable, explain what went wrong and what to run manually (e.g. `git tag -l 'v*'`, `git diff ...`).

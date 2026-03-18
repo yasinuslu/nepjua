@@ -9,7 +9,7 @@ import { utilCmd } from "./commands/util.ts";
 
 const cmd = new Command()
   .name("nep")
-  .version("0.0.1")
+  .version("0.1.0")
   .description("A Command Line Tool for Automating my tasks")
   .command("completions", new CompletionsCommand())
   .command("sops", sopsCommand)

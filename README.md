@@ -78,6 +78,10 @@ sudo nixos-rebuild switch --flake .#tristan --impure
 └── docs/               # Documentation
 ```
 
+## Nep CLI
+
+The repo includes **`nep`**, a small CLI for automation tasks (SOPS, certs, secrets, etc.). Supported release targets: **Linux x86_64** and **macOS ARM64**. Install prebuilt binaries from [GitHub Releases](https://github.com/yasinuslu/nepjua/releases); full instructions: [docs/cli/README.md](./docs/cli/README.md). Maintainers: [Releasing nep](./docs/development/releasing-nep.md).
+
 ## Documentation
 
 Comprehensive documentation is available in the [docs](./docs) directory:
@@ -86,6 +90,7 @@ Comprehensive documentation is available in the [docs](./docs) directory:
 - [Available Features](./docs/features/README.md)
 - [Module System](./docs/modules/README.md)
 - [Troubleshooting Guide](./docs/troubleshooting/README.md)
+- [Nep CLI](./docs/cli/README.md)
 
 ## Common Tasks
 

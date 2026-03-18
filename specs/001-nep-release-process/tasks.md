@@ -26,7 +26,7 @@ description: "Task list for Nep CLI release process and documentation"
 
 **Purpose**: Align on scope before changing automation or docs
 
-- [ ] T001 Audit `.github/workflows/release.yml` and `cli/main.ts` against `specs/001-nep-release-process/research.md` and `specs/001-nep-release-process/contracts/release-checklist.md`; record gap list in notes or issue
+- [x] T001 Audit `.github/workflows/release.yml` and `cli/main.ts` against `specs/001-nep-release-process/research.md` and `specs/001-nep-release-process/contracts/release-checklist.md`; record gap list in notes or issue
 
 ---
 
@@ -36,8 +36,8 @@ description: "Task list for Nep CLI release process and documentation"
 
 **⚠️ CRITICAL**: User story work assumes this phase completes first
 
-- [ ] T002 Restrict build matrix in `.github/workflows/release.yml` to **x86_64-unknown-linux-gnu** and **aarch64-apple-darwin** only (remove aarch64-linux and x86_64-darwin jobs per FR-008)
-- [ ] T003 Add a gate in `.github/workflows/release.yml` release job: verify both expected binaries exist (`nep-x86_64-unknown-linux-gnu`, `nep-aarch64-apple-darwin`) before creating the GitHub Release; fail the job if either is missing (per research: no partial release)
+- [x] T002 Restrict build matrix in `.github/workflows/release.yml` to **x86_64-unknown-linux-gnu** and **aarch64-apple-darwin** only (remove aarch64-linux and x86_64-darwin jobs per FR-008)
+- [x] T003 Add a gate in `.github/workflows/release.yml` release job: verify both expected binaries exist (`nep-x86_64-unknown-linux-gnu`, `nep-aarch64-apple-darwin`) before creating the GitHub Release; fail the job if either is missing (per research: no partial release)
 
 **Checkpoint**: Tag push builds only two targets; release is not published unless both succeed
 
@@ -51,9 +51,9 @@ description: "Task list for Nep CLI release process and documentation"
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Update `.github/workflows/release.yml` release body template: installation section must name **Linux x86_64** and **macOS ARM64** artifacts explicitly (`nep-x86_64-unknown-linux-gnu`, `nep-aarch64-apple-darwin`); remove generic four-platform wording
-- [ ] T005 [US1] Add `docs/development/releasing-nep.md` documenting: run release-notes via `.cursor/commands/release-notes-generate.md`, update `cli/main.ts` version, tag `v*.*.*`, push, verify workflow; link to `specs/001-nep-release-process/contracts/release-checklist.md`
-- [ ] T006 [US1] Align `cli/main.ts` `.version()` with the tagging process (document in `docs/development/releasing-nep.md` that version must match tag, or implement compile-time version from tag if preferred)
+- [x] T004 [US1] Update `.github/workflows/release.yml` release body template: installation section must name **Linux x86_64** and **macOS ARM64** artifacts explicitly (`nep-x86_64-unknown-linux-gnu`, `nep-aarch64-apple-darwin`); remove generic four-platform wording
+- [x] T005 [US1] Add `docs/development/releasing-nep.md` documenting: run release-notes via `.cursor/commands/release-notes-generate.md`, update `cli/main.ts` version, tag `v*.*.*`, push, verify workflow; link to `specs/001-nep-release-process/contracts/release-checklist.md`
+- [x] T006 [US1] Align `cli/main.ts` `.version()` with the tagging process (document in `docs/development/releasing-nep.md` that version must match tag, or implement compile-time version from tag if preferred)
 
 **Checkpoint**: Maintainer can cut a release following docs; GitHub Release matches two-platform spec
 
@@ -67,8 +67,8 @@ description: "Task list for Nep CLI release process and documentation"
 
 ### Implementation for User Story 2
 
-- [ ] T007 [P] [US2] Create `docs/cli/README.md` with installation steps (download from GitHub Releases, `chmod +x`, PATH), upgrade steps (replace binary), and checksum verification using `checksums.txt` for both supported platforms
-- [ ] T008 [US2] Add a **Nep CLI** subsection to `README.md` with one-paragraph description, supported platforms, and link to `docs/cli/README.md`
+- [x] T007 [P] [US2] Create `docs/cli/README.md` with installation steps (download from GitHub Releases, `chmod +x`, PATH), upgrade steps (replace binary), and checksum verification using `checksums.txt` for both supported platforms
+- [x] T008 [US2] Add a **Nep CLI** subsection to `README.md` with one-paragraph description, supported platforms, and link to `docs/cli/README.md`
 
 **Checkpoint**: New user can install in under 5 minutes per spec SC-002
 
@@ -82,9 +82,9 @@ description: "Task list for Nep CLI release process and documentation"
 
 ### Implementation for User Story 3
 
-- [ ] T009 [P] [US3] Extend `docs/cli/README.md` with subcommand list per `contracts/cli-docs-surface.md`: `sops`, `certs`, `util`, `secret`, `completions` — one-line description each plus `nep <cmd> --help` guidance
-- [ ] T010 [US3] Add `docs/cli/README.md` to `docs/README.md` Documentation Structure and Quick Links
-- [ ] T011 [US3] In `docs/development/releasing-nep.md`, add explicit post-release step: update any version-pinned or install URLs in `README.md` and `docs/cli/README.md` to match the new release (FR-007); define **latest** as most recent stable GitHub Release
+- [x] T009 [P] [US3] Extend `docs/cli/README.md` with subcommand list per `contracts/cli-docs-surface.md`: `sops`, `certs`, `util`, `secret`, `completions` — one-line description each plus `nep <cmd> --help` guidance
+- [x] T010 [US3] Add `docs/cli/README.md` to `docs/README.md` Documentation Structure and Quick Links
+- [x] T011 [US3] In `docs/development/releasing-nep.md`, add explicit post-release step: update any version-pinned or install URLs in `README.md` and `docs/cli/README.md` to match the new release (FR-007); define **latest** as most recent stable GitHub Release
 
 **Checkpoint**: Docs match released CLI; maintainers know to refresh docs on each release
 
@@ -94,8 +94,8 @@ description: "Task list for Nep CLI release process and documentation"
 
 **Purpose**: Consistency and command accuracy
 
-- [ ] T012 [P] Update `.cursor/commands/release-notes-generate.md` examples to reference two-platform artifact names if they still mention four targets
-- [ ] T013 Validate `specs/001-nep-release-process/quickstart.md` against final workflow and doc paths; fix broken links or outdated commands
+- [x] T012 [P] Update `.cursor/commands/release-notes-generate.md` examples to reference two-platform artifact names if they still mention four targets
+- [x] T013 Validate `specs/001-nep-release-process/quickstart.md` against final workflow and doc paths; fix broken links or outdated commands
 
 ---
 

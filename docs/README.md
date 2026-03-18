@@ -35,8 +35,9 @@ system configuration framework.
 
 - [Development](./development/README.md)
   - Development environment
-  - Contributing guidelines
-  - Best practices
+  - [Releasing the nep CLI](./development/releasing-nep.md)
+- [Nep CLI](./cli/README.md)
+  - Install, upgrade, checksums, subcommands
 
 - [Troubleshooting](./troubleshooting/README.md)
   - Common issues
@@ -48,7 +49,8 @@ system configuration framework.
 - [Installation Guide](./getting-started/installation.md)
 - [Configuration Guide](./getting-started/configuration.md)
 - [Feature List](./features/available-features.md)
-- [Contributing Guide](./development/contributing.md)
+- [Nep CLI](./cli/README.md)
+- [Releasing nep](./development/releasing-nep.md)
 
 ## Repository Structure
 

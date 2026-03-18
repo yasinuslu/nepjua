@@ -19,12 +19,6 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             runner: ubuntu-latest
             os: linux
-          - target: aarch64-unknown-linux-gnu
-            runner: ubuntu-latest
-            os: linux
-          - target: x86_64-apple-darwin
-            runner: macos-latest
-            os: darwin
           - target: aarch64-apple-darwin
             runner: macos-latest
             os: darwin
@@ -64,14 +58,24 @@ jobs:
         with:
           path: ./artifacts
 
-      - name: Generate checksums
+      - name: Assemble release assets and verify both platforms
         run: |
-          cd artifacts
-          for file in nep-*; do
-            if [ -f "$file" ]; then
-              sha256sum "$file" >> checksums.txt
-            fi
-          done
+          set -euo pipefail
+          mkdir -p release-assets
+          LINUX=$(find artifacts -type f -name 'nep-x86_64-unknown-linux-gnu' | head -1)
+          MAC=$(find artifacts -type f -name 'nep-aarch64-apple-darwin' | head -1)
+          if [ -z "$LINUX" ] || [ ! -f "$LINUX" ]; then
+            echo "::error::Missing Linux x86_64 binary (nep-x86_64-unknown-linux-gnu). Both platforms are required."
+            exit 1
+          fi
+          if [ -z "$MAC" ] || [ ! -f "$MAC" ]; then
+            echo "::error::Missing macOS ARM64 binary (nep-aarch64-apple-darwin). Both platforms are required."
+            exit 1
+          fi
+          cp "$LINUX" release-assets/nep-x86_64-unknown-linux-gnu
+          cp "$MAC" release-assets/nep-aarch64-apple-darwin
+          cd release-assets
+          sha256sum nep-x86_64-unknown-linux-gnu nep-aarch64-apple-darwin > checksums.txt
 
       - name: Extract version from tag
         id: tag_version
@@ -86,27 +90,41 @@ jobs:
           body: |
             ## Changes
 
-            This release includes the following changes:
+            Paste AI-generated release notes here (see [Releasing nep](https://github.com/yasinuslu/nepjua/blob/main/docs/development/releasing-nep.md)). Until then, see commit history for this tag.
 
             ${{ github.event.head_commit.message }}
 
             ## Installation
 
-            Download the binary for your platform and verify the checksum:
+            Supported platforms: **Linux x86_64**, **macOS ARM64 (Apple Silicon)**.
+
+            Download the matching binary from the assets below:
+
+            | Platform | Asset file |
+            |----------|------------|
+            | Linux x86_64 | `nep-x86_64-unknown-linux-gnu` |
+            | macOS ARM64 | `nep-aarch64-apple-darwin` |
 
             ```bash
-            # Verify checksum
+            # Verify checksums (from checksums.txt in the same release)
             sha256sum -c checksums.txt
 
-            # Make executable (Linux/macOS)
-            chmod +x nep-<target>
+            # Make executable
+            chmod +x nep-x86_64-unknown-linux-gnu   # Linux
+            # or
+            chmod +x nep-aarch64-apple-darwin     # macOS ARM64
+
+            # Optional: install to PATH (example)
+            sudo install -m755 nep-x86_64-unknown-linux-gnu /usr/local/bin/nep   # Linux
+            sudo install -m755 nep-aarch64-apple-darwin /usr/local/bin/nep       # macOS
             ```
 
             ## Checksums
 
-            See `checksums.txt` for SHA256 checksums of all binaries.
+            File `checksums.txt` lists SHA256 for both binaries.
           files: |
-            artifacts/checksums.txt
-            artifacts/nep-*
+            release-assets/checksums.txt
+            release-assets/nep-x86_64-unknown-linux-gnu
+            release-assets/nep-aarch64-apple-darwin
           draft: false
           prerelease: false

@@ -4,23 +4,17 @@
 
 ## Maintainer: Cutting a release
 
-1. **Ensure CI is green** on the branch you intend to tag (e.g. `main`).
-2. **Generate release notes**  
-   Run the release-notes AI command (e.g. in Cursor: use the command that finds the previous release commit, diffs to current, and generates notes). Copy the markdown output.
-3. **Tag and push**  
-   Choose a version (e.g. `1.0.0`). Create and push the tag:
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
-4. **Watch the release workflow**  
-   GitHub Actions builds for Linux x86_64 and macOS ARM64. When both succeed, a GitHub Release is created with artifacts and checksums.
-5. **Paste release notes**  
-   If the workflow does not inject the generated notes, edit the release on GitHub and paste the release notes into the release body (you can keep the default install/checksum template and add the generated “Changes” section above it).
-6. **Update docs**  
-   Update README and any CLI docs so that version references, install, and upgrade instructions match the new release. Commit and push.
+See **[docs/development/releasing-nep.md](../../docs/development/releasing-nep.md)** for the canonical runbook (version bump, tag, post-release doc updates).
 
-See [contracts/release-checklist.md](./contracts/release-checklist.md) for the full checklist.
+1. **Ensure CI is green** on the branch you intend to tag (e.g. `main`).
+2. **Generate release notes** — Cursor command **release-notes-generate** (`.cursor/commands/release-notes-generate.md`).
+3. **Match `cli/main.ts` `.version()` to the tag** (e.g. `v0.1.0` → `"0.1.0"`).
+4. **Tag and push** — `git tag v0.1.0 && git push origin v0.1.0`
+5. **Watch the workflow** — [`.github/workflows/release.yml`](../../.github/workflows/release.yml); both platforms must succeed.
+6. **Paste release notes** into the GitHub Release **Changes** section after publish.
+7. **Update docs** per [releasing-nep.md](../../docs/development/releasing-nep.md) (README / `docs/cli/` if needed).
+
+Full checklist: [contracts/release-checklist.md](./contracts/release-checklist.md).
 
 ## User: Installing nep
 
