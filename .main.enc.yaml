@@ -1,5 +1,6 @@
 reserved-for-future-use: ENC[AES256_GCM,data:Nt1WrmWK3oMAwKQ=,iv:2zSssSnM0/tPFWOUbJVrpNUmHRHenlYsu1c44wLtyAo=,tag:fWesImnUmB2g/1+OT11skg==,type:str]
 openrouter-api-key: ENC[AES256_GCM,data:ReIhC317GuhhTlkhdDy3rKqc5PF0HjBaTqAGZeGfwgzVU/FGZ1wzLGifUh5kvvnuzMBylb6rn3CvXKnriwy00vjL/gcSi80u6Q==,iv:5T+jbFbrQBlZ1Te3AByjvLzeRbOX0Ww4KNA7+ckKfiM=,tag:HGKxPumDLYCR+Xs/a2hWuQ==,type:str]
+opencode-zen-api-key: ENC[AES256_GCM,data:/xzcBzZug+YLF2WpjRjVq2yIM0R+EKzACkFzyeIp0KrXLLmPgsiJ0BwATzRfMdVW5m5OHG04oOHmVJP7+EKuHnTT5g==,iv:H5KLCqiknfxB/9ABPXzEvBpqebTVPBBfWIrqMw/BEI0=,tag:n1fO2o7tbtyIUJtUT64jZQ==,type:str]
 sops:
     age:
         - recipient: age1kmcfw420lmcsw67s4vjdws5xmlncmqavs9k3xp79jw8jccv53yjsjhp79w
@@ -11,7 +12,7 @@ sops:
             TTdscVRtMWRHeUdzUnhLRTBrQ2JpY0EKgTGHhmm9qbhwBVoDUP68YvHj7I42leMY
             Rs0t8gg7zDwu1F+edXx72nuzYtBXjbvJS//gpgPgqerqkbIXZ00qTw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-03-06T03:47:11Z"
-    mac: ENC[AES256_GCM,data:WPPyNBXZvESR2Woil8SFv6erMPhrwZvBox7JCfCp5jwgcfIId1OqSrooxlFQdcslhtpWBl+Byq5MYcPXVISBQ3RGChd/spWCdf+Tpvtm3+6BMZUafHdrNsGy8TlAoaW8NekfPAOM2sRCrUtPdmUNj3LHIJ7Hl0RhntUKvRySMOA=,iv:YONFWsuxhW8JxXQ4rkVNIoueT11zySVY3qR9RkdSDLw=,tag:LimgCSv7t9+9Hv0aTiukIw==,type:str]
+    lastmodified: "2026-03-18T03:42:43Z"
+    mac: ENC[AES256_GCM,data:Rp9JlSBsPnV9VjhAZojidHsMbVkoGCK9wfnhmI2HKZswjfUZ/q0YjFfj1xzZ/tenydJdAH4knBBWEJyGzeYTJYimzpZz0GkizkDqgzKyiIoGO457O1VHZfq9nJpAKWoNiL76acnEOv/zxjBXsfAZ1qzraT6QTqmE0WDiAQ3aIDk=,iv:J2TpS28oh6CO43m0H/QklCX1Z1wdeola7h7qNUUihRQ=,tag:uq2eWUnBKZwjTfwORrH6Pw==,type:str]
     unencrypted_regex: ^(apiVersion|metadata|kind|type|immutable)$
     version: 3.12.0

@@ -113,6 +113,7 @@
 
         export SOPS_AGE_KEY_FILE="$FLAKE_ROOT/.sops/age-key.txt"
         export OPENROUTER_API_KEY=$(sops -d --extract '["openrouter-api-key"]' "$FLAKE_ROOT/.main.enc.yaml")
+        export OPENCODE_ZEN_API_KEY=$(sops -d --extract '["opencode-zen-api-key"]' "$FLAKE_ROOT/.main.enc.yaml")
         export ANTHROPIC_BASE_URL="https://openrouter.ai/api/v1/anthropic"
         export ANTHROPIC_AUTH_TOKEN="$OPENROUTER_API_KEY"
         export ANTHROPIC_API_KEY=""

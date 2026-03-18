@@ -1,0 +1,35 @@
+---
+description: Project Development Guidelines
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# nepjua Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2026-03-15
+
+## Active Technologies
+
+- Deno (runtime for CLI); Nix for dev/build environment + @cliffy/command (CLI), Nix flake, GitHub Actions (001-nep-release-process)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+# Add commands for Deno (runtime for CLI); Nix for dev/build environment
+
+## Code Style
+
+Deno (runtime for CLI); Nix for dev/build environment: Follow standard conventions
+
+## Recent Changes
+
+- 001-nep-release-process: Added Deno (runtime for CLI); Nix for dev/build environment + @cliffy/command (CLI), Nix flake, GitHub Actions
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
