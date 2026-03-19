@@ -37,3 +37,28 @@ jobs:
       - name: Lint
         run: |
           nix develop --command deno lint
+
+  build-nep:
+    name: Build nep (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            runner: ubuntu-latest
+          - target: aarch64-apple-darwin
+            runner: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v14
+
+      - name: Set up Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v4
+
+      - name: Compile nep binary
+        run: |
+          nix develop --command deno compile -A --target ${{ matrix.target }} --output nep-${{ matrix.target }} ./cli/main.ts
