@@ -99,7 +99,7 @@ let
   '';
 
   cursorMcPackage = pkgs.writeShellScriptBin "cursor-mc" ''
-    cursor "$@"
+    code "$@"
   '';
 in
 {
