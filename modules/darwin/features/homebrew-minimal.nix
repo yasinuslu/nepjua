@@ -46,7 +46,6 @@
       "whatsapp"
       "zed"
       "zen"
-      "cursor"
       "jordanbaird-ice@beta"
       "ghostty"
       "blender"
