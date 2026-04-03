@@ -1,0 +1,51 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "agent": {
+    "favorite_models": [],
+    "model_parameters": [],
+    "enable_feedback": false
+  },
+  "edit_predictions": {
+    "provider": "zed"
+  },
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
+  "terminal": {
+    "working_directory": "current_file_directory",
+    "shell": {
+      "program": "fish"
+    },
+    "font_family": "JetBrainsMono Nerd Font"
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Macchiato"
+  },
+  "collaboration_panel": {
+    "button": false
+  },
+  "agent_ui_font_size": 17.0,
+  "disable_ai": true,
+  "ui_font_size": 17.0,
+  "buffer_font_size": 16.0,
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "Tokyo Night"
+  }
+}
