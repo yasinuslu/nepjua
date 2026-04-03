@@ -23,10 +23,6 @@ let
     # Enable mouse mode by default
     set -g mouse on
 
-    # Shift+Enter: send literal newline so prompts (e.g. Claude Code) can insert newline without submit
-    # -l = literal (no escape sequence interpretation); app receives actual newline character
-    bind -n S-Enter send-keys -l "${"\n"}"
-
     # Window swapping with Ctrl+[ and Ctrl+]
     bind -r C-'[' swap-window -t -1\; previous-window
     bind -r C-']' swap-window -t +1\; next-window
