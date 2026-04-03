@@ -10,58 +10,58 @@
     "context": "Workspace",
     "bindings": {
       // "shift shift": "file_finder::Toggle"
-    }
+    },
   },
   {
     "context": "Editor && vim_mode == insert",
     "bindings": {
       // "j k": "vim::NormalBefore"
-    }
+    },
   },
   {
     "context": "Workspace",
     "bindings": {
-      "alt-~": "terminal_panel::Toggle"
-    }
+      "alt-~": "terminal_panel::Toggle",
+    },
   },
   {
     "context": "Workspace",
     "unbind": {
-      "ctrl-`": "terminal_panel::Toggle"
-    }
+      "ctrl-`": "terminal_panel::Toggle",
+    },
   },
   {
     "context": "Terminal",
     "bindings": {
-      "cmd-t": "workspace::NewTerminal"
-    }
+      "cmd-t": "workspace::NewTerminal",
+    },
   },
   {
     "context": "Terminal",
     "unbind": {
-      "cmd-n": "workspace::NewTerminal"
-    }
+      "cmd-n": "workspace::NewTerminal",
+    },
   },
   {
     "bindings": {
-      "cmd-!": "project_panel::ToggleFocus"
-    }
+      "cmd-!": "project_panel::ToggleFocus",
+    },
   },
   {
     "unbind": {
-      "cmd-shift-e": "project_panel::ToggleFocus"
-    }
+      "cmd-shift-e": "project_panel::ToggleFocus",
+    },
   },
   {
     "context": "Workspace",
     "bindings": {
-      "cmd-@": "git_panel::ToggleFocus"
-    }
+      "cmd-@": "git_panel::ToggleFocus",
+    },
   },
   {
     "context": "Workspace",
     "unbind": {
-      "ctrl-shift-g": "git_panel::ToggleFocus"
-    }
-  }
+      "ctrl-shift-g": "git_panel::ToggleFocus",
+    },
+  },
 ]

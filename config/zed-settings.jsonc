@@ -9,35 +9,35 @@
 {
   "telemetry": {
     "diagnostics": false,
-    "metrics": false
+    "metrics": false,
   },
   "agent": {
     "favorite_models": [],
     "model_parameters": [],
-    "enable_feedback": false
+    "enable_feedback": false,
   },
   "edit_predictions": {
-    "provider": "zed"
+    "provider": "zed",
   },
   "agent_servers": {
     "claude-acp": {
-      "type": "registry"
-    }
+      "type": "registry",
+    },
   },
   "terminal": {
     "working_directory": "current_file_directory",
     "shell": {
-      "program": "fish"
+      "program": "fish",
     },
-    "font_family": "JetBrainsMono Nerd Font"
+    "font_family": "JetBrainsMono Nerd Font",
   },
   "icon_theme": {
     "mode": "dark",
     "light": "Catppuccin Latte",
-    "dark": "Catppuccin Macchiato"
+    "dark": "Catppuccin Macchiato",
   },
   "collaboration_panel": {
-    "button": false
+    "button": false,
   },
   "agent_ui_font_size": 17.0,
   "disable_ai": true,
@@ -46,6 +46,6 @@
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Tokyo Night"
-  }
+    "dark": "Tokyo Night",
+  },
 }
