@@ -50,6 +50,7 @@
       "ghostty"
       "blender"
       "beyond-compare"
+      "superwhisper"
       # "copyq"
       "blender"
     ];
