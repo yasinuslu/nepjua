@@ -13,6 +13,7 @@
     enable = true;
     brews = [
       "bfg"
+      "cocoapods"
       "ffmpeg"
       "gh"
       "git-lfs"
