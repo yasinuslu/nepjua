@@ -22,7 +22,7 @@
     cachix
     nixd
 
-    nixfmt-rfc-style
+    nixfmt
     nixpkgs-review
 
     wget

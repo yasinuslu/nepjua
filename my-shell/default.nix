@@ -69,7 +69,7 @@
         kubevirt
         sops
         age
-        nixfmt-rfc-style
+        nixfmt
         cacert
         uv
         specify
@@ -132,7 +132,7 @@
           "
         fi
 
-        alias code="cursor"
+        alias code="zed"
       '';
       inherit inputsFrom;
     };
