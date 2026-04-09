@@ -194,3 +194,4 @@ dist
 .env
 *.enc.tmp.*
 .decrypted-*
+.decrypted~*
