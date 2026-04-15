@@ -51,7 +51,7 @@
       "ghostty"
       "blender"
       "beyond-compare"
-      "superwhisper"
+      "spokenly"
       # "copyq"
       "blender"
     ];
