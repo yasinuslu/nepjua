@@ -31,8 +31,9 @@ macOS-specific system configurations:
 
 - **Features**:
 
-  - `homebrew-minimal.nix`: Basic Homebrew setup
-  - `homebrew-extra.nix`: Additional Homebrew packages
+  - `homebrew-base.nix`: Shared Homebrew setup (all machines)
+  - `homebrew-personal.nix`: Personal-only Homebrew packages
+  - `homebrew-work.nix`: Work-only Homebrew packages (opt-in per host)
   - `keyboard.nix`: Keyboard customization
   - `alt-tab.nix`: Window switching behavior
   - `base.nix`: Basic system configuration

@@ -73,8 +73,9 @@ system.
 
 #### Homebrew
 
-- `homebrew-minimal.nix`: Essential packages
-- `homebrew-extra.nix`: Additional tools
+- `homebrew-base.nix`: Shared taps, brews, and casks
+- `homebrew-personal.nix`: Personal-only additions
+- `homebrew-work.nix`: Work-only additions (enabled on work hosts)
 
 #### Keyboard (`keyboard.nix`)
 

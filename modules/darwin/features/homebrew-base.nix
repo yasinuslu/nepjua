@@ -29,6 +29,7 @@
       "jeffreywildman/homebrew-virt-manager/virt-viewer"
       "sonar-scanner"
       "snyk-cli"
+      "rustup"
     ];
     casks = [
       "1password-cli"

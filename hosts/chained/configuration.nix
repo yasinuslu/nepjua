@@ -20,7 +20,7 @@
   security.pki.certificates =
     let
       certsDir = "/Users/yahmet/code/nepjua/.generated/cert/extra";
-      certFiles = builtins.readDir certsDir;
+      certFiles = if builtins.pathExists certsDir then builtins.readDir certsDir else { };
       certContents = builtins.filter (name: builtins.match ".*\\.crt$" name != null) (
         builtins.attrNames certFiles
       );
@@ -31,7 +31,8 @@
   myDarwin = {
     bundles.darwin-desktop.enable = true;
 
-    homebrew-extra.enable = false;
+    homebrew-personal.enable = false;
+    homebrew-work.enable = true;
 
     users = {
       yahmet = {

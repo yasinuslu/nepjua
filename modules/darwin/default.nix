@@ -15,7 +15,8 @@ let
     };
 
     extraConfig = {
-      myDarwin.${name}.enable = lib.mkDefault true;
+      # homebrew-work is opt-in (work machines); other features default on
+      myDarwin.${name}.enable = lib.mkDefault (name != "homebrew-work");
     };
 
     configExtension = config: (lib.mkIf cfg.${name}.enable config);
