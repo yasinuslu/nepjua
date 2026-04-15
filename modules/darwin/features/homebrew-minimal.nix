@@ -28,6 +28,7 @@
       "htop"
       "jeffreywildman/homebrew-virt-manager/virt-viewer"
       "sonar-scanner"
+      "snyk-cli"
     ];
     casks = [
       "1password-cli"
