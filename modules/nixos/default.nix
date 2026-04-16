@@ -70,6 +70,10 @@ in
     };
 
     nixpkgs = {
+      overlays = [
+        (import ../../overlays/nushell-disable-checks.nix)
+      ];
+
       config = {
         allowUnfree = true;
         allowUnsupportedSystem = false;
