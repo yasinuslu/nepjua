@@ -1,0 +1,95 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  // SublimeText base_keymap binds cmd-1/cmd-2 in "Pane" to pane::ActivateItem (tabs).
+  // Pane context beats "Workspace" while the editor/tab strip has focus —
+  // re-bind there so Cmd+1/2 toggle project tree / git panel instead of tabs.
+  {
+    "context": "Pane",
+    "bindings": {
+      "cmd-1": "project_panel::Toggle",
+      "cmd-2": "git_panel::Toggle",
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      // "shift shift": "file_finder::Toggle"
+      "alt-~": "terminal_panel::Toggle",
+      "cmd-1": "project_panel::ToggleFocus",
+      "cmd-2": "git_panel::Toggle",
+    },
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-`": "terminal_panel::Toggle",
+      "ctrl-shift-g": "git_panel::ToggleFocus",
+    },
+  },
+  // Workspace cmd-w → workspace::CloseActiveDock nukes docks on focus; send focus editor instead.
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "GitPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "OutlinePanel && not_editing",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "AgentPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "ThreadsSidebar",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "DebugPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
+    },
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-t": "workspace::NewTerminal",
+    },
+  },
+  {
+    "context": "Terminal",
+    "unbind": {
+      "cmd-n": "workspace::NewTerminal",
+    },
+  },
+  {
+    "unbind": {
+      "cmd-shift-e": "project_panel::ToggleFocus",
+    },
+  },
+]

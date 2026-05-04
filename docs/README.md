@@ -44,6 +44,9 @@ system configuration framework.
   - Debugging guides
   - FAQ
 
+- [Editor configs](./editor/zed/README.md)
+  - Zed `settings.json` / `keymap.json` snapshots
+
 ## Quick Links
 
 - [Installation Guide](./getting-started/installation.md)
