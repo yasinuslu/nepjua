@@ -9,6 +9,7 @@
     taps = [
       "hashicorp/tap"
       "jeffreywildman/homebrew-virt-manager"
+      "deskflow/tap"
     ];
     enable = true;
     brews = [
@@ -56,6 +57,7 @@
       "spokenly"
       # "copyq"
       "blender"
+      "deskflow/tap/deskflow"
     ];
   };
 }

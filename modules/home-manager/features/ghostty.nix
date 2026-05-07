@@ -3,8 +3,8 @@
   # Ghostty is installed via homebrew on macOS (see homebrew-base.nix)
   # We only manage the configuration here
   xdg.configFile."ghostty/config".text = ''
-    # Theme
-    theme = "Monokai Remastered"
+    # Theme (auto-switches with macOS appearance)
+    theme = dark:Monokai Remastered,light:Catppuccin Latte
 
     # Font
     font-family = "JetBrainsMono Nerd Font Mono"
