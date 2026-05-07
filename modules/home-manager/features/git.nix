@@ -74,6 +74,7 @@ in
 {
   home.packages = with pkgs; [
     transcrypt
+    git-sync
     git-rebase-tracked
     git-reset-tracked
     git-remove-branches-except

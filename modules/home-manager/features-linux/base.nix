@@ -11,6 +11,5 @@
       tailscale
       telepresence2
       lazygit
-      git-sync
     ];
 }
