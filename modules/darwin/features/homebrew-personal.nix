@@ -1,6 +1,8 @@
 { ... }:
 {
-  homebrew.taps = [ ];
+  homebrew.taps = [
+    "hamed-elfayome/claude-usage"
+  ];
 
   homebrew.brews = [
     "cloudflared"
@@ -32,5 +34,6 @@
     "mullvad-vpn"
     "antigravity"
     "cursor"
+    "claude-usage-tracker"
   ];
 }
