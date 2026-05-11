@@ -14,10 +14,20 @@ let
   caFileRelative = "code/nepjua/.generated/cert/ca-bundle.pem";
   caFileEnv = "$HOME/${caFileRelative}";
   caFileAbsolute = "${config.home.homeDirectory}/${caFileRelative}";
+  # corepack's `enable` defaults to installing shims next to the node binary,
+  # which lives in the read-only nix store. Force it to a writable dir.
+  corepackWrapper = pkgs.writeShellScriptBin "corepack" ''
+    if [ "''${1:-}" = "enable" ]; then
+      shift
+      exec ${pkgs.nodejs}/bin/corepack enable --install-directory "${globalNodeModules}/bin" "$@"
+    fi
+    exec ${pkgs.nodejs}/bin/corepack "$@"
+  '';
 in
 {
-  home.packages = with pkgs; [
-    nodejs
+  home.packages = [
+    pkgs.nodejs
+    (lib.hiPrio corepackWrapper)
   ];
 
   home.activation = {
@@ -70,6 +80,7 @@ in
   };
 
   myHomeManager.paths = [
+    "${corepackWrapper}/bin"
     "${pnpmHome}"
     "${globalNodeModules}/bin"
   ];
