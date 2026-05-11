@@ -7,20 +7,45 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  // BEGIN: Important Privacy Settings
+  "project_panel": {
+    "dock": "left",
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+    "button": false,
+  },
+  "git_panel": {
+    "dock": "left",
+  },
+  "edit_predictions": {
+    "provider": "zed",
+  },
   "telemetry": {
     "diagnostics": false,
     "metrics": false,
   },
   "agent": {
+    "dock": "right",
+    "default_model": null,
     "favorite_models": [],
     "model_parameters": [],
     "enable_feedback": false,
   },
-  "edit_predictions": {
-    "provider": "zed",
+  // END: Important Privacy Settings
+  "cli_default_open_behavior": "existing_window",
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "session": {
+    "trust_all_worktrees": true,
   },
   "agent_servers": {
     "claude-acp": {
+      "favorite_config_option_values": {
+        "mode": ["acceptEdits"],
+      },
       "type": "registry",
     },
   },
@@ -35,9 +60,6 @@
     "mode": "dark",
     "light": "Catppuccin Latte",
     "dark": "Catppuccin Macchiato",
-  },
-  "collaboration_panel": {
-    "button": false,
   },
   "agent_ui_font_size": 17.0,
   "disable_ai": true,

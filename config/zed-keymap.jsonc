@@ -6,28 +6,73 @@
 // To see the default key bindings run `zed: open default keymap`
 // from the command palette.
 [
+  // SublimeText base_keymap binds cmd-1/cmd-2 in "Pane" to pane::ActivateItem (tabs).
+  // Pane context beats "Workspace" while the editor/tab strip has focus —
+  // re-bind there so Cmd+1/2 toggle project tree / git panel instead of tabs.
+  {
+    "context": "Pane",
+    "bindings": {
+      "cmd-1": "project_panel::Toggle",
+      "cmd-2": "git_panel::Toggle",
+    },
+  },
   {
     "context": "Workspace",
     "bindings": {
       // "shift shift": "file_finder::Toggle"
-    },
-  },
-  {
-    "context": "Editor && vim_mode == insert",
-    "bindings": {
-      // "j k": "vim::NormalBefore"
-    },
-  },
-  {
-    "context": "Workspace",
-    "bindings": {
       "alt-~": "terminal_panel::Toggle",
+      "cmd-1": "project_panel::ToggleFocus",
+      "cmd-2": "git_panel::Toggle",
     },
   },
   {
     "context": "Workspace",
     "unbind": {
       "ctrl-`": "terminal_panel::Toggle",
+      "ctrl-shift-g": "git_panel::ToggleFocus",
+    },
+  },
+  // Workspace cmd-w → workspace::CloseActiveDock nukes docks on focus; send focus editor instead.
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "GitPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "OutlinePanel && not_editing",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "AgentPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "ThreadsSidebar",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "DebugPanel",
+    "bindings": {
+      "cmd-w": "editor::ToggleFocus",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
     },
   },
   {
@@ -43,25 +88,61 @@
     },
   },
   {
-    "bindings": {
-      "cmd-!": "project_panel::ToggleFocus",
-    },
-  },
-  {
     "unbind": {
       "cmd-shift-e": "project_panel::ToggleFocus",
     },
   },
   {
+    "context": "Editor && mode == full",
+    "bindings": {
+      "cmd-e": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "Editor && mode == full",
+    "unbind": {
+      "cmd->": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-e": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "Terminal",
+    "unbind": {
+      "cmd->": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "AgentPanel",
+    "bindings": {
+      "cmd-e": "agent::AddSelectionToThread",
+    },
+  },
+  {
+    "context": "AgentPanel",
+    "unbind": {
+      "cmd->": "agent::AddSelectionToThread",
+    },
+  },
+  {
     "context": "Workspace",
     "bindings": {
-      "cmd-@": "git_panel::ToggleFocus",
+      "cmd-§": "multi_workspace::ToggleWorkspaceSidebar",
     },
   },
   {
     "context": "Workspace",
     "unbind": {
-      "ctrl-shift-g": "git_panel::ToggleFocus",
+      "alt-cmd-j": "multi_workspace::ToggleWorkspaceSidebar",
+    },
+  },
+  {
+    "bindings": {
+      "alt-!": "debug_panel::Toggle",
     },
   },
 ]
