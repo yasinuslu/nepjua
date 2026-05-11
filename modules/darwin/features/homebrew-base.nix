@@ -58,6 +58,7 @@
       # "copyq"
       "blender"
       "deskflow/tap/deskflow"
+      "bruno"
     ];
   };
 }

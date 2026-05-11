@@ -16,13 +16,13 @@
   },
   "collaboration_panel": {
     "dock": "left",
-    "button": false,
   },
   "git_panel": {
     "dock": "left",
   },
   "edit_predictions": {
-    "provider": "zed",
+    "provider": "none",
+    "disabled_globs": ["**/**"],
   },
   "telemetry": {
     "diagnostics": false,
@@ -62,12 +62,12 @@
     "dark": "Catppuccin Macchiato",
   },
   "agent_ui_font_size": 17.0,
-  "disable_ai": true,
+  "disable_ai": false,
   "ui_font_size": 17.0,
   "buffer_font_size": 16.0,
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Tokyo Night",
+    "dark": "Ayu Dark",
   },
 }

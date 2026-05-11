@@ -145,4 +145,49 @@
       "alt-!": "debug_panel::Toggle",
     },
   },
+  {
+    "bindings": {
+      "alt-1": "debugger::Continue",
+    },
+  },
+  {
+    "unbind": {
+      "f5": "debugger::Continue",
+    },
+  },
+  {
+    "bindings": {
+      "alt-2": "debugger::StepOver",
+    },
+  },
+  {
+    "unbind": {
+      "f7": "debugger::StepOver",
+    },
+  },
+  {
+    "bindings": {
+      "alt-3": "debugger::StepInto",
+    },
+  },
+  {
+    "unbind": {
+      "f11": "debugger::StepInto",
+    },
+  },
+  {
+    "unbind": {
+      "ctrl-f11": "debugger::StepInto",
+    },
+  },
+  {
+    "bindings": {
+      "alt-4": "debugger::StepOut",
+    },
+  },
+  {
+    "unbind": {
+      "shift-f11": "debugger::StepOut",
+    },
+  },
 ]
