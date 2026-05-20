@@ -50,18 +50,12 @@ machines across different platforms (NixOS, macOS, and WSL).
 nix run nix-darwin -- switch --flake .#$hostname
 ```
 
-Replace `$hostname` with one of: `joyboy`, `sezer`, `chained`
-
-### NixOS Configuration
-
-```bash
-sudo nixos-rebuild switch --flake .#kaori
-```
+Replace `$hostname` with one of: `joyboy`, `chained`
 
 ### NixOS-WSL Configuration
 
 ```bash
-sudo nixos-rebuild switch --flake .#tristan --impure
+sudo nixos-rebuild switch --flake .#nika --impure
 ```
 
 ## Repository Structure

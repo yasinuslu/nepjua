@@ -29,12 +29,12 @@ This guide will help you get started with the Nepjua Nix Configuration system.
 nix run nix-darwin -- switch --flake .#$hostname
 ```
 
-Replace `$hostname` with one of: `joyboy`, `sezer`, `chained`
+Replace `$hostname` with one of: `joyboy`, `chained`
 
-### For NixOS
+### For NixOS-WSL
 
 ```bash
-sudo nixos-rebuild switch --flake .#kaori
+sudo nixos-rebuild switch --flake .#nika --impure
 ```
 
 ## System Types

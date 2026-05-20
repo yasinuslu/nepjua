@@ -127,14 +127,11 @@
           };
         flake = {
           nixosConfigurations = {
-            kaori = mkSystem defaultSystems.linux ./hosts/kaori/configuration.nix;
-            nari = mkSystem defaultSystems.linux ./hosts/nari/configuration.nix;
             nika = mkSystem defaultSystems.linux ./hosts/nika/configuration.nix;
           };
 
           darwinConfigurations = {
             joyboy = mkDarwinSystem defaultSystems.darwin ./hosts/joyboy/configuration.nix;
-            sezer = mkDarwinSystem defaultSystems.darwin ./hosts/sezer/configuration.nix;
             chained = mkDarwinSystem defaultSystems.darwin ./hosts/chained/configuration.nix;
           };
 
