@@ -2,6 +2,7 @@
 {
   nixpkgs.overlays = [
     (import ../../../overlays/nushell-disable-checks.nix)
+    (import ../../../overlays/microsandbox.nix)
   ];
 
   # List packages installed in system profile. To search by name, run:

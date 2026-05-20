@@ -72,6 +72,7 @@ in
     nixpkgs = {
       overlays = [
         (import ../../overlays/nushell-disable-checks.nix)
+        (import ../../overlays/microsandbox.nix)
       ];
 
       config = {
