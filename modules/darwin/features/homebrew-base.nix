@@ -58,7 +58,7 @@
       # "copyq"
       "blender"
       "deskflow/tap/deskflow"
-      "bruno"
+      "podman-desktop"
     ];
   };
 }
