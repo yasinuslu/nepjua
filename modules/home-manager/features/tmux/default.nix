@@ -23,9 +23,18 @@ let
     # Enable mouse mode by default
     set -g mouse on
 
-    # Window swapping with Ctrl+[ and Ctrl+]
-    bind -r C-'[' swap-window -t -1\; previous-window
-    bind -r C-']' swap-window -t +1\; next-window
+    # Pane focus left/right — mirrors Ghostty's Cmd+[ / Cmd+]
+    bind -r C-'[' select-pane -L
+    bind -r C-']' select-pane -R
+
+    # Splits — | for side-by-side; remove top/bottom split
+    unbind -
+    unbind _
+    bind '|' split-window -h
+
+    # Break pane to its own window; join a pane from another window
+    bind '[' break-pane -d
+    bind ']' choose-window "join-pane -h -s '%%'"
 
     # We disable this because tmux does not pick up existing environment variables in the shell when it is enabled
     tmux_conf_new_session_retain_current_path=disabled
@@ -54,6 +63,7 @@ let
     # and enable true colour passthrough.
     set -g default-terminal "tmux-256color"
     set -as terminal-overrides ',*:Tc'
+
   '';
 in
 {

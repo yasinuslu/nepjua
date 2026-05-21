@@ -97,6 +97,44 @@ gh auth login
 export NIX_CONFIG="extra-access-tokens = github.com=$(gh auth token -u yasinuslu)"
 ```
 
+## Terminal Workflow
+
+Two Ghostty splits side by side, each running its own tmux session.
+
+### Ghostty
+
+| Action | Shortcut |
+|---|---|
+| Split right | `Cmd+D` |
+| Split down | `Cmd+Shift+D` |
+| Focus left / right split | `Cmd+[` / `Cmd+]` |
+| Navigate splits | `Cmd+Option+↑/↓/←/→` |
+| Zoom split | `Cmd+Shift+Enter` |
+| New tab | `Cmd+T` |
+| Prev / next tab | `Cmd+Shift+[` / `Cmd+Shift+]` |
+| Close split or tab | `Cmd+W` |
+
+### tmux (prefix = `Ctrl+S`)
+
+| Action | Shortcut |
+|---|---|
+| New window | `prefix c` |
+| Kill window | `prefix x` |
+| Show all windows | `prefix w` |
+| Prev / next window | `prefix C-h` / `prefix C-l` |
+| Move window left / right | `prefix C-S-H` / `prefix C-S-L` |
+| Rename window | `prefix ,` |
+| Last window | `prefix Tab` |
+| Split pane side by side | `prefix \|` |
+| Navigate panes (vim) | `prefix h/j/k/l` |
+| Focus pane left / right | `prefix C-[` / `prefix C-]` |
+| Zoom pane | `prefix z` |
+| Break pane → own window | `prefix [` |
+| Join pane from another window | `prefix ]` (visual picker) |
+| Switch sessions | `prefix C-f` |
+| Detach | `prefix d` |
+| Reload config | `prefix r` |
+
 ## Credits
 
 - Configuration inspiration from

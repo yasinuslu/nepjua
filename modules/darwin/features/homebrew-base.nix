@@ -10,6 +10,7 @@
       "hashicorp/tap"
       "jeffreywildman/homebrew-virt-manager"
       "deskflow/tap"
+      "macos-fuse-t/homebrew-cask"
     ];
     enable = true;
     brews = [
@@ -59,6 +60,8 @@
       "blender"
       "deskflow/tap/deskflow"
       "podman-desktop"
+      "macos-fuse-t/homebrew-cask/fuse-t"
+      "macos-fuse-t/homebrew-cask/fuse-t-sshfs"
     ];
   };
 }
