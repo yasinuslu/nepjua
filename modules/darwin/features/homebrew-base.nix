@@ -60,8 +60,6 @@
       "blender"
       "deskflow/tap/deskflow"
       "podman-desktop"
-      "macos-fuse-t/homebrew-cask/fuse-t"
-      "macos-fuse-t/homebrew-cask/fuse-t-sshfs"
     ];
   };
 }

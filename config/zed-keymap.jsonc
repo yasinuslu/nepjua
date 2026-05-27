@@ -10,19 +10,14 @@
   // Pane context beats "Workspace" while the editor/tab strip has focus —
   // re-bind there so Cmd+1/2 toggle project tree / git panel instead of tabs.
   {
-    "context": "Pane",
     "bindings": {
-      "cmd-1": "project_panel::Toggle",
-      "cmd-2": "git_panel::Toggle",
-    },
-  },
-  {
-    "context": "Workspace",
-    "bindings": {
-      // "shift shift": "file_finder::Toggle"
+      "cmd-b": "multi_workspace::ToggleWorkspaceSidebar",
+      "cmd-1": "agent::Toggle",
+      "cmd-2": "editor::ToggleFocus",
+      "cmd-3": "terminal_panel::Toggle",
+      "cmd-4": "project_panel::Toggle",
+      "cmd-5": "git_panel::Toggle",
       "alt-~": "terminal_panel::Toggle",
-      "cmd-1": "project_panel::ToggleFocus",
-      "cmd-2": "git_panel::Toggle",
     },
   },
   {
@@ -108,6 +103,7 @@
     "context": "Terminal",
     "bindings": {
       "cmd-e": "agent::AddSelectionToThread",
+      "shift-enter": ["terminal::SendText", "\u001b\r"],
     },
   },
   {
@@ -188,6 +184,52 @@
   {
     "unbind": {
       "shift-f11": "debugger::StepOut",
+    },
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-shift-up": "editor::MoveLineUp",
+    },
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "alt-up": "editor::MoveLineUp",
+    },
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-shift-down": "editor::MoveLineDown",
+    },
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "alt-down": "editor::MoveLineDown",
+    },
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-shift-d": "editor::DuplicateLineDown",
+    },
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "alt-shift-down": "editor::DuplicateLineDown",
+    },
+  },
+  {
+    "bindings": {
+      "cmd-escape": "workspace::ToggleZoom",
+    },
+  },
+  {
+    "unbind": {
+      "shift-escape": "workspace::ToggleZoom",
     },
   },
 ]

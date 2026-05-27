@@ -7,19 +7,30 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  // BEGIN: Important Privacy Settings
+  "debugger": {
+    "dock": "right",
+  },
+  "terminal": {
+    "bell": "system",
+    "dock": "right",
+    "shell": {
+      "program": "fish",
+    },
+    "font_family": "JetBrainsMono Nerd Font",
+  },
   "project_panel": {
-    "dock": "left",
+    "dock": "right",
   },
   "outline_panel": {
-    "dock": "left",
+    "dock": "right",
   },
   "collaboration_panel": {
-    "dock": "left",
+    "dock": "right",
   },
   "git_panel": {
-    "dock": "left",
+    "dock": "right",
   },
+  // BEGIN: Important Privacy Settings
   "edit_predictions": {
     "provider": "none",
     "disabled_globs": ["**/**"],
@@ -29,35 +40,21 @@
     "metrics": false,
   },
   "agent": {
-    "dock": "right",
+    "dock": "left",
     "default_model": null,
     "favorite_models": [],
     "model_parameters": [],
     "enable_feedback": false,
   },
   // END: Important Privacy Settings
+  "format_on_save": "on",
   "cli_default_open_behavior": "existing_window",
   "multi_cursor_modifier": "cmd_or_ctrl",
   "session": {
     "trust_all_worktrees": true,
   },
-  "agent_servers": {
-    "claude-acp": {
-      "favorite_config_option_values": {
-        "mode": ["acceptEdits"],
-      },
-      "type": "registry",
-    },
-  },
-  "terminal": {
-    "working_directory": "current_file_directory",
-    "shell": {
-      "program": "fish",
-    },
-    "font_family": "JetBrainsMono Nerd Font",
-  },
   "icon_theme": {
-    "mode": "dark",
+    "mode": "system",
     "light": "Catppuccin Latte",
     "dark": "Catppuccin Macchiato",
   },
@@ -66,7 +63,7 @@
   "ui_font_size": 17.0,
   "buffer_font_size": 16.0,
   "theme": {
-    "mode": "dark",
+    "mode": "system",
     "light": "One Light",
     "dark": "Ayu Dark",
   },
