@@ -232,4 +232,16 @@
       "shift-escape": "workspace::ToggleZoom",
     },
   },
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-shift-r": "editor::FindAllReferences"
+    }
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "alt-cmd-shift-down": "editor::FindAllReferences"
+    }
+  }
 ]

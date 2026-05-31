@@ -32,10 +32,10 @@
     "dock": "right",
   },
   // BEGIN: Important Privacy Settings
-  "edit_predictions": {
-    "provider": "none",
-    "disabled_globs": ["**/**"],
-  },
+  // "edit_predictions": {
+  //   "provider": "none",
+  //   "disabled_globs": ["**/**"],
+  // },
   "telemetry": {
     "diagnostics": false,
     "metrics": false,
