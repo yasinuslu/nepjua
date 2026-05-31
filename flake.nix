@@ -108,6 +108,14 @@
             # For 'nix fmt'
             formatter = pkgs.nixfmt;
 
+            # Reusable secrets tooling (ADR-0005): `nep` CLI + ksops binary,
+            # consumed by other repos via inputs.nep.packages / lib.
+            packages.nep = import ./nix/nep.nix {
+              inherit pkgs;
+              src = inputs.self;
+            };
+            packages.ksops = pkgs.callPackage ./nix/ksops.nix { inherit system; };
+
             devShells.default =
               let
                 myShell = import ./my-shell/default.nix {
@@ -139,6 +147,10 @@
           nixosModules.default = ./modules/nixos;
           darwinModules.default = ./modules/darwin;
           myLib.default = myLib;
+
+          # Reusable secrets dev-shell builder (ADR-0005). Consumers call:
+          #   inputs.nep.lib.mkSecretsDevShell { inherit pkgs; nep = …; ksops = …; }
+          lib.mkSecretsDevShell = import ./nix/secrets-dev-shell.nix;
         };
       }
     );
