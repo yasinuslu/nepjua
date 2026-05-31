@@ -95,7 +95,7 @@ export async function gitGetRemotes(): Promise<GitRemote[]> {
 /**
  * Parse GitHub URL to extract owner/repo
  */
-export function gitParseGitHubUrl(url: string): GitNamespace | null {
+function gitParseGitHubUrl(url: string): GitNamespace | null {
   // Handle different GitHub URL formats:
   // - https://github.com/owner/repo.git
   // - https://github.com/owner/repo

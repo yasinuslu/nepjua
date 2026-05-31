@@ -3,7 +3,6 @@ import "./zx-configuration.ts";
 import { Command } from "@cliffy/command";
 import { CompletionsCommand } from "@cliffy/command/completions";
 import { certsCmd } from "./commands/certs.ts";
-import { gitopsCommand } from "./commands/gitops.ts";
 import { secretCmd } from "./commands/secret.ts";
 import { sopsCommand } from "./commands/sops.ts";
 import { utilCmd } from "./commands/util.ts";
@@ -17,7 +16,6 @@ const cmd = new Command()
   .command("certs", certsCmd)
   .command("util", utilCmd)
   .command("secret", secretCmd)
-  .command("gitops", gitopsCommand)
   .reset()
   .action(() => cmd.showHelp());
 
