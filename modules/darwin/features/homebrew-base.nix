@@ -4,13 +4,12 @@
     onActivation = {
       cleanup = "zap";
       autoUpdate = true;
-      upgrade = true;
+      upgrade = false;
     };
     taps = [
       "hashicorp/tap"
       "jeffreywildman/homebrew-virt-manager"
       "deskflow/tap"
-      "macos-fuse-t/homebrew-cask"
     ];
     enable = true;
     brews = [

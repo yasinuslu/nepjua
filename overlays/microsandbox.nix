@@ -2,22 +2,22 @@ final: prev:
 let
   inherit (final) lib stdenv;
 
-  version = "0.4.6";
+  version = "0.5.7";
 
   sources = {
     "aarch64-darwin" = {
       target = "darwin-aarch64";
-      hash = "sha256:1pnibl1gwyz3py0zbfg9qrn76v9ccjhxgc65w9mbyzvp9yqwars6";
+      hash = "sha256:0nrzdz8jh01fzxri4akhp7k8b96knp0flgsyk8miqnplykkkayfp";
       lib = "libkrunfw.5.dylib";
     };
     "aarch64-linux" = {
       target = "linux-aarch64";
-      hash = "sha256:1ls6rm0m4sa9hjd0nyi7xxzrvd1lv94442gkaj4v35fj4yl4gcg4";
+      hash = "sha256:19043gbhamy9v91vs4vhjas1nj8gblcy35s1qlqpqnygglb8ywsl";
       lib = "libkrunfw.so.5.2.1";
     };
     "x86_64-linux" = {
       target = "linux-x86_64";
-      hash = "sha256:19vddxrggl37czj824llbi8vxyrqblcgdxabcdyd4109575zq9l0";
+      hash = "sha256:1r2g69k3g9xda51k4xvczmpfjvy1vgn6iwp5bb482fnxbgzaps58";
       lib = "libkrunfw.so.5.2.1";
     };
   };

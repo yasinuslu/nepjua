@@ -67,6 +67,39 @@
     }
   ];
 
+  programs.fish.functions = {
+    fish_title = ''
+      if set -q ZED_TERM; and set -q ZED_TERMINAL_TITLE
+        echo $ZED_TERMINAL_TITLE
+        return
+      end
+
+      set -l ssh
+      set -q SSH_TTY
+      and set ssh "["(prompt_hostname | string sub -l 10 | string collect)"]"
+
+      if set -q argv[1]
+        echo -- $ssh (string sub -l 20 -- $argv[1]) (prompt_pwd -d 1 -D 1)
+      else
+        set -l command (status current-command)
+        if test "$command" = fish
+          set command
+        end
+        echo -- $ssh (string sub -l 20 -- $command) (prompt_pwd -d 1 -D 1)
+      end
+    '';
+
+    title = ''
+      if test (count $argv) -eq 0
+        set -e ZED_TERMINAL_TITLE
+        return
+      end
+
+      set -gx ZED_TERMINAL_TITLE (string join " " $argv)
+      printf '\033]2;%s\007' "$ZED_TERMINAL_TITLE"
+    '';
+  };
+
   programs.fish.shellInitLast = ''
     if type -q gpg
       set -xg GPG_TTY (tty)

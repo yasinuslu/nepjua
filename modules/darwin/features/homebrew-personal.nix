@@ -9,7 +9,6 @@
   ];
 
   homebrew.casks = [
-    "macfuse"
     # For some reason, upgrading anydesk is failing even though I deleted it
     # "anydesk"
     "parsec"
@@ -29,7 +28,6 @@
     "crossover"
     # "mullvadvpn"
     "soundsource"
-    "macfuse"
     "lens"
     "mullvad-vpn"
     "antigravity"
