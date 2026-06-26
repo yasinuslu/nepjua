@@ -83,6 +83,7 @@ in
     "${corepackWrapper}/bin"
     "${pnpmHome}"
     "${globalNodeModules}/bin"
+    "$HOME/.bun/bin"
   ];
 
   home.sessionVariables = {

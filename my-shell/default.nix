@@ -92,7 +92,6 @@
 
         export PATH="$HOME/.local/bin:$PATH"
         export PATH="$HOME/.console-ninja/.bin:$PATH"
-        export PATH="$HOME/.bun/bin:$PATH"
         export PATH="$HOME/.microsandbox/bin:$PATH"
 
         # Find FLAKE_ROOT and exit early if not found
