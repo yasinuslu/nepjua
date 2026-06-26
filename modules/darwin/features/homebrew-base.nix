@@ -33,6 +33,7 @@
       "rustup"
       "swiftlint" # Swift linting (used by the zentab project's bin/lint + CI)
       "xcbeautify" # readable xcodebuild output for Swift/macOS projects
+      "xcode-build-server" # feeds SourceKit-LSP for editor (Zed) autocomplete on xcodeproj
     ];
     casks = [
       "1password-cli"
