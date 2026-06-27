@@ -10,13 +10,14 @@
   // zed-sops: route the extension's sops calls through a shim that discovers each repo's
   // own age key (<repo>/.sops/age-key.txt) from the file being decrypted — Zed's process
   // doesn't inherit the per-repo SOPS_AGE_KEY_FILE that direnv sets in the shell.
+  // The shim (sops-zed) is nix-managed in modules/home-manager/features/editor.nix.
   "edit_predictions": {
     "mode": "subtle",
   },
   "lsp": {
     "sops-lsp": {
       "initialization_options": {
-        "sopsPath": "/Users/nepjua/.local/bin/sops-zed",
+        "sopsPath": "/etc/profiles/per-user/nepjua/bin/sops-zed",
       },
     },
   },
@@ -47,11 +48,6 @@
   "git_panel": {
     "dock": "right",
   },
-  // BEGIN: Important Privacy Settings
-  // "edit_predictions": {
-  //   "provider": "none",
-  //   "disabled_globs": ["**/**"],
-  // },
   "telemetry": {
     "diagnostics": false,
     "metrics": false,
