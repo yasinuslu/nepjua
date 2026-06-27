@@ -34,8 +34,6 @@ let
       __REMOTE_CODE__ "$@"
     elif is_remote_vscode_path "$CURSOR_PATH"; then
       cursor "$@"
-    elif [[ "$FULL_PWD" == */*astercont*/* ]]; then
-      zed-mc "$@"
     elif [[ "$FULL_PWD" == */yasinuslu/* ]]; then
       zed "$@"
     elif is_available "$ZED_PATH"; then
@@ -63,10 +61,6 @@ let
 
   editorRealPath = pkgs.writeShellScriptBin "er" ''
     ${editorPackage}/bin/e $(realpath "$1")
-  '';
-
-  zedMcPackage = pkgs.writeShellScriptBin "zed-mc" ''
-    zed "$@"
   '';
 
   # zed-sops shim. The meesk/zed-sops extension's `sops-lsp` invokes the `sops`
@@ -108,7 +102,6 @@ in
     editorPackage
     editorBetaPackage
     editorRealPath
-    zedMcPackage
     sopsZedPackage
   ];
 
