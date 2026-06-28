@@ -5,7 +5,7 @@ set shell := ["bash", "-uc"]
 # Determine the OS and set the appropriate rebuild ommand
 
 os := `uname`
-rebuild_cmd := if os == "Darwin" { "sudo env HOMEBREW_USER_CONFIG_HOME=$HOME/.homebrew nix run nix-darwin/master#darwin-rebuild --" } else { "sudo nixos-rebuild" }
+rebuild_cmd := if os == "Darwin" { "sudo env HOMEBREW_USER_CONFIG_HOME=$HOME/.homebrew NIX_CONFIG=\"${NIX_CONFIG:-}\" nix run nix-darwin/master#darwin-rebuild --" } else { "sudo env NIX_CONFIG=\"${NIX_CONFIG:-}\" nixos-rebuild" }
 rebuild_args := "--impure"
 host := `hostname`
 nix_config := "experimental-features = nix-command flakes$(gh auth token | xargs -I {} echo \"\nextra-access-tokens = github.com={}\")"
@@ -50,6 +50,8 @@ build-verbose-no-cache:
   #!/usr/bin/env bash
   set -euo pipefail
 
+  export NIX_CONFIG="{{ nix_config }}"
+
   echo -e "\n🔨 Building with verbose output and no cache using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
   {{ rebuild_cmd }} build \
@@ -61,10 +63,23 @@ build-verbose-no-cache:
 
   echo -e "\n✅ Build completed at $(date)\n"
 
+# Sudo-free build of the system closure. Catches every eval/build error
+# without touching the live system, so an agent (or you) can iterate freely
+# with zero password prompts. Only `switch`/`build` activate and need sudo.
+check *ARGS:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  export NIX_CONFIG="{{ nix_config }}"
+  echo -e "\n🔎 Building (no activation) '{{ host }}'...\n"
+  nix build --impure --no-link --print-out-paths \
+    ".#darwinConfigurations.{{ host }}.system" {{ ARGS }}
+
 # Build with verbose output
 build-verbose:
   #!/usr/bin/env bash
   set -euo pipefail
+
+  export NIX_CONFIG="{{ nix_config }}"
 
   echo -e "\n🔨 Building with verbose output using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
@@ -93,9 +108,20 @@ setup-sops-at-root:
   sudo chmod 600 /var/root/.config/sops/age-key.txt
   sudo chown root:wheel /var/root/.config/sops/age-key.txt
 
+  # Belt-and-suspenders: also place the key at the invoking user's HOME.
+  # sops-nix bakes `age.keyFile = "$HOME/.config/sops/age-key.txt"` at eval
+  # time; depending on whether sudo preserves $HOME or resets it to /var/root,
+  # the baked path resolves to one or the other. Cover both so activation can
+  # always decrypt.
+  mkdir -p "$HOME/.config/sops"
+  cp ".sops/age-key.txt" "$HOME/.config/sops/age-key.txt"
+  chmod 600 "$HOME/.config/sops/age-key.txt"
+
 build: setup-sops-at-root
   #!/usr/bin/env bash
   set -euo pipefail
+
+  export NIX_CONFIG="{{ nix_config }}"
 
   cleanup_sops() {
     echo -e "🔑 Cleaning up SOPS key at root location...\n"
@@ -129,14 +155,30 @@ switch: setup-sops-at-root
   #!/usr/bin/env bash
   set -euo pipefail
 
+  # Authenticate Nix's GitHub flake fetches (nix-darwin/master, inputs) so the
+  # `nix run`/activation below don't hit the unauthenticated API rate limit.
+  # Built from `gh auth token`; passed through the `sudo env` in rebuild_cmd.
+  export NIX_CONFIG="{{ nix_config }}"
+
   echo -e "\n🔄 Switching configuration for '{{ host }}' on '{{ os }}' using \033[1;34m{{ rebuild_cmd }}\033[0m at $(date)...\n"
 
-  cleanup_sops() {
+  # Homebrew's activation installs casks whose installers call sudo in a
+  # de-escalated context that can't prompt — which hangs the switch. Grant
+  # passwordless sudo for the duration of THIS switch only (you authenticate
+  # once, right here — a Touch ID tap), and always remove it on exit. The
+  # leading cleanup clears any drop-in left behind by a hard-killed run.
+  NOPASSWD_FILE="/etc/sudoers.d/99-nepjua-switch-nopasswd"
+  sudo rm -f "$NOPASSWD_FILE" 2>/dev/null || true
+  printf '%s ALL=(ALL) NOPASSWD: ALL\n' "$(whoami)" | sudo tee "$NOPASSWD_FILE" >/dev/null
+  sudo chmod 0440 "$NOPASSWD_FILE"
+
+  cleanup() {
+    sudo rm -f "$NOPASSWD_FILE" 2>/dev/null || true
     echo -e "🔑 Cleaning up SOPS key at root location...\n"
     sudo rm -rf /var/root/.config/sops
   }
 
-  trap cleanup_sops EXIT
+  trap cleanup EXIT
 
   if [ "{{ fresh_build }}" -eq "1" ]; then
     just --set host {{ host }} build
@@ -145,11 +187,15 @@ switch: setup-sops-at-root
   fi
 
   if [ "{{ os }}" = "Darwin" ] && command -v brew >/dev/null; then
+    # Best-effort: pre-trust third-party taps so the non-interactive `brew
+    # bundle` during activation doesn't prompt. Never fatal — on a fresh
+    # machine the taps may not be tapped yet, and `set -e` would otherwise
+    # abort the whole switch here.
     brew trust --tap \
       hashicorp/tap \
       jeffreywildman/virt-manager \
       deskflow/tap \
-      hamed-elfayome/claude-usage
+      hamed-elfayome/claude-usage || true
   fi
 
   {{ rebuild_cmd }} switch --flake .#{{ host }} --impure
@@ -162,6 +208,8 @@ switch: setup-sops-at-root
 boot:
   #!/usr/bin/env bash
   set -euo pipefail
+
+  export NIX_CONFIG="{{ nix_config }}"
 
   echo -e "\n🔄 Setting configuration on {{ os }} using \033[1;34m{{ rebuild_cmd }}\033[0m for next boot...\n"
 

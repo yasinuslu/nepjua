@@ -48,11 +48,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixvim = {
-      url = "github:dc-tec/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     khanelivim = {
       url = "github:khaneliman/khanelivim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -122,6 +117,25 @@
               myShell.mkShell {
                 # This is just to be able to trigger a rebuild when I want to
                 version = "0.0.2";
+                inputsFrom = [ config.flake-root.devShell ];
+              };
+
+            # Minimal shell for bootstrapping a fresh machine:
+            #   nix develop .#fresh
+            #   nep sops setup && just --set host joyboy switch
+            devShells.fresh =
+              let
+                freshShell = import ./my-shell/fresh.nix {
+                  inherit
+                    system
+                    pkgs
+                    inputs
+                    myLib
+                    ;
+                };
+              in
+              freshShell.mkShell {
+                version = "0.0.1";
                 inputsFrom = [ config.flake-root.devShell ];
               };
           };

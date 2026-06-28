@@ -52,7 +52,8 @@
       src = pkgs.fetchFromGitHub {
         owner = "oh-my-fish";
         repo = "plugin-osx";
-        rev = "master";
+        # Pinned commit instead of moving `master` (same content as before).
+        rev = "27039b251201ec2e70d8e8052cbc59fa0ac3b3cd";
         sha256 = "sha256-jSUIk3ewM6QnfoAtp16l96N1TlX6vR0d99dvEH53Xgw=";
       };
     }

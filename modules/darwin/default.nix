@@ -57,7 +57,7 @@ in
       extra-experimental-features = "nix-command flakes auto-allocate-uids";
       accept-flake-config = true;
       extra-nix-path = "nixpkgs=flake:nixpkgs";
-      bash-prompt-prefix = "(nix:$name)\040";
+      bash-prompt-prefix = "(nix:$name) ";
       build-users-group = "nixbld";
       extra-platforms = "aarch64-darwin x86_64-darwin";
       keep-outputs = true;

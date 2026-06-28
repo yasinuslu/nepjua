@@ -28,7 +28,6 @@
       "tig"
       "htop"
       "jeffreywildman/homebrew-virt-manager/virt-viewer"
-      "sonar-scanner"
       "snyk-cli"
       "rustup"
       "swiftlint" # Swift linting (used by the zentab project's bin/lint + CI)
@@ -48,7 +47,6 @@
       "obsidian"
       "rectangle"
       "spotify"
-      "visual-studio-code"
       "vlc"
       "whatsapp"
       "zed"
@@ -56,10 +54,8 @@
       "jordanbaird-ice@beta"
       "ghostty"
       "blender"
-      "beyond-compare"
       "spokenly"
       # "copyq"
-      "blender"
       "deskflow/tap/deskflow"
       "podman-desktop"
     ];

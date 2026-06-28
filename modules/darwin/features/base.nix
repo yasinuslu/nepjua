@@ -13,6 +13,8 @@
     fish
     act
     openssh
+    sops
+    age
   ];
 
   environment.shells = [

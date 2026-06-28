@@ -2,13 +2,16 @@
 
 pkgs.stdenv.mkDerivation {
   pname = "oh-my-tmux";
-  version = "2025-11-21";
+  version = "2026-02-21";
 
   src = pkgs.fetchFromGitHub {
     owner = "gpakosz";
     repo = ".tmux";
-    rev = "master";
-    sha256 = "sha256-0suqQJvB7OfUuxw8ruRbBOSjv+hHy2mfwsvJKbg5csQ=";
+    # Pin to an immutable commit, not a moving branch. Tracking `master`
+    # breaks reproducibility: upstream moves, the recorded hash goes stale,
+    # and a fresh Nix store (e.g. after a reinstall) fails to fetch.
+    rev = "af33f07134b76134acca9d01eacbdecca9c9cda6";
+    sha256 = "sha256-nXm664l84YSwZeRM4Hsweqgz+OlpyfwXcgEdyNGhaGA=";
   };
 
   installPhase = ''
