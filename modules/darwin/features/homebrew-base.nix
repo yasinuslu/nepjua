@@ -33,6 +33,7 @@
       "swiftlint" # Swift linting (used by the zentab project's bin/lint + CI)
       "xcbeautify" # readable xcodebuild output for Swift/macOS projects
       "xcode-build-server" # feeds SourceKit-LSP for editor (Zed) autocomplete on xcodeproj
+      "xcodegen" # generates ZenTab.xcodeproj from project.yml (source of truth)
     ];
     casks = [
       "1password-cli"
@@ -54,7 +55,6 @@
       "jordanbaird-ice@beta"
       "ghostty"
       "blender"
-      "spokenly"
       # "copyq"
       "deskflow/tap/deskflow"
       "podman-desktop"
