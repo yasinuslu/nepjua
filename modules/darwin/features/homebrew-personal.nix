@@ -22,6 +22,7 @@
     "rustdesk"
     "ollama-app"
     "crossover"
+    "utm" # Apple Virtualization VMs (Windows 11 ARM, e.g. testing the zentab windows app)
     "lens"
     "mullvad-vpn"
     "antigravity"
